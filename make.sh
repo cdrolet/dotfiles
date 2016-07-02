@@ -13,9 +13,9 @@ cd;
 echo ""
 
 function echoSection() {
-  echo ('-' * 75)
+  echo ("-" * 75)
   echo $1	
-  echo ('-' * 75)
+  echo ("-" * 75)
 }
 
 function makeLinks() {
