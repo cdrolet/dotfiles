@@ -12,21 +12,13 @@ cd;
 
 echo ""
 
-function echoSection() {
-  echo ""
-  echo "------------------------------------------------------------------"
-  echo $1	
-  echo "------------------------------------------------------------------"
-  echo ""
-}
-
 function makeLinks() {
   # For each directory in dirs, make a symlink for each file found that starts with a . (dot)
   for dir in $dirs; do
-    echoSection "Linking $dir files."
+    echo "Linking $dir files"
     cd $dotfiles_dir/$dir;
-    for file in .[^.]*; do
-      ln -svf $dotfiles_dir/$dir/$file ~/$file
+    for file in *; do
+      ln -svf $dotfiles_dir/$dir/$file ~/.$file
     done
     echo ""
   done
@@ -34,13 +26,15 @@ function makeLinks() {
   # Handle odd-ball cases
   # Vim files
 	  
-  echoSection "Linking vim files."
+  echo ""
+  echo "Linking vim files"
   ln -svf $dotfiles_dir/vim ~/.vim;
   ln -svf $dotfiles_dir/vim/vimrc ~/.vimrc;
   ln -svf $dotfiles_dir/vim/vimrc.bundles ~/.vimrc.bundles;
 
   # ssh
-  echoSection "Linking ssh configuration."
+  echo ""
+  echo "Linking ssh configuration."
   ln -svf $dotfiles_dir/ssh/config ~/.ssh/config
 
   # i3
@@ -48,11 +42,13 @@ function makeLinks() {
 # echo "Linking i3 configuration."
 # ln -svf $dotfiles_dir/.i3 ~/.i3
 
-  echoSection "Linking fonts & dircolors"
+  echo ""
+  echo "Linking fonts & dircolors"
   ln -svf $dotfiles_dir/fonts ~/.fonts;
   ln -svf $dotfiles_dir/dircolors ~/.dircolors;
 
-  echoSection "CAVEATS"
+  echo ""
+  echo "Caveats:"
   echo "Vim:  If remote server, rm .vimrc.bundles"
   echo "Bash: If local server, rm .bashrc.local"
 
