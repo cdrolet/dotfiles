@@ -12,10 +12,17 @@ cd;
 
 echo ""
 
+function hr() {
+  local start=$'\e(0' end=$'\e(B' line='qqqqqqqqqqqqqqqq'
+  local cols=${COLUMNS:-$(tput cols)}
+  while ((${#line} < cols)); do line+="$line"; done
+  printf '%s%s%s\n' "$start" "${line:0:cols}" "$end"
+}
+
 function echoSection() {
-  echo ("-" * 75)
+  hr 
   echo $1	
-  echo ("-" * 75)
+  hr)
 }
 
 function makeLinks() {
