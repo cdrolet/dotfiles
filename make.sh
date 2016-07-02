@@ -22,7 +22,7 @@ function hr() {
 function echoSection() {
   hr 
   echo $1	
-  hr)
+  hr
 }
 
 function makeLinks() {
