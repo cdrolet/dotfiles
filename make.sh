@@ -25,7 +25,8 @@ function makeLinks() {
   for dir in $dirs; do
     echoSection "Linking $dir files."
     cd $dotfiles_dir/$dir;
-    for file in .[^.]*; do
+    dotFiles = 
+    for file in [.]*; do
       ln -svf $dotfiles_dir/$dir/$file ~/$file
     done
     echo ""
