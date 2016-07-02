@@ -1,0 +1,38 @@
+[user]
+	name = charles drolet 
+	email = charles.drokar@gmail.com
+
+[github]
+	user = cdrolet	
+
+[format]
+	pretty = oneline
+
+[color]
+	ui = auto
+	interactive = auto
+
+[core]
+	editor = vim 
+	autocrlf = true
+	pager = less
+
+[diff]
+	tool = vimdiff
+	submodule = diff
+	
+[merge]
+    	log = true
+	tool = vimdiff
+
+[push]
+	default = matching
+
+[http]
+	sslVerify = false
+
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	required = true
+
