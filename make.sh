@@ -21,7 +21,7 @@ function echoSection() {
 function makeLinks() {
   
   # For each directory in dirs, make a symlink for each file found that starts with a . (dot)
-  for dir in */ do
+  for dir in */; do
     echoSection "Linking $dir files."
     cd $dotfiles_dir/$dir;
     for file in .*; do
