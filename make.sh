@@ -1,7 +1,16 @@
 #!/bin/bash
 
-dotfiles_dir=~/.dotfiles
-ignored_names=(".git" ".." ".")
+initDotFileDir() {
+   local source="${BASH_SOURCE[0]}"
+   # resolve $source until the file is no longer a symlink
+   while [ -h "$source" ]; do
+      DOTFILES_DIR="$( cd -P "$( dirname "$source" )" && pwd )"
+      source="$(readlink "$source")"
+      # if $source was a relative symlink, we need to resolve it relative to the path where the symlink file was located
+      [[ $source != /* ]] && source="$DOTFILES_DIR/$source"
+   done
+   DOTFILES_DIR="$( cd -P "$( dirname "$source" )" && pwd )"
+}
 
 isIgnored() {
     local ignoredList=( "${ignored_names[@]}" )
@@ -28,10 +37,10 @@ linkFile() {
 makeAllLinks() {
   shopt -s dotglob
 
-  for file in $dotfiles_dir/*
+  for file in $DOTFILES_DIR/*
   do
     linkFile "$file"
-    if [ -d "$file" ] && [ "$ignored" -eq 1 ] 
+    if [ -d "$file" ] && [ "$ignored" -eq 1 ]
     then
       for file in $file/*
       do
@@ -44,16 +53,18 @@ makeAllLinks() {
 
 updateFilesFromRepo() {
   echo ""
-  echo "Updating $dotfiles_dir to master"
+  echo "Updating $DOTFILES_DIR to master"
   echo ""
-  cd $dotfiles_dir
+  cd "$DOTFILES_DIR"
   git pull origin master
+  git submodule foreach git pull origin master
   cd
+  echo ""
 }
 
 addSymbolicLinks() {
   echo ""
-  echo "Adding symbolics links to home"
+  echo "Adding symbolics links to home directory"
   echo ""
   if [ "$1" == "--force" -o "$1" == "-f" ]
   then
@@ -74,9 +85,16 @@ cleanup() {
   unset -f makeAllLinks
   unset -f updateFilesFromRepo
   unset -f addSymbolicLinks
+  unset -f initDotFileDir
   unset excluded_names
   unset excluded_names
 }
+
+# Variables
+
+ignored_names=(".git" ".." ".")
+
+initDotFileDir
 
 updateFilesFromRepo
 
