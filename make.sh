@@ -12,8 +12,13 @@ initDotFileDir() {
    DOTFILES_DIR="$( cd -P "$( dirname "$source" )" && pwd )"
 }
 
+loadIgnoredFiles() {
+   readarray -t IGNORED_FILES < "$DOTFILES_DIR"/.dotignore
+   echo files to ignore: "${IGNORED_FILES[@]}"
+}
+
 isIgnored() {
-    local ignoredList=( "${ignored_names[@]}" )
+    local ignoredList=( "${IGNORED_FILES[@]}" )
     for element in "${ignoredList[@]}"
     do
        if [[ "$1" == "$element" ]]; then
@@ -51,7 +56,7 @@ makeAllLinks() {
 
 }
 
-updateFilesFromRepo() {
+updateFromRepo() {
   echo ""
   echo "Updating $DOTFILES_DIR to master"
   echo ""
@@ -90,22 +95,21 @@ cleanup() {
   unset excluded_names
 }
 
-# Variables
-
-ignored_names=(".git" ".." ".")
-
 initDotFileDir
 
-updateFilesFromRepo
+updateFromRepo
+
+loadIgnoredFiles
 
 addSymbolicLinks "$1"
 
 cleanup
 
-echo ""
-echo "CAVEATS"
-echo "Vim:  If remote server, rm .vimrc.bundles"
-echo "Bash: If local server, rm .bashrc.local"
+#echo ""
+#echo "CAVEATS"
+#echo "Vim:  If remote server, rm .vimrc.bundles"
+#echo "Bash: If local server, rm .bashrc.local"
 echo ""
 echo "Finished."
+
 
