@@ -1,64 +1,126 @@
 #!/bin/bash
 
-initDotFileDir() {
-   local source="${BASH_SOURCE[0]}"
-   # resolve $source until the file is no longer a symlink
-   while [ -h "$source" ]; do
-      DOTFILES_DIR="$( cd -P "$( dirname "$source" )" && pwd )"
-      source="$(readlink "$source")"
-      # if $source was a relative symlink, we need to resolve it relative to the path where the symlink file was located
-      [[ $source != /* ]] && source="$DOTFILES_DIR/$source"
-   done
-   DOTFILES_DIR="$( cd -P "$( dirname "$source" )" && pwd )"
+initVar() {
+  local source="${BASH_SOURCE[0]}"
+  # resolve $source until the file is no longer a symlink
+  while [ -h "$source" ]; do
+    DOTFILES_DIR="$( cd -P "$( dirname "$source" )" && pwd )"
+    source="$(readlink "$source")"
+    # if $source was a relative symlink, we need to resolve it relative to the path where the symlink file was located
+    [[ $source != /* ]] && source="$DOTFILES_DIR/$source"
+  done
+  DOTFILES_DIR="$( cd -P "$( dirname "$source" )" && pwd )"
+  BACKUP_HOME_DIR="$DOTFILES_DIR"/backup
+  REVERT_FILE="$DOTFILES_DIR"/revert.sh
 }
 
-loadIgnoredFiles() {
-   readarray -t IGNORED_FILES < "$DOTFILES_DIR"/.dotignore
-   echo files to ignore: "${IGNORED_FILES[@]}"
-}
-
-isIgnored() {
-    local ignoredList=( "${IGNORED_FILES[@]}" )
-    for element in "${ignoredList[@]}"
-    do
-       if [[ "$1" == "$element" ]]; then
-           echo "Ignoring $1"
-           return 0;
-        fi
-    done;
-    return 1;
-}
-
-linkFile() {
-    local filename=$(basename "$1")
-    isIgnored "$filename"
-    ignored=$?
-    if [[ "$filename" == .* ]] && [[ "$ignored" -eq 1 ]]
+addSymbolicLinks() {
+  echo ""
+  echo "Linking dot files to home directory."
+  echo ""
+  echo "Overwritten files will be saved in backup directory" 
+  echo "To revert to the backup files, execute 'sh ~/revert.sh'."
+  echo ""
+  if [ "$1" == "--force" -o "$1" == "-f" ]
+  then
+    echo ""
+    makeAllLinks
+  else
+    read -p "Do you want to continue? (y/n) " -n 1;
+    if [[ $REPLY =~ ^[Yy]$ ]]
     then
-      ln -svf $1
+      makeAllLinks
     fi
+  fi
+  echo ""
 }
 
 makeAllLinks() {
+  loadIgnoredFiles
+  selectFiles
+  backupHome
+  symlinkFiles
+}
+
+loadIgnoredFiles() {
+  readarray -t IGNORED_FILES < "$DOTFILES_DIR"/.dotignore
+  echo ""
+  echo "Files to ignore: "${IGNORED_FILES[@]}""
+}
+
+selectFiles() {
+  echo ""
+  echo "Selecting dot files:"
+  echo ""
+ 
+  DOTFILES=()
   shopt -s dotglob
 
   for file in $DOTFILES_DIR/*
   do
-    linkFile "$file"
+    addFile "$file"
     if [ -d "$file" ] && [ "$ignored" -eq 1 ]
     then
       for file in $file/*
       do
-        linkFile "$file"
+        addFile "$file"
       done;
     fi
   done
+}
 
+addFile() {
+  local filename=$(basename "$1")
+  isIgnored "$filename"
+  ignored=$?
+  if [[ "$filename" == .* ]] && [[ "$ignored" -eq 1 ]]
+  then
+    DOTFILES+=("$1")
+    echo "+ $1"
+  fi
+}
+
+isIgnored() {
+  local ignoredList=( "${IGNORED_FILES[@]}" )
+  ignoredList+=("$(basename "$BACKUP_HOME_DIR")")
+  for element in "${ignoredList[@]}"
+  do
+    if [[ "$1" == "$element" ]]; then
+      echo "- Ignoring $1"
+      return 0;
+    fi
+  done;
+  return 1;
+}
+
+backupHome() {
+  [ -d "$BACKUP_HOME_DIR" ] || mkdir "$BACKUP_HOME_DIR"
+
+  echo ""
+  echo "Saving previous home files in $BACKUP_HOME_DIR."
+  echo ""
+
+  for file in "${DOTFILES[@]}"
+  do
+    [ -a "$file" ] && mv -fv ~/$(basename "$file") "$BACKUP_HOME_DIR"
+  done
+}
+
+symlinkFiles() {
+  echo ""
+  echo "Creating symbolic links in home."
+  echo ""
+
+  for file in "${DOTFILES[@]}"
+  do
+    ln -svf "$file" ~
+  done
+  ln -svf "$REVERT_FILE" ~
 }
 
 updateFromRepo() {
   echo ""
-  echo "Updating $DOTFILES_DIR to master"
+  echo "Updating $DOTFILES_DIR to master."
   echo ""
   cd "$DOTFILES_DIR"
   git pull origin master
@@ -67,39 +129,20 @@ updateFromRepo() {
   echo ""
 }
 
-addSymbolicLinks() {
-  echo ""
-  echo "Adding symbolics links to home directory"
-  echo ""
-  if [ "$1" == "--force" -o "$1" == "-f" ]
-  then
-    makeAllLinks
-  else
-    read -p "This may overwrite existing files in your home directory. Are you sure? (y/n) " -n 1;
-    echo ""
-    if [[ $REPLY =~ ^[Yy]$ ]]
-    then
-      makeAllLinks
-    fi
-  fi
-}
-
 cleanup() {
   unset -f isIgnored 
-  unset -f linkFile
+  unset -f symlinkFiles
   unset -f makeAllLinks
-  unset -f updateFilesFromRepo
+  unset -f updateFromRepo
   unset -f addSymbolicLinks
-  unset -f initDotFileDir
+  unset -f initVar
   unset excluded_names
   unset excluded_names
 }
 
-initDotFileDir
+initVar
 
 updateFromRepo
-
-loadIgnoredFiles
 
 addSymbolicLinks "$1"
 
@@ -111,5 +154,6 @@ cleanup
 #echo "Bash: If local server, rm .bashrc.local"
 echo ""
 echo "Finished."
+echo ""
 
 
