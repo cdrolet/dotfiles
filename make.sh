@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-initVar() {
+initGlobals() {
   local source="${BASH_SOURCE[0]}"
   # resolve $source until the file is no longer a symlink
   while [ -h "$source" ]; do
@@ -14,16 +14,22 @@ initVar() {
   REVERT_FILE="$DOTFILES_DIR"/revert.sh
 }
 
+out() {
+  printf("\n")
+  for text in "$@"
+  do
+    printf("$text\n")
+  done
+}
+
 addSymbolicLinks() {
-  echo ""
-  echo "Linking dot files to home directory."
-  echo ""
-  echo "Overwritten files will be saved in backup directory" 
-  echo "To revert to the backup files, execute 'sh ~/revert.sh'."
-  echo ""
+  out "Linking dot files to home directory." "" \
+      "Overwritten files will be saved in backup directory." \
+      "To revert to the backup files, execute 'sh ~/revert.sh'."
+
   if [ "$1" == "--force" -o "$1" == "-f" ]
   then
-    echo ""
+    out
     makeAllLinks
   else
     read -p "Do you want to continue? (y/n) " -n 1;
@@ -32,7 +38,7 @@ addSymbolicLinks() {
       makeAllLinks
     fi
   fi
-  echo ""
+  cr
 }
 
 makeAllLinks() {
@@ -44,14 +50,11 @@ makeAllLinks() {
 
 loadIgnoredFiles() {
   readarray -t IGNORED_FILES < "$DOTFILES_DIR"/.dotignore
-  echo ""
-  echo "Files to ignore: "${IGNORED_FILES[@]}""
+  out "Files to ignore: ${IGNORED_FILES[@]}"
 }
 
 selectFiles() {
-  echo ""
-  echo "Selecting dot files:"
-  echo ""
+  out "Selecting dot files:"
  
   DOTFILES=()
   shopt -s dotglob
@@ -96,9 +99,7 @@ isIgnored() {
 backupHome() {
   [ -d "$BACKUP_HOME_DIR" ] || mkdir "$BACKUP_HOME_DIR"
 
-  echo ""
-  echo "Saving previous home files in $BACKUP_HOME_DIR."
-  echo ""
+  out "Saving previous home files in $BACKUP_HOME_DIR."
 
   for file in "${DOTFILES[@]}"
   do
@@ -107,9 +108,7 @@ backupHome() {
 }
 
 symlinkFiles() {
-  echo ""
-  echo "Creating symbolic links in home."
-  echo ""
+  out "Creating symbolic links in home."
 
   for file in "${DOTFILES[@]}"
   do
@@ -119,14 +118,13 @@ symlinkFiles() {
 }
 
 updateFromRepo() {
-  echo ""
-  echo "Updating $DOTFILES_DIR to master."
-  echo ""
+  out "Updating $DOTFILES_DIR to master."
+  
   cd "$DOTFILES_DIR"
   git pull origin master
   git submodule foreach git pull origin master
   cd
-  echo ""
+  out
 }
 
 cleanup() {
@@ -135,12 +133,12 @@ cleanup() {
   unset -f makeAllLinks
   unset -f updateFromRepo
   unset -f addSymbolicLinks
-  unset -f initVar
+  unset -f initGlobals
   unset excluded_names
   unset excluded_names
 }
 
-initVar
+initGlobals
 
 updateFromRepo
 
@@ -152,8 +150,6 @@ cleanup
 #echo "CAVEATS"
 #echo "Vim:  If remote server, rm .vimrc.bundles"
 #echo "Bash: If local server, rm .bashrc.local"
-echo ""
-echo "Finished."
-echo ""
+out "Finished."
 
 
