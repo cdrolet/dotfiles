@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+##!/usr/bin/env bash
 
 initGlobals() {
   local source="${BASH_SOURCE[0]}"
@@ -15,11 +15,16 @@ initGlobals() {
 }
 
 out() {
-  printf("\n")
+  printf "\n"
   for text in "$@"
   do
-    printf("$text\n")
+    printf "$text\n"
   done
+}
+
+indent() {
+  printf "    "
+  $@
 }
 
 addSymbolicLinks() {
@@ -33,12 +38,13 @@ addSymbolicLinks() {
     makeAllLinks
   else
     read -p "Do you want to continue? (y/n) " -n 1;
+    out
     if [[ $REPLY =~ ^[Yy]$ ]]
     then
       makeAllLinks
     fi
   fi
-  cr
+  out
 }
 
 makeAllLinks() {
@@ -50,12 +56,11 @@ makeAllLinks() {
 
 loadIgnoredFiles() {
   readarray -t IGNORED_FILES < "$DOTFILES_DIR"/.dotignore
-  out "Files to ignore: ${IGNORED_FILES[@]}"
 }
 
 selectFiles() {
   out "Selecting dot files:"
- 
+
   DOTFILES=()
   shopt -s dotglob
 
@@ -79,7 +84,7 @@ addFile() {
   if [[ "$filename" == .* ]] && [[ "$ignored" -eq 1 ]]
   then
     DOTFILES+=("$1")
-    echo "+ $1"
+    indent "echo "+ Adding $(basename "$1")""
   fi
 }
 
@@ -89,7 +94,7 @@ isIgnored() {
   for element in "${ignoredList[@]}"
   do
     if [[ "$1" == "$element" ]]; then
-      echo "- Ignoring $1"
+      indent "echo - Ignoring "$1""
       return 0;
     fi
   done;
@@ -99,11 +104,15 @@ isIgnored() {
 backupHome() {
   [ -d "$BACKUP_HOME_DIR" ] || mkdir "$BACKUP_HOME_DIR"
 
-  out "Saving previous home files in $BACKUP_HOME_DIR."
+  out "Saving previous home files in "$BACKUP_HOME_DIR"."
 
   for file in "${DOTFILES[@]}"
   do
-    [ -a "$file" ] && mv -fv ~/$(basename "$file") "$BACKUP_HOME_DIR"
+    if [ -a "$file" ]
+    then
+      indent
+      mv -fv ~/$(basename "$file") "$BACKUP_HOME_DIR"
+    fi
   done
 }
 
@@ -112,14 +121,20 @@ symlinkFiles() {
 
   for file in "${DOTFILES[@]}"
   do
-    ln -svf "$file" ~
+    linkFile "$file"
   done
-  ln -svf "$REVERT_FILE" ~
+
+  linkFile "$REVERT_FILE"
+}
+
+linkFile() {
+  indent
+  ln -svf "$1" ~
 }
 
 updateFromRepo() {
   out "Updating $DOTFILES_DIR to master."
-  
+
   cd "$DOTFILES_DIR"
   git pull origin master
   git submodule foreach git pull origin master
@@ -151,5 +166,4 @@ cleanup
 #echo "Vim:  If remote server, rm .vimrc.bundles"
 #echo "Bash: If local server, rm .bashrc.local"
 out "Finished."
-
 
