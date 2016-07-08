@@ -1,4 +1,4 @@
-##!/usr/bin/env bash
+#!/usr/bin/env bash
 
 initGlobals() {
   local source="${BASH_SOURCE[0]}"
@@ -9,9 +9,11 @@ initGlobals() {
     # if $source was a relative symlink, we need to resolve it relative to the path where the symlink file was located
     [[ $source != /* ]] && source="$DOTFILES_DIR/$source"
   done
+  
   DOTFILES_DIR="$( cd -P "$( dirname "$source" )" && pwd )"
-  BACKUP_HOME_DIR="$DOTFILES_DIR"/backup
+  BACKUP_DIR="$DOTFILES_DIR"/backup
   REVERT_FILE="$DOTFILES_DIR"/revert.sh
+  TEMP_FILE="$DOTFILES_DIR"/files.tmp
 }
 
 out() {
@@ -90,7 +92,7 @@ addFile() {
 
 isIgnored() {
   local ignoredList=( "${IGNORED_FILES[@]}" )
-  ignoredList+=("$(basename "$BACKUP_HOME_DIR")")
+  ignoredList+=("$(basename "$BACKUP_DIR")")
   for element in "${ignoredList[@]}"
   do
     if [[ "$1" == "$element" ]]; then
@@ -102,18 +104,22 @@ isIgnored() {
 }
 
 backupHome() {
-  [ -d "$BACKUP_HOME_DIR" ] || mkdir "$BACKUP_HOME_DIR"
+  [ -d "$BACKUP_DIR" ] || mkdir "$BACKUP_DIR"
 
-  out "Saving previous home files in "$BACKUP_HOME_DIR"."
+  out "Saving previous home files in "$BACKUP_DIR"."
 
+  local files=()
   for file in "${DOTFILES[@]}"
   do
     if [ -a "$file" ]
     then
-      indent
-      mv -fv ~/$(basename "$file") "$BACKUP_HOME_DIR"
+      files+=($(basename "$file"))
     fi
   done
+  
+  printf "%s\n" "${files[@]}" > "$TEMP_FILE"
+  rsync -av --files-from="$TEMP_FILE" --out-format='    %n%L' ~ "$BACKUP_DIR"
+  rm "$TEMP_FILE"
 }
 
 symlinkFiles() {
@@ -167,3 +173,5 @@ cleanup
 #echo "Bash: If local server, rm .bashrc.local"
 out "Finished."
 
+
+ 
