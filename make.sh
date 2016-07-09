@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-initGlobals() {
+initVar() {
   local source="${BASH_SOURCE[0]}"
   # resolve $source until the file is no longer a symlink
   while [ -h "$source" ]; do
@@ -111,9 +111,19 @@ backupHome() {
   local files=()
   for file in "${DOTFILES[@]}"
   do
+    # check if the file is not already a symlink to our dotfiles
+    if [[ -L "$file" && -d "$file" ]]
+    then
+        if [ "$(readlink $file)" = "$BACKUP_DIR/$(basename "$file")" ]
+        then
+            indent "echo "skipping $file""
+            continue
+        fi
+    fi
+    
     if [ -a "$file" ]
     then
-      files+=($(basename "$file"))
+        files+=($(basename "$file"))
     fi
   done
   
@@ -154,12 +164,12 @@ cleanup() {
   unset -f makeAllLinks
   unset -f updateFromRepo
   unset -f addSymbolicLinks
-  unset -f initGlobals
+  unset -f initVar
   unset excluded_names
   unset excluded_names
 }
 
-initGlobals
+initVar
 
 updateFromRepo
 
