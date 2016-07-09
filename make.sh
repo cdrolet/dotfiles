@@ -9,7 +9,7 @@ initVar() {
     # if $source was a relative symlink, we need to resolve it relative to the path where the symlink file was located
     [[ $source != /* ]] && source="$DOTFILES_DIR/$source"
   done
-  
+
   DOTFILES_DIR="$( cd -P "$( dirname "$source" )" && pwd )"
   BACKUP_DIR="$DOTFILES_DIR"/backup
   REVERT_FILE="$DOTFILES_DIR"/revert.sh
@@ -111,22 +111,28 @@ backupHome() {
   local files=()
   for file in "${DOTFILES[@]}"
   do
+    local homefile=~/"$(basename "$file")"
+    # check if file exist
+    if [ ! -e "$homefile" ]
+    then
+      continue
+    fi
+
     # check if the file is not already a symlink to our dotfiles
-    if [[ -L "$file" && -d "$file" ]]
+    if [ -L "$homefile" ] && [ "$(readlink $homefile)" = "$DOTFILES_DIR/$(basename "$file")" ]
     then
-        if [ "$(readlink $file)" = "$BACKUP_DIR/$(basename "$file")" ]
-        then
-            indent "echo "skipping $file""
-            continue
-        fi
+      continue
     fi
-    
-    if [ -a "$file" ]
-    then
-        files+=($(basename "$file"))
-    fi
+
+    indent "echo "+ Adding $homefile to backup""
+    files+=($(basename "$file"))
   done
-  
+
+  if [ "${#files[@]}" -eq 0 ]
+  then
+    indent "echo "- Nothing to save""
+    return
+  fi
   printf "%s\n" "${files[@]}" > "$TEMP_FILE"
   rsync -av --files-from="$TEMP_FILE" --out-format='    %n%L' ~ "$BACKUP_DIR"
   rm "$TEMP_FILE"
@@ -183,5 +189,3 @@ cleanup
 #echo "Bash: If local server, rm .bashrc.local"
 out "Finished."
 
-
- 
