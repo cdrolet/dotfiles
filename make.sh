@@ -66,7 +66,7 @@ selectDirFiles() {
     if isIllegible "$file"
 	then
       SELECTED_FILES+=("$file")
-      indent "echo "+ Selecting $(basename "$file")""
+      indent echo "+ Selecting "$file""
 	else
 	  # look for dotfiles in subfolders
       if [ -d "$file" ] && [ $level -lt $MAX_SCAN_LEVEL ]
@@ -90,24 +90,24 @@ isIllegible() {
   # check if the file is not already a symlink to our dotfiles
   if areFilesLinked ~/"$filename" "$1" 
   then
-    indent "echo - Skipping "$1" (already symlinked)"
+    indent echo "- Skipping "$1" (already symlinked)"
 	return 1
   fi
 
   # check if the file is in the ignored list
   if isIgnored "$filename"
   then
-    indent "echo - Ignoring "$filename""
+    indent echo "- Ignoring "$1""
     return 1
   fi
 }
 
 areFilesLinked() {
-	if [ -L "$1" ] && [ "$(readlink $1)" = "$SOURCE_DIR/$(basename "$2")" ]
-	then
-	  return 0
-	fi
-	return 1
+  if [ -L "$1" ] && [ "$(readlink $1)" = "$2" ]
+  then
+    return 0
+  fi
+  return 1
 }
 
 isIgnored() {
@@ -119,7 +119,6 @@ isIgnored() {
   done;
   return 1;
 }
-
 
 createSymLinks() {
   if [ "${#SELECTED_FILES[@]}" -eq 0 ]
@@ -171,13 +170,13 @@ backupHome() {
       continue
     fi
 
-    indent "echo "+ Adding $homefile to backup""
+    indent echo "+ Adding $homefile to backup"
     files+=($(basename "$file"))
   done
 
   if [ "${#files[@]}" -eq 0 ]
   then
-    indent "echo "- No backup required""
+    indent echo "- No backup required"
     return
   fi
   
@@ -226,8 +225,10 @@ cleanup() {
   unset -f copyFiles
   unset -f getSourceDir
   unset -f cleanup
+  unset -f indent
   
   out "Finished." ""
+  unset -f out
 }
 
 initGlobalVariables
