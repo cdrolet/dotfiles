@@ -1,38 +1,171 @@
 #!/usr/bin/env bash
 
-initVar() {
+initGlobalVariables() {
+  shopt -s dotglob
+  
   local source="${BASH_SOURCE[0]}"
   # resolve $source until the file is no longer a symlink
   while [ -h "$source" ]; do
-    DOTFILES_DIR="$( cd -P "$( dirname "$source" )" && pwd )"
+    SOURCE_DIR="$( cd -P "$( dirname "$source" )" && pwd )"
     source="$(readlink "$source")"
     # if $source was a relative symlink, we need to resolve it relative to the path where the symlink file was located
-    [[ $source != /* ]] && source="$DOTFILES_DIR/$source"
+    [[ $source != /* ]] && source="$SOURCE_DIR/$source"
   done
 
-  DOTFILES_DIR="$( cd -P "$( dirname "$source" )" && pwd )"
-  BACKUP_DIR="$DOTFILES_DIR"/backup
-  REVERT_FILE="$DOTFILES_DIR"/revert.sh
-  TEMP_FILE="$DOTFILES_DIR"/files.tmp
+  SOURCE_DIR="$( cd -P "$( dirname "$source" )" && pwd )"
+  BACKUP_DIR="$SOURCE_DIR"/backup
+  REVERT_FILE="$SOURCE_DIR"/revert_dotfiles.sh
+  TEMP_FILE="$SOURCE_DIR"/files.tmp
+  SELECTED_FILES=()
+  readarray -t IGNORED_FILES < "$SOURCE_DIR"/.dotignore
+  IGNORED_FILES+=("$(basename "$BACKUP_DIR")")
 }
 
-out() {
-  printf "\n"
-  for text in "$@"
+selectDirFiles() {
+  for file in $1/*
   do
-    printf "$text\n"
+    
+echo ">>> "$1""
+    
+	if isFileIllegible "$file"
+	then
+      SELECTED_FILES+=("$file")
+      indent "echo "+ Adding $(basename "$file")""
+	else
+	  # look for dotfiles in subfolders
+      if [ -d "$file" ] 
+      then
+		if ! isIgnored $(basename "$file") 
+		then
+   	      indent "echo "looking into $file""
+	      selectDirFiles "$file"
+		fi
+	  fi	
+	fi
   done
 }
 
-indent() {
-  printf "    "
-  $@
+isFileIllegible() {
+  local filename=$(basename "$1")
+  if [[ "$filename" != .* ]] 
+  then
+    return 1
+  fi
+
+  # check if the file is not already a symlink to our dotfiles
+  if areFilesLinked ~/"$filename" "$1" 
+  then
+    indent "echo - Skipping "$1" (already symlinked)"
+	return 1
+  fi
+
+  # check if the file is in the ignored list
+  if isIgnored "$filename"
+  then
+    indent "echo - Ignoring "$1""
+    return 1
+  fi
 }
 
-addSymbolicLinks() {
-  out "Linking dot files to home directory." "" \
-      "Overwritten files will be saved in backup directory." \
-      "To revert to the backup files, execute 'sh ~/revert.sh'."
+
+isIgnored() {
+  for element in "${IGNORED_FILES[@]}"
+  do
+    if [[ "$1" == "$element" ]]; then
+      return 0;
+    fi
+  done;
+  return 1;
+}
+
+backupHome() {
+  [ -d "$BACKUP_DIR" ] || mkdir "$BACKUP_DIR"
+
+  out "Saving overwritten files in "$BACKUP_DIR"."
+
+  local files=()
+  for file in "${SELECTED_FILES[@]}"
+  do
+    local homefile=~/$(basename "$file")
+    # check if file exist
+    if [ ! -e "$homefile" ]
+    then
+      continue
+    fi
+
+    indent "echo "+ Adding $homefile to backup""
+    files+=($(basename "$file"))
+  done
+
+  if [ "${#files[@]}" -eq 0 ]
+  then
+    indent "echo "- No file overwritten""
+    return
+  fi
+  
+  rsyncFiles "${files[@]}"
+}
+
+rsyncFiles() {
+  printf "%s\n" $1 > "$TEMP_FILE"
+  rsync -av --files-from="$TEMP_FILE" --out-format='    %n%L' ~ "$BACKUP_DIR"
+  rm "$TEMP_FILE"
+}
+
+symlinkFiles() {
+  out "Creating symbolic links in home."
+
+  for file in "${SELECTED_FILES[@]}"
+  do
+	indent
+	ln -svf "$file" ~
+  done
+}
+
+areFilesLinked() {
+    
+     echo "are files linked $1 "$SOURCE_DIR/$(basename "$2")""""
+      
+	 
+	if [ -L "$1" ] && [ "$(readlink $1)" = "$SOURCE_DIR/$(basename "$2")" ]
+	then
+	  return 0
+	fi
+	return 1
+}
+
+updateFromRepo() {
+  out "Updating $SOURCE_DIR to master." ""
+
+  cd "$SOURCE_DIR"
+  git pull origin master
+  git submodule foreach git pull origin master
+  cd
+  out
+}
+
+cleanup() {
+  unset -f isIgnored 
+  unset -f symlinkFiles
+  unset -f makeAllLinks
+  unset -f updateFromRepo
+  unset -f areFilesLinked
+  unset -f confirmLinkCreation
+  unset -f initGlobalVariables
+
+  unset SELECTED_FILES
+  unset SOURCE_DIR
+  unset BACKUP_DIR
+  unset REVERT_FILE
+  unset TEMP_FILE
+  unset IGNORED_FILES
+
+}
+
+confirmLinkCreation() {
+  out "Symbolic links required." "" \
+      "Overwritten files in home will be saved in backup directory." \
+      "To revert to the backup files, execute 'sh ~/$(basename "$REVERT_FILE")'."
 
   if [ "$1" == "--force" -o "$1" == "-f" ]
   then
@@ -49,143 +182,43 @@ addSymbolicLinks() {
   out
 }
 
+selectFiles() {
+  out "Scanning dot files:" ""
+  selectDirFiles "$SOURCE_DIR"
+}
+
 makeAllLinks() {
-  loadIgnoredFiles
-  selectFiles
   backupHome
   symlinkFiles
 }
 
-loadIgnoredFiles() {
-  readarray -t IGNORED_FILES < "$DOTFILES_DIR"/.dotignore
-}
-
-selectFiles() {
-  out "Selecting dot files:"
-
-  DOTFILES=()
-  shopt -s dotglob
-
-  for file in $DOTFILES_DIR/*
+out() {
+  printf "\n"
+  for text in "$@"
   do
-    addFile "$file"
-    if [ -d "$file" ] && [ "$ignored" -eq 1 ]
-    then
-      for file in $file/*
-      do
-        addFile "$file"
-      done;
-    fi
+    printf "$text\n"
   done
 }
 
-addFile() {
-  local filename=$(basename "$1")
-  isIgnored "$filename"
-  ignored=$?
-  if [[ "$filename" == .* ]] && [[ "$ignored" -eq 1 ]]
-  then
-    DOTFILES+=("$1")
-    indent "echo "+ Adding $(basename "$1")""
-  fi
+indent() {
+  printf "    "
+  $@
 }
 
-isIgnored() {
-  local ignoredList=( "${IGNORED_FILES[@]}" )
-  ignoredList+=("$(basename "$BACKUP_DIR")")
-  for element in "${ignoredList[@]}"
-  do
-    if [[ "$1" == "$element" ]]; then
-      indent "echo - Ignoring "$1""
-      return 0;
-    fi
-  done;
-  return 1;
-}
-
-backupHome() {
-  [ -d "$BACKUP_DIR" ] || mkdir "$BACKUP_DIR"
-
-  out "Saving previous home files in "$BACKUP_DIR"."
-
-  local files=()
-  for file in "${DOTFILES[@]}"
-  do
-    local homefile=~/"$(basename "$file")"
-    # check if file exist
-    if [ ! -e "$homefile" ]
-    then
-      continue
-    fi
-
-    # check if the file is not already a symlink to our dotfiles
-    if [ -L "$homefile" ] && [ "$(readlink $homefile)" = "$DOTFILES_DIR/$(basename "$file")" ]
-    then
-      continue
-    fi
-
-    indent "echo "+ Adding $homefile to backup""
-    files+=($(basename "$file"))
-  done
-
-  if [ "${#files[@]}" -eq 0 ]
-  then
-    indent "echo "- Nothing to save""
-    return
-  fi
-  printf "%s\n" "${files[@]}" > "$TEMP_FILE"
-  rsync -av --files-from="$TEMP_FILE" --out-format='    %n%L' ~ "$BACKUP_DIR"
-  rm "$TEMP_FILE"
-}
-
-symlinkFiles() {
-  out "Creating symbolic links in home."
-
-  for file in "${DOTFILES[@]}"
-  do
-    linkFile "$file"
-  done
-
-  linkFile "$REVERT_FILE"
-}
-
-linkFile() {
-  indent
-  ln -svf "$1" ~
-}
-
-updateFromRepo() {
-  out "Updating $DOTFILES_DIR to master."
-
-  cd "$DOTFILES_DIR"
-  git pull origin master
-  git submodule foreach git pull origin master
-  cd
-  out
-}
-
-cleanup() {
-  unset -f isIgnored 
-  unset -f symlinkFiles
-  unset -f makeAllLinks
-  unset -f updateFromRepo
-  unset -f addSymbolicLinks
-  unset -f initVar
-  unset excluded_names
-  unset excluded_names
-}
-
-initVar
+initGlobalVariables
 
 updateFromRepo
 
-addSymbolicLinks "$1"
+selectFiles
+
+if [ "${#SELECTED_FILES[@]}" -eq 0 ]
+then
+  out "No new symbolic links required."
+else
+  confirmLinkCreation "$1"
+fi
 
 cleanup
 
-#echo ""
-#echo "CAVEATS"
-#echo "Vim:  If remote server, rm .vimrc.bundles"
-#echo "Bash: If local server, rm .bashrc.local"
-out "Finished."
+out "Finished." ""
 
