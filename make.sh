@@ -1,42 +1,11 @@
 #!/usr/bin/env bash
 
-out() {
-  printf "\n"
-  for text in "$@"
-  do
-    printf "$text\n"
-  done
-}
+loadCommons() {
 
-indent() {
-  printf "    "
-  $@
-}
-
-initGlobalVariables() {
-  shopt -s dotglob
+  local sourcedir="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+  source "$sourcedir"/script/commons.sh
+  initGlobalVariables "$sourcedir"
   
-  SOURCE_DIR=$(getSourceDir)
-  BACKUP_DIR="$SOURCE_DIR"/backup
-  REVERT_FILE="$SOURCE_DIR"/revert_dotfiles.sh
-  TEMP_FILE="$SOURCE_DIR"/files.tmp
-  SELECTED_FILES=()
-  readarray -t IGNORED_FILES < "$SOURCE_DIR"/.dotignore
-  IGNORED_FILES+=("$(basename "$BACKUP_DIR")")
-  MAX_SCAN_LEVEL=1
-}
-
-getSourceDir() {
-  local source="${BASH_SOURCE[0]}"
-  local current
-  # resolve $source until the file is no longer a symlink
-  while [ -h "$source" ]; do
-    current="$( cd -P "$( dirname "$source" )" && pwd )"
-    source="$(readlink "$source")"
-    # if $source was a relative symlink, we need to resolve it relative to the path where the symlink file was located
-    [[ $source != /* ]] && source="$current/$source"
-  done
-  echo "$( cd -P "$( dirname "$source" )" && pwd )"
 }
 
 updateFromRepo() {
@@ -56,23 +25,18 @@ selectFiles() {
 
 selectDirFiles() {
   local level=0 
-  if [ ! -z "$2" ] 
-  then
+  if [ ! -z "$2" ];then
     level=$2
   fi  
   
-  for file in $1/*
-  do
-    if isIllegible "$file"
-	then
+  for file in $1/*;do
+    if isIllegible "$file"; then
       SELECTED_FILES+=("$file")
       indent echo "+ Selecting "$file""
 	else
 	  # look for dotfiles in subfolders
-      if [ -d "$file" ] && [ $level -lt $MAX_SCAN_LEVEL ]
-      then
-        if ! isIgnored $(basename "$file") 
-        then
+      if [ -d "$file" ] && [ "$level" -lt $MAX_SCAN_LEVEL ]; then
+        if ! isIgnored $(basename "$file"); then
             selectDirFiles "$file" $((level+1))
         fi
 	  fi
@@ -82,38 +46,33 @@ selectDirFiles() {
 
 isIllegible() {
   local filename=$(basename "$1")
-  if [[ "$filename" != .* ]] 
-  then
+  if [[ "$filename" != .* ]] ;then
     return 1
   fi
 
   # check if the file is not already a symlink to our dotfiles
-  if areFilesLinked ~/"$filename" "$1" 
-  then
+  if areFilesLinked ~/"$filename" "$1";then
     indent echo "- Skipping "$1" (already symlinked)"
 	return 1
   fi
 
   # check if the file is in the ignored list
-  if isIgnored "$filename"
-  then
+  if isIgnored "$filename";then
     indent echo "- Ignoring "$1""
     return 1
   fi
 }
 
 areFilesLinked() {
-  if [ -L "$1" ] && [ "$(readlink $1)" = "$2" ]
-  then
+  if [ -L "$1" ] && [ "$(readlink $1)" = "$2" ];then
     return 0
   fi
   return 1
 }
 
 isIgnored() {
-  for element in "${IGNORED_FILES[@]}"
-  do
-    if [[ "$1" == "$element" ]]; then
+  for element in "${IGNORED_FILES[@]}";do
+    if [[ "$1" == "$element" ]];then
       return 0;
     fi
   done;
@@ -121,8 +80,7 @@ isIgnored() {
 }
 
 createSymLinks() {
-  if [ "${#SELECTED_FILES[@]}" -eq 0 ]
-  then
+  if [ "${#SELECTED_FILES[@]}" -eq 0 ];then
     out "No new symbolic links required."
   else
     confirmLinkCreation "$1"
@@ -135,15 +93,13 @@ confirmLinkCreation() {
       "Overwritten files in home will be saved in backup directory." \
       "To revert to the backup files, execute 'sh ~/$(basename "$REVERT_FILE")'."
 
-  if [ "$1" == "--force" -o "$1" == "-f" ]
-  then
+  if [ "$1" == "--force" -o "$1" == "-f" ];then
     out
     backupAndLinkFiles
   else
     read -p "Do you want to continue? (y/n) " -n 1;
     out
-    if [[ $REPLY =~ ^[Yy]$ ]]
-    then
+    if [[ $REPLY =~ ^[Yy]$ ]];then
       backupAndLinkFiles
     fi
   fi
@@ -161,12 +117,10 @@ backupHome() {
   out "Saving overwritten files in "$BACKUP_DIR"."
 
   local files=()
-  for file in "${SELECTED_FILES[@]}"
-  do
+  for file in "${SELECTED_FILES[@]}";do
     local homefile=~/$(basename "$file")
     # check if file exist
-    if [ ! -e "$homefile" ]
-    then
+    if [ ! -e "$homefile" ];then
       continue
     fi
 
@@ -174,8 +128,7 @@ backupHome() {
     files+=($(basename "$file"))
   done
 
-  if [ "${#files[@]}" -eq 0 ]
-  then
+  if [ "${#files[@]}" -eq 0 ];then
     indent echo "- No backup required"
     return
   fi
@@ -192,8 +145,7 @@ copyFiles() {
 symlinkFiles() {
   out "Creating symbolic links in home."
 
-  for file in "${SELECTED_FILES[@]}"
-  do
+  for file in "${SELECTED_FILES[@]}";do
 	indent
 	ln -svf "$file" ~
   done
@@ -201,13 +153,7 @@ symlinkFiles() {
 
 cleanup() {
 
-  unset SELECTED_FILES
-  unset SOURCE_DIR
-  unset BACKUP_DIR
-  unset REVERT_FILE
-  unset TEMP_FILE
-  unset IGNORED_FILES
-  unset MAX_SCAN_LEVEL
+  cleanupGlobalVariables
   
   unset -f isIgnored 
   unset -f isIllegible
@@ -225,18 +171,17 @@ cleanup() {
   unset -f copyFiles
   unset -f getSourceDir
   unset -f cleanup
-  unset -f indent
-  
+ 
   out "Finished." ""
-  unset -f out
+
 }
 
-initGlobalVariables
+loadCommons
 
 updateFromRepo
 
 selectFiles
 
-createSymLinks
+createSymLinks "$1"
 
 cleanup
