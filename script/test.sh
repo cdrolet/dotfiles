@@ -1,45 +1,17 @@
 #!/usr/bin/env bash
 
-out() {
-  printf "\n"
-  for text in "$@"
-  do
-    printf "$text\n"
-  done
-}
-
-indent() {
-  printf "    "
-  $@
-}
-
 initTestVariables() {
-  shopt -s dotglob
+
+    local sourcedir="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+    source "$sourcedir"/commons.sh
+    initGlobalVariables "$commons.sh"
   
-  SOURCE_DIR=$(getSourceDir)
-  BACKUP_DIR="$SOURCE_DIR"/backup
-  REVERT_FILE="$SOURCE_DIR"/revert_dotfiles.sh
-  
-  FILE_1=.test1
-  FILE_2=.test2
-  DIR_3=tests
-  FILE_3=.test3
+    FILE_1=.test1
+    FILE_2=.test2
+    DIR_3=tests
+    FILE_3=.test3
    
 }
-
-getSourceDir() {
-  local source="${BASH_SOURCE[0]}"
-  local current
-  # resolve $source until the file is no longer a symlink
-  while [ -h "$source" ]; do
-    current="$( cd -P "$( dirname "$source" )" && pwd )"
-    source="$(readlink "$source")"
-    # if $source was a relative symlink, we need to resolve it relative to the path where the symlink file was located
-    [[ $source != /* ]] && source="$current/$source"
-  done
-  echo "$( cd -P "$( dirname "$source" )" && pwd )"
-}
-
 
 testScenario_1() {
     

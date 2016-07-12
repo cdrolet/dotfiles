@@ -36,11 +36,12 @@ selectDirFiles() {
             SELECTED_FILES+=("$file")
 
             local homefile=~/$(basename "$file")
-            # check if file exist
+            # check if file exist in home
             if [ -e "$homefile" ];then
-                local detail="(home file to be overwritten)"
+                local detail="(exist in home)"
+                OVERWRITTEN_FILES+=($(basename "$file"))
             else
-                local detail="(new file)"
+                local detail="(new home file)"
             fi
             
             indent echo "+ Selecting "$file" "$detail""
@@ -105,21 +106,22 @@ createSymLinks() {
 
 confirmLinkCreation() {
 
-    out "Symbolic links creation required in home." "" \
-        "Overwritten files in home will be saved in backup directory." \
-        "To revert to the backup files, execute 'sh ~/$(basename "$REVERT_FILE")'."
+    out "Symbolic links creation required in home."
+    
+    if [ "${#OVERWRITTEN_FILES[@]}" -gt 0 ];then
+        out "Overwritten files in home will be saved in backup directory." \
+        "To revert home to the backup files, execute 'sh ~/$(basename "$REVERT_FILE")'."
+    fi
 
     if [ "$1" == "--force" -o "$1" == "-f" ];then
-        out
         backupAndLinkFiles
     else
-        read -p "Do you want to continue? (y/n) " -n 1;
+        read -p "Do you want to proceed? (y/n) " -n 1;
         out
         if [[ $REPLY =~ ^[Yy]$ ]];then
             backupAndLinkFiles
         fi
     fi
-    out
 }
 
 backupAndLinkFiles() {
@@ -129,32 +131,13 @@ backupAndLinkFiles() {
 
 backupHome() {
 
-    [ -d "$BACKUP_DIR" ] || mkdir "$BACKUP_DIR"
-
-    out "Saving overwritten files in "$BACKUP_DIR"."
-
-    local files=()
-    for file in "${SELECTED_FILES[@]}";do
-        local homefile=~/$(basename "$file")
-        # check if file exist
-        if [ ! -e "$homefile" ];then
-            continue
-        fi
-
-        indent echo "+ Adding $homefile to backup"
-        files+=($(basename "$file"))
-    done
-
-    if [ "${#files[@]}" -eq 0 ];then
-        indent echo "- No backup required"
+    if [ "${#OVERWRITTEN_FILES[@]}" -eq 0 ];then
         return
     fi
 
-    copyFiles "${files[@]}"
-}
-
-copyFiles() {
-    printf "%s\n" $1 > "$TEMP_FILE"
+    [ -d "$BACKUP_DIR" ] || mkdir "$BACKUP_DIR"
+    
+    printf "%s\n" $OVERWRITTEN_FILES > "$TEMP_FILE"
     rsync -av --files-from="$TEMP_FILE" --out-format='    %n%L' ~ "$BACKUP_DIR"
     rm "$TEMP_FILE"
 }

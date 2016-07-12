@@ -20,6 +20,7 @@ initGlobalVariables() {
     REVERT_FILE="$SOURCE_DIR"/revert_dotfiles.sh
     TEMP_FILE="$SOURCE_DIR"/files.tmp
     SELECTED_FILES=()
+    OVERWRITTEN_FILES=()
     readarray -t IGNORED_FILES < "$SOURCE_DIR"/.dotignore
     IGNORED_FILES+=("$(basename "$BACKUP_DIR")")
     MAX_SCAN_LEVEL=1
