@@ -13,14 +13,14 @@ updateFromRepo() {
 
     cd "$SOURCE_DIR"
     git pull origin master
-    git submodule foreach git pull origin master
+#    git submodule foreach git pull origin master
     cd
     out
 }
 
 selectFiles() {
 
-    out "Scanning dot files:" ""
+    out "Scanning dot files:"
     selectDirFiles "$SOURCE_DIR"
 }
 
@@ -38,10 +38,10 @@ selectDirFiles() {
             local homefile=~/$(basename "$file")
             # check if file exist in home
             if [ -e "$homefile" ];then
-                local detail="(exist in home)"
+                local detail="(* exist in home)"
                 OVERWRITTEN_FILES+=($(basename "$file"))
             else
-                local detail="(new home file)"
+                local detail="(new dotfile)"
             fi
             
             indent echo "+ Selecting "$file" "$detail""
@@ -109,8 +109,8 @@ confirmLinkCreation() {
     out "Symbolic links creation required in home."
     
     if [ "${#OVERWRITTEN_FILES[@]}" -gt 0 ];then
-        out "Overwritten files in home will be saved in backup directory." \
-        "To revert home to the backup files, execute 'sh ~/$(basename "$REVERT_FILE")'."
+        out "* Overwritten files in home will be saved in $BACKUP_DIR." \
+        "To revert dot files to the backup files, execute 'sh ~/$(basename "$REVERT_FILE")'."
     fi
 
     if [ "$1" == "--force" -o "$1" == "-f" ];then
@@ -137,13 +137,14 @@ backupHome() {
 
     [ -d "$BACKUP_DIR" ] || mkdir "$BACKUP_DIR"
     
-    printf "%s\n" $OVERWRITTEN_FILES > "$TEMP_FILE"
-    rsync -av --files-from="$TEMP_FILE" --out-format='    %n%L' ~ "$BACKUP_DIR"
+    out "Transfering existing files to "$BACKUP_DIR":" 
+    printf "%s\r" ${OVERWRITTEN_FILES[@]} > "$TEMP_FILE"
+    rsync -ahH --files-from="$TEMP_FILE" --out-format='    %n%L' ~ "$BACKUP_DIR"
     rm "$TEMP_FILE"
 }
 
 symlinkFiles() {
-    out "Creating symbolic links in home."
+    out "Creating symbolic links in home:" 
 
     for file in "${SELECTED_FILES[@]}";do
         indent
