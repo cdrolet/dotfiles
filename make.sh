@@ -20,11 +20,18 @@ updateFromRepo() {
 
 selectFiles() {
 
-    out "Scanning dot files:"
-    selectDirFiles "$SOURCE_DIR"
+    if [ -z $TARGET ]; then
+        out "Scanning dot files:"
+        scanDir "$SOURCE_DIR"
+    else
+        # Not good, should target dir as well
+        if isIllegible "$TARGET"; then
+            selectFile "$TARGET"
+        fi
+    fi
 }
 
-selectDirFiles() {
+scanDir() {
 
     local level=0 
     if [ ! -z "$2" ];then
@@ -33,27 +40,32 @@ selectDirFiles() {
 
     for file in $1/*;do
         if isIllegible "$file"; then
-            SELECTED_FILES+=("$file")
-
-            local homefile=~/$(basename "$file")
-            # check if file exist in home
-            if [ -e "$homefile" ];then
-                local detail="(* exist in home)"
-                OVERWRITTEN_FILES+=($(basename "$file"))
-            else
-                local detail="(new dotfile)"
-            fi
-            
-            indent echo "+ Selecting "$file" "$detail""
+            selectFile $file
         else
             # look for dotfiles in subfolders
             if [ -d "$file" ] && [ "$level" -lt $MAX_SCAN_LEVEL ]; then
                 if ! isIgnored $(basename "$file"); then
-                    selectDirFiles "$file" $((level+1))
+                    scanDir "$file" $((level+1))
                 fi
             fi
         fi
     done
+}
+
+selectFile() {
+
+    SELECTED_FILES+=("$1")
+
+    local homefile=~/$(basename "$1")
+    # check if file exist in home
+    if [ -e "$homefile" ];then
+        local detail="(* exist in home)"
+        OVERWRITTEN_FILES+=($(basename "$1"))
+    else
+        local detail="(new dotfile)"
+    fi
+    
+    indent echo "+ Selecting "$1" "$detail""
 }
 
 isIllegible() {
@@ -113,7 +125,7 @@ confirmLinkCreation() {
         "To revert dot files to the backup files, execute 'sh ~/$(basename "$REVERT_FILE")'."
     fi
 
-    if [ "$1" == "--force" -o "$1" == "-f" ];then
+    if [ "$FORCE" -eq 0 ];then
         backupAndLinkFiles
     else
         read -p "Do you want to proceed? (y/n) " -n 1;
@@ -166,7 +178,7 @@ cleanup() {
     unset -f confirmLinkCreation
     unset -f initGlobalVariables
     unset -f isIllegible
-    unset -f selectDirFiles
+    unset -f scanDir
     unset -f selectFiles
     unset -f createSymLinks
     unset -f copyFiles
@@ -177,6 +189,21 @@ cleanup() {
 }
 
 loadCommons
+
+while getopts 'ft:v' flag; do
+    case "${flag}" in
+        f) FORCE=0 ;;
+        r) REVERT=0 ;;
+        t) TARGET="${OPTARG}" ;;
+        *) error "Unexpected option ${flag}" ;;
+    esac
+done
+
+# Missing conflicting files check
+
+# 
+
+readCommandArgs
 
 updateFromRepo
 

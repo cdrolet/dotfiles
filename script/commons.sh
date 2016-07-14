@@ -24,6 +24,11 @@ initGlobalVariables() {
     readarray -t IGNORED_FILES < "$SOURCE_DIR"/.dotignore
     IGNORED_FILES+=("$(basename "$BACKUP_DIR")")
     MAX_SCAN_LEVEL=1
+    FORCE=1
+    
+}
+
+readCommandArgs() {
 }
 
 cleanupGlobalVariables() {
