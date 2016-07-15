@@ -1,10 +1,42 @@
 #!/usr/bin/env bash
 
-loadCommons() {
+out() {
+    printf "\n"
+    for text in "$@";do
+        printf "$text\n"
+    done
+}
 
-    local sourcedir="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-    source "$sourcedir"/script/commons.sh
-    initGlobalVariables "$sourcedir"
+ind() {
+    printf "    "
+}
+
+readCommandArgs() {
+    while getopts 'ft:v' flag; do
+        case "${flag}" in
+            f) FORCE=0 ;;
+            r) REVERT=0 ;;
+            t) TARGET="${OPTARG}" ;;
+            *) error "Unexpected option ${flag}" ;;
+        esac
+    done
+}
+
+initGlobalVariables() {
+    shopt -s dotglob
+
+    SOURCE_DIR="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+    BACKUP_DIR="$SOURCE_DIR"/backup
+    REVERT_FILE="$SOURCE_DIR"/revert_dotfiles.sh
+    TEMP_FILE="$SOURCE_DIR"/files.tmp
+    SELECTED_FILES=()
+    OVERWRITTEN_FILES=()
+    REJECTED_FILES=()
+    readarray -t IGNORED_FILES < "$SOURCE_DIR"/.dotignore
+    IGNORED_FILES+=("$(basename "$BACKUP_DIR")")
+    MAX_SCAN_LEVEL=1
+    FORCE=1
+    
 }
 
 updateFromRepo() {
@@ -52,40 +84,35 @@ scanDir() {
     done
 }
 
-selectFile() {
-
-    SELECTED_FILES+=("$1")
-
-    local homefile=~/$(basename "$1")
-    # check if file exist in home
-    if [ -e "$homefile" ];then
-        local detail="(* exist in home)"
-        OVERWRITTEN_FILES+=($(basename "$1"))
-    else
-        local detail="(new dotfile)"
-    fi
-    
-    indent echo "+ Selecting "$1" "$detail""
-}
-
 isIllegible() {
 
     local filename=$(basename "$1")
     if [[ "$filename" != .* ]] ;then
         return 1
     fi
-
+    
     # check if the file is not already a symlink to our dotfiles
     if areFilesLinked ~/"$filename" "$1";then
-        indent echo "- Skipping "$1" (already symlinked)"
+        ind; echo "- Skipping "$1" (already symlinked)"
         return 1
     fi
 
     # check if the file is in the ignored list
     if isIgnored "$filename";then
-        indent echo "- Ignoring "$1""
+        ind; echo "- Ignoring "$1""
         return 1
     fi
+
+    # check if the file is not in conflict with another selected file
+    for element in "${SELECTED_FILES[@]}"; do
+        if [[ $(basename "$element") == "$filename" ]]; then
+            ind; echo "! Rejecting "$1" (in conflict with "$element")"
+            REJECTED_FILES+=($1)
+            return 1
+        fi
+    done    
+    
+    return 0
 }
 
 areFilesLinked() {
@@ -106,12 +133,27 @@ isIgnored() {
     return 1;
 }
 
+selectFile() {
+
+    SELECTED_FILES+=("$1")
+
+    local homefile=~/$(basename "$1")
+    # check if file exist in home
+    if [ -e "$homefile" ];then
+        OVERWRITTEN_FILES+=($(basename "$1"))
+        ind; echo "* Selecting "$1" (exist in home)"
+        return
+    fi
+
+    ind; echo "+ Selecting "$1" (new dotfile)"
+}
+
 createSymLinks() {
 
     if [ "${#SELECTED_FILES[@]}" -eq 0 ];then
         out "No new symbolic links required."
     else
-        confirmLinkCreation "$1"
+        confirmLinkCreation
     fi
 }
 
@@ -119,10 +161,14 @@ createSymLinks() {
 confirmLinkCreation() {
 
     out "Symbolic links creation required in home."
-    
+
     if [ "${#OVERWRITTEN_FILES[@]}" -gt 0 ];then
         out "* Overwritten files in home will be saved in $BACKUP_DIR." \
         "To revert dot files to the backup files, execute 'sh ~/$(basename "$REVERT_FILE")'."
+    fi
+
+    if [ "${#REJECTED_FILES[@]}" -gt 0 ];then
+        out "! Warning, conflict detected."  
     fi
 
     if [ "$FORCE" -eq 0 ];then
@@ -159,16 +205,13 @@ symlinkFiles() {
     out "Creating symbolic links in home:" 
 
     for file in "${SELECTED_FILES[@]}";do
-        indent
-        ln -svf "$file" ~
+        ind; ln -svf "$file" ~
     done
 }
 
 cleanup() {
 
-    cleanupGlobalVariables
-
-    unset -f isIgnored 
+unset -f isIgnored 
     unset -f isIllegible
     unset -f areFilesLinked
     unset -f symlinkFiles
@@ -185,30 +228,25 @@ cleanup() {
     unset -f getSourceDir
     unset -f cleanup
 
+    unset SELECTED_FILES
+    unset SOURCE_DIR
+    unset BACKUP_DIR
+    unset REVERT_FILE
+    unset TEMP_FILE
+    unset IGNORED_FILES
+    unset MAX_SCAN_LEVEL
+    
     out "Finished." ""
 }
 
-loadCommons
-
-while getopts 'ft:v' flag; do
-    case "${flag}" in
-        f) FORCE=0 ;;
-        r) REVERT=0 ;;
-        t) TARGET="${OPTARG}" ;;
-        *) error "Unexpected option ${flag}" ;;
-    esac
-done
-
-# Missing conflicting files check
-
-# 
-
-readCommandArgs
+initGlobalVariables
 
 updateFromRepo
 
+readCommandArgs "$@"
+
 selectFiles
 
-createSymLinks "$1"
+createSymLinks
 
 cleanup
