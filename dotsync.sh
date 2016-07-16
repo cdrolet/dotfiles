@@ -34,9 +34,9 @@ initGlobalVariables() {
     REJECTED_FILES=()
     readarray -t IGNORED_FILES < "$SOURCE_DIR"/.dotignore
     IGNORED_FILES+=("$(basename "$BACKUP_DIR")")
-    MAX_SCAN_LEVEL=1
+    MAX_SCAN_LEVEL=2
     FORCE=1
-    
+
 }
 
 updateFromRepo() {
@@ -54,50 +54,54 @@ selectFiles() {
 
     if [ -z $TARGET ]; then
         out "Scanning dot files:"
-        scanDir "$SOURCE_DIR"
-    else
-        # Not good, should target dir as well
-        if isIllegible "$TARGET"; then
-            selectFile "$TARGET"
-        fi
+        selectFileTree "$SOURCE_DIR"
+        return
     fi
+
+    out "targeting dot files: "$TARGET""
+    selectFileTree "$TARGET" 1
+}
+
+selectFileTree() {
+
+  if isIllegible "$1"; then
+      selectFile $1
+      return
+  fi
+
+  local level=0
+  [ ! -z "$2" ] && level=$2
+
+  # look for dotfiles in subfolders
+  if [ -d "$1" ] && [ "$level" -lt $MAX_SCAN_LEVEL ]; then
+      if ! isIgnored $(basename "$1"); then
+          scanDir "$1" $((level+1))
+      fi
+  fi
 }
 
 scanDir() {
-
-    local level=0 
-    if [ ! -z "$2" ];then
-        level=$2
-    fi  
-
+	ind; echo "> scanning dir $1"
     for file in $1/*;do
-        if isIllegible "$file"; then
-            selectFile $file
-        else
-            # look for dotfiles in subfolders
-            if [ -d "$file" ] && [ "$level" -lt $MAX_SCAN_LEVEL ]; then
-                if ! isIgnored $(basename "$file"); then
-                    scanDir "$file" $((level+1))
-                fi
-            fi
-        fi
+      selectFileTree "$file" $2
     done
 }
 
 isIllegible() {
 
+    [[ "$SOURCE_DIR" == $filename ]] && return 1
+
     local filename=$(basename "$1")
-    if [[ "$filename" != .* ]] ;then
-        return 1
-    fi
-    
+
+    [[ "$filename" != .* ]] && return 1
+
     # check if the file is not already a symlink to our dotfiles
     if areFilesLinked ~/"$filename" "$1";then
         ind; echo "- Skipping "$1" (already symlinked)"
         return 1
     fi
 
-    # check if the file is in the ignored list
+    # check if the file is not in the ignored list
     if isIgnored "$filename";then
         ind; echo "- Ignoring "$1""
         return 1
@@ -110,8 +114,8 @@ isIllegible() {
             REJECTED_FILES+=($1)
             return 1
         fi
-    done    
-    
+    done
+
     return 0
 }
 
@@ -168,7 +172,7 @@ confirmLinkCreation() {
     fi
 
     if [ "${#REJECTED_FILES[@]}" -gt 0 ];then
-        out "! Warning, conflict detected."  
+        out "! Warning, conflict detected."
     fi
 
     if [ "$FORCE" -eq 0 ];then
@@ -194,15 +198,15 @@ backupHome() {
     fi
 
     [ -d "$BACKUP_DIR" ] || mkdir "$BACKUP_DIR"
-    
-    out "Transfering existing files to "$BACKUP_DIR":" 
+
+    out "Transfering existing files to "$BACKUP_DIR":"
     printf "%s\r" ${OVERWRITTEN_FILES[@]} > "$TEMP_FILE"
-    rsync -ahH --files-from="$TEMP_FILE" --out-format='    %n%L' ~ "$BACKUP_DIR"
+    rsync -ahH --files-from="$TEMP_FILE" --out-format='    %f -> $BACKUP_DIR' ~ "$BACKUP_DIR"
     rm "$TEMP_FILE"
 }
 
 symlinkFiles() {
-    out "Creating symbolic links in home:" 
+    out "Creating symbolic links in home:"
 
     for file in "${SELECTED_FILES[@]}";do
         ind; ln -svf "$file" ~
@@ -211,7 +215,7 @@ symlinkFiles() {
 
 cleanup() {
 
-unset -f isIgnored 
+unset -f isIgnored
     unset -f isIllegible
     unset -f areFilesLinked
     unset -f symlinkFiles
@@ -235,7 +239,7 @@ unset -f isIgnored
     unset TEMP_FILE
     unset IGNORED_FILES
     unset MAX_SCAN_LEVEL
-    
+
     out "Finished." ""
 }
 
