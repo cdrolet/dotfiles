@@ -12,7 +12,7 @@ ind() {
 }
 
 readCommandArgs() {
-    while getopts 'ft:v' flag; do
+    while getopts 'frt:v' flag; do
         case "${flag}" in
             f) FORCE=0 ;;
             r) REVERT=0 ;;
@@ -22,20 +22,24 @@ readCommandArgs() {
     done
 }
 
-initGlobalVariables() {
+initSynchVariables() {
     shopt -s dotglob
 
     SOURCE_DIR="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
     BACKUP_DIR="$SOURCE_DIR"/backup
-    REVERT_FILE="$SOURCE_DIR"/revert_dotfiles.sh
+    REVERT_FILE="$SOURCE_DIR"/dotrevert.sh
     TEMP_FILE="$SOURCE_DIR"/files.tmp
     SELECTED_FILES=()
+    SKIPPED_FILES=()
     OVERWRITTEN_FILES=()
     REJECTED_FILES=()
+    TO_REMOVE_FILES=()
+    TO_RESTORE_FILES=()
     readarray -t IGNORED_FILES < "$SOURCE_DIR"/.dotignore
     IGNORED_FILES+=("$(basename "$BACKUP_DIR")")
     MAX_SCAN_LEVEL=2
-    FORCE=1
+    FORCE=1 #false
+    REVERT=1 #false
 
 }
 
@@ -54,12 +58,11 @@ selectFiles() {
 
     if [ -z $TARGET ]; then
         out "Scanning dot files:"
-        selectFileTree "$SOURCE_DIR"
-        return
+    else
+        out "targeting dot files: "$TARGET""
     fi
 
-    out "targeting dot files: "$TARGET""
-    selectFileTree "$TARGET" 1
+    selectFileTree "$SOURCE_DIR"
 }
 
 selectFileTree() {
@@ -81,7 +84,6 @@ selectFileTree() {
 }
 
 scanDir() {
-	ind; echo "> scanning dir $1"
     for file in $1/*;do
       selectFileTree "$file" $2
     done
@@ -89,14 +91,17 @@ scanDir() {
 
 isIllegible() {
 
-    [[ "$SOURCE_DIR" == $filename ]] && return 1
+    [[ "$SOURCE_DIR" == "$1" ]] && return 1
 
     local filename=$(basename "$1")
 
     [[ "$filename" != .* ]] && return 1
 
+    [[ ! -z $TARGET ]]  && [[ "$filename" != $TARGET ]] && return 1
+    
     # check if the file is not already a symlink to our dotfiles
-    if areFilesLinked ~/"$filename" "$1";then
+    if areFilesLinked $HOME/"$filename" "$1";then
+        SKIPPED_FILES+=($1)
         ind; echo "- Skipping "$1" (already symlinked)"
         return 1
     fi
@@ -108,20 +113,45 @@ isIllegible() {
     fi
 
     # check if the file is not in conflict with another selected file
-    for element in "${SELECTED_FILES[@]}"; do
-        if [[ $(basename "$element") == "$filename" ]]; then
-            ind; echo "! Rejecting "$1" (in conflict with "$element")"
-            REJECTED_FILES+=($1)
-            return 1
-        fi
-    done
+    if isFileInConflictWith "$1" SELECTED_FILES; then
+        return 1
+    fi
+    
+    # check if the file is not in conflict with a skipped file    
+    if isFileInConflictWith "$1" SKIPPED_FILES; then
+        return 1
+    fi
 
     return 0
+}
+
+isFileInConflictWith() {
+    local filename=$(basename "$1")
+    local arrayname=$2[@]
+    
+    files=("${!arrayname}")
+    
+    for element in "${files[@]}"; do
+        if [[ $(basename "$element") == "$filename" ]]; then
+            ind; echo "! Rejecting "$1" (in conflict with "$element")"   
+            REJECTED_FILES+=($1)
+            return 0
+        fi
+    done
+    
+    return 1
 }
 
 areFilesLinked() {
 
     if [ -L "$1" ] && [ "$(readlink $1)" = "$2" ];then
+        return 0
+    fi
+    return 1
+}
+
+areFileLinkPointToward() {
+    if [[ -L "$1" ]] && [[ "$(readlink $1)" == "$2"* ]];then
         return 0
     fi
     return 1
@@ -141,7 +171,7 @@ selectFile() {
 
     SELECTED_FILES+=("$1")
 
-    local homefile=~/$(basename "$1")
+    local homefile=$HOME/$(basename "$1")
     # check if file exist in home
     if [ -e "$homefile" ];then
         OVERWRITTEN_FILES+=($(basename "$1"))
@@ -152,8 +182,110 @@ selectFile() {
     ind; echo "+ Selecting "$1" (new dotfile)"
 }
 
+performAction() {
+
+    if [ "$REVERT" -eq 0 ];then
+        revertSymLinks
+        return
+    fi
+        
+    createSymLinks
+}
+
+revertSymLinks() {
+    
+    selectFileToRevert
+    
+    if [ "${#TO_REMOVE_FILES[@]}" -eq 0 ] && [ "${#TO_RESTORE_FILES[@]}" -eq 0 ];then
+        out "No files to revert."
+    else
+        confirmRevert
+    fi
+
+}
+
+selectFileToRevert() {
+
+    if [ -z $TARGET ]; then
+        out "Scanning home files to remove:"
+        selectFilesToRemove
+        out "Scanning backup files to restore:"
+        selectFilesToRestore
+        return
+    fi
+    
+    #TODO
+    #out "reverting dot files: "$TARGET""
+}
+
+
+selectFilesToRemove() {
+    for file in $HOME/*;do
+        # check if the file is not a symlink to our dotdir
+        if areFileLinkPointToward "$file" "$SOURCE_DIR";then
+            TO_REMOVE_FILES+=($file)
+            ind; echo "- Selecting "$file""
+        fi
+    done
+    if [ ${#TO_REMOVE_FILES[@]} -eq 0 ]; then
+        ind; echo "No file to be removed in home." 
+    fi
+}
+
+selectFilesToRestore() {
+    for file in $BACKUP_DIR/*;do
+        local homefile="$HOME/$(basename $file)"
+        if [ -e "$homefile" ] && [ ! -L "$homefile" ] && [ ! $file -nt "$homefile" ]; then
+            ind; echo "- Skipping "$file" (already in home)"
+            continue
+        fi
+    
+        TO_RESTORE_FILES+=($file)
+        ind; echo "+ Selecting "$file""
+    done
+    if [ ${#TO_RESTORE_FILES[@]} -eq 0 ]; then
+        ind; echo "No file to be restored from backup." 
+    fi
+
+}
+
+confirmRevert() {
+
+    echo
+    [ ${#TO_REMOVE_FILES[@]} -gt 0 ] && echo "- "${#TO_REMOVE_FILES[@]}" files to be removed in home." 
+    [ ${#TO_RESTORE_FILES[@]} -gt 0 ] && echo "+ "${#TO_RESTORE_FILES[@]}" files to be restored from backup."
+
+    if [ "$FORCE" -eq 0 ];then
+        removeAndRestoreFiles
+    else
+        read -p "Do you want to proceed? (y/n) " -n 1;
+        echo
+        if [[ $REPLY =~ ^[Yy]$ ]];then
+            removeAndRestoreFiles
+        fi
+    fi
+}
+
+removeAndRestoreFiles() {
+    removeFiles
+    restoreFiles
+}
+
+removeFiles() {
+    for file in "${TO_REMOVE_FILES[@]}";do
+        ind; rm -vf "$file"
+    done
+}
+
+restoreFiles() {
+    echo
+    rsync -ahH --out-format='    %f' "$BACKUP_DIR"/* "$HOME"
+}
+
 createSymLinks() {
 
+    selectFiles
+    
     if [ "${#SELECTED_FILES[@]}" -eq 0 ];then
         out "No new symbolic links required."
     else
@@ -161,23 +293,22 @@ createSymLinks() {
     fi
 }
 
-
 confirmLinkCreation() {
 
-    out "Symbolic links creation required in home."
+    echo "+ ${#SELECTED_FILES[@]} symbolic links to be added in home."
 
     if [ "${#OVERWRITTEN_FILES[@]}" -gt 0 ];then
-        out "* Overwritten files in home will be saved in $BACKUP_DIR." \
-        "To revert dot files to the backup files, execute 'sh ~/$(basename "$REVERT_FILE")'."
+        echo "* ${#OVERWRITTEN_FILES[@]} files in home will be saved in $BACKUP_DIR."
     fi
 
     if [ "${#REJECTED_FILES[@]}" -gt 0 ];then
-        out "! Warning, conflict detected."
+        echo "! Warning, ${#REJECTED_FILES[@]} dot files in conflict."
     fi
 
     if [ "$FORCE" -eq 0 ];then
         backupAndLinkFiles
     else
+        out "To revert changes, execute 'sh ~/$(basename "$REVERT_FILE")'."
         read -p "Do you want to proceed? (y/n) " -n 1;
         out
         if [[ $REPLY =~ ^[Yy]$ ]];then
@@ -196,20 +327,20 @@ backupHome() {
     if [ "${#OVERWRITTEN_FILES[@]}" -eq 0 ];then
         return
     fi
-
-    [ -d "$BACKUP_DIR" ] || mkdir "$BACKUP_DIR"
+    
+    rm -rfd "$BACKUP_DIR"
+    mkdir "$BACKUP_DIR"
 
     out "Transfering existing files to "$BACKUP_DIR":"
     printf "%s\r" ${OVERWRITTEN_FILES[@]} > "$TEMP_FILE"
-    rsync -ahH --files-from="$TEMP_FILE" --out-format='    %f -> $BACKUP_DIR' ~ "$BACKUP_DIR"
+    rsync -ahH --files-from="$TEMP_FILE" --out-format='    %f' "$HOME" "$BACKUP_DIR"
     rm "$TEMP_FILE"
 }
 
 symlinkFiles() {
     out "Creating symbolic links in home:"
-
     for file in "${SELECTED_FILES[@]}";do
-        ind; ln -svf "$file" ~
+        ind; ln -svf $file $HOME
     done
 }
 
@@ -223,7 +354,7 @@ unset -f isIgnored
     unset -f updateFromRepo
     unset -f areFilesLinked
     unset -f confirmLinkCreation
-    unset -f initGlobalVariables
+    unset -f initSynchVariables
     unset -f isIllegible
     unset -f scanDir
     unset -f selectFiles
@@ -243,14 +374,12 @@ unset -f isIgnored
     out "Finished." ""
 }
 
-initGlobalVariables
+initSynchVariables
 
 updateFromRepo
 
 readCommandArgs "$@"
 
-selectFiles
-
-createSymLinks
+performAction
 
 cleanup
