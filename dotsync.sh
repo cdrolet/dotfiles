@@ -12,10 +12,12 @@ ind() {
 }
 
 readCommandArgs() {
-    while getopts 'frt:v' flag; do
+    FORCE=1
+    REVERT=1
+
+    while getopts 'ft:v' flag; do
         case "${flag}" in
             f) FORCE=0 ;;
-            r) REVERT=0 ;;
             t) TARGET="${OPTARG}" ;;
             *) error "Unexpected option ${flag}" ;;
         esac
@@ -33,13 +35,9 @@ initSynchVariables() {
     SKIPPED_FILES=()
     OVERWRITTEN_FILES=()
     REJECTED_FILES=()
-    TO_REMOVE_FILES=()
-    TO_RESTORE_FILES=()
     readarray -t IGNORED_FILES < "$SOURCE_DIR"/.dotignore
     IGNORED_FILES+=("$(basename "$BACKUP_DIR")")
     MAX_SCAN_LEVEL=2
-    FORCE=1 #false
-    REVERT=1 #false
 
 }
 
@@ -142,14 +140,6 @@ isFileInConflictWith() {
     return 1
 }
 
-areFilesLinked() {
-
-    if [ -L "$1" ] && [ "$(readlink $1)" = "$2" ];then
-        return 0
-    fi
-    return 1
-}
-
 areFileLinkPointToward() {
     if [[ -L "$1" ]] && [[ "$(readlink $1)" == "$2"* ]];then
         return 0
@@ -182,109 +172,6 @@ selectFile() {
     ind; echo "+ Selecting "$1" (new dotfile)"
 }
 
-performAction() {
-
-    if [ "$REVERT" -eq 0 ];then
-        revertSymLinks
-        return
-    fi
-        
-    createSymLinks
-}
-
-revertSymLinks() {
-    
-    selectFileToRevert
-    
-    if [ "${#TO_REMOVE_FILES[@]}" -eq 0 ] && [ "${#TO_RESTORE_FILES[@]}" -eq 0 ];then
-        out "No files to revert."
-    else
-        confirmRevert
-    fi
-
-}
-
-selectFileToRevert() {
-    selectFilesToRemove
-    selectFilesToRestore
-}
-
-
-selectFilesToRemove() {
-    [[ ! -z $TARGET ]] && return
-    out "Scanning home files to remove:"
-    
-    for file in $HOME/*;do
-        # check if the file is not a symlink to our dotdir
-        if areFileLinkPointToward "$file" "$SOURCE_DIR";then
-            TO_REMOVE_FILES+=($file)
-            ind; echo "- Selecting "$file""
-        fi
-    done
-    if [ ${#TO_REMOVE_FILES[@]} -eq 0 ]; then
-        ind; echo "No file to be removed in home." 
-    fi
-}
-
-selectFilesToRestore() {
-    if [[ ! -z $TARGET ]]; then
-        out "Looking for backup file: "$TARGET""
-    else
-        out "Scanning backup files to restore:"
-    fi
-    for file in $BACKUP_DIR/*;do
-    
-        local filename="$(basename $file)"
-        [[ ! -z $TARGET ]] && [[ "$filename" != $TARGET ]] && continue
-        
-        local homefile="$HOME/$filename"
-        if [ -e "$homefile" ] && [ ! -L "$homefile" ] && [ ! $file -nt "$homefile" ]; then
-            ind; echo "- Skipping "$file" (already in home)"
-            continue
-        fi
-    
-        TO_RESTORE_FILES+=($file)
-        ind; echo "+ Selecting "$file""
-    done
-    if [ ${#TO_RESTORE_FILES[@]} -eq 0 ]; then
-        ind; echo "No file to be restored from backup." 
-    fi
-
-}
-
-confirmRevert() {
-
-    echo
-    [ ${#TO_REMOVE_FILES[@]} -gt 0 ] && echo "- "${#TO_REMOVE_FILES[@]}" files to be removed in home." 
-    [ ${#TO_RESTORE_FILES[@]} -gt 0 ] && echo "+ "${#TO_RESTORE_FILES[@]}" files to be restored from backup."
-
-    if [ "$FORCE" -eq 0 ];then
-        removeAndRestoreFiles
-    else
-        read -p "Do you want to proceed? (y/n) " -n 1;
-        echo
-        if [[ $REPLY =~ ^[Yy]$ ]];then
-            removeAndRestoreFiles
-        fi
-    fi
-}
-
-removeAndRestoreFiles() {
-    removeFiles
-    restoreFiles
-}
-
-removeFiles() {
-    for file in "${TO_REMOVE_FILES[@]}";do
-        ind; rm -vf "$file"
-    done
-}
-
-restoreFiles() {
-    echo
-    rsync -ahH --out-format='    %f' "$BACKUP_DIR"/* "$HOME"
-}
-
 createSymLinks() {
 
     selectFiles
@@ -294,6 +181,7 @@ createSymLinks() {
     else
         confirmLinkCreation
     fi
+
 }
 
 confirmLinkCreation() {
@@ -323,6 +211,7 @@ confirmLinkCreation() {
 backupAndLinkFiles() {
     backupHome
     symlinkFiles
+    ind; ln -sf $REVERT_FILE $HOME
 }
 
 backupHome() {
@@ -331,8 +220,7 @@ backupHome() {
         return
     fi
     
-    rm -rfd "$BACKUP_DIR"
-    mkdir "$BACKUP_DIR"
+    [ ! -d "$DIRECTORY" ] && mkdir "$BACKUP_DIR"
 
     out "Transfering existing files to "$BACKUP_DIR":"
     printf "%s\r" ${OVERWRITTEN_FILES[@]} > "$TEMP_FILE"
@@ -355,7 +243,6 @@ unset -f isIgnored
     unset -f symlinkFiles
     unset -f backupAndLinkFiles
     unset -f updateFromRepo
-    unset -f areFilesLinked
     unset -f confirmLinkCreation
     unset -f initSynchVariables
     unset -f isIllegible
@@ -383,6 +270,6 @@ updateFromRepo
 
 readCommandArgs "$@"
 
-performAction
+createSymLinks
 
 cleanup
