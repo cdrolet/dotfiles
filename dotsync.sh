@@ -97,15 +97,8 @@ isIllegible() {
 
     [[ "$filename" != .* ]] && return 1
 
-    [[ ! -z $TARGET ]]  && [[ "$filename" != $TARGET ]] && return 1
+    [[ ! -z $TARGET ]] && [[ "$filename" != $TARGET ]] && return 1
     
-    # check if the file is not already a symlink to our dotfiles
-    if areFilesLinked $HOME/"$filename" "$1";then
-        SKIPPED_FILES+=($1)
-        ind; echo "- Skipping "$1" (already symlinked)"
-        return 1
-    fi
-
     # check if the file is not in the ignored list
     if isIgnored "$filename";then
         ind; echo "- Ignoring "$1""
@@ -119,6 +112,13 @@ isIllegible() {
     
     # check if the file is not in conflict with a skipped file    
     if isFileInConflictWith "$1" SKIPPED_FILES; then
+        return 1
+    fi
+
+    # check if the file is not already a symlink to our dotfiles
+    if areFileLinkPointToward $HOME/"$filename" "$SOURCE_DIR";then
+        SKIPPED_FILES+=($1)
+        ind; echo "- Skipping "$1" (already symlinked)"
         return 1
     fi
 
@@ -205,21 +205,15 @@ revertSymLinks() {
 }
 
 selectFileToRevert() {
-
-    if [ -z $TARGET ]; then
-        out "Scanning home files to remove:"
-        selectFilesToRemove
-        out "Scanning backup files to restore:"
-        selectFilesToRestore
-        return
-    fi
-    
-    #TODO
-    #out "reverting dot files: "$TARGET""
+    selectFilesToRemove
+    selectFilesToRestore
 }
 
 
 selectFilesToRemove() {
+    [[ ! -z $TARGET ]] && return
+    out "Scanning home files to remove:"
+    
     for file in $HOME/*;do
         # check if the file is not a symlink to our dotdir
         if areFileLinkPointToward "$file" "$SOURCE_DIR";then
@@ -233,8 +227,17 @@ selectFilesToRemove() {
 }
 
 selectFilesToRestore() {
+    if [[ ! -z $TARGET ]]; then
+        out "Looking for backup file: "$TARGET""
+    else
+        out "Scanning backup files to restore:"
+    fi
     for file in $BACKUP_DIR/*;do
-        local homefile="$HOME/$(basename $file)"
+    
+        local filename="$(basename $file)"
+        [[ ! -z $TARGET ]] && [[ "$filename" != $TARGET ]] && continue
+        
+        local homefile="$HOME/$filename"
         if [ -e "$homefile" ] && [ ! -L "$homefile" ] && [ ! $file -nt "$homefile" ]; then
             ind; echo "- Skipping "$file" (already in home)"
             continue
