@@ -1,0 +1,69 @@
+[user]
+	name = charles drolet 
+	email = charles.drokar@gmail.com
+
+[color]
+	ui = auto
+	interactive = auto
+	
+[color "branch"]
+	current = yellow bold
+	local = green bold
+	remote = cyan bold
+	
+[color "diff"]
+	meta = yellow bold
+	frag = magenta bold
+	old = red bold
+	new = green bold
+	whitespace = red reverse
+	
+[color "status"]
+	added = green bold
+	changed = yellow bold
+	untracked = red bold
+	
+[core]
+	editor = vim 
+	autocrlf = true
+	pager = less
+
+[diff]
+	tool = vimdiff
+	submodule = diff
+
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	required = true
+
+[format]
+	pretty = oneline
+
+[github]
+	user = cdrolet	
+	
+[http]
+	sslVerify = false
+
+[merge]
+    log = true
+	tool = vimdiff
+
+[push]
+	default = matching
+
+[web]
+	browser = google-chrome
+	
+[url "https://github.com/"]
+    insteadOf = gh:
+
+[url "https://gist.github.com/"]
+    insteadOf = gist:
+
+[url "https://bitbucket.org/"]
+    insteadOf = bb:
+    
+[url "https://github.com/cdrolet/"]
+    insteadOf = home:

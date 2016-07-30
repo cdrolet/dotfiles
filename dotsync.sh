@@ -24,10 +24,24 @@ readCommandArgs() {
     done
 }
 
+initSourceDir() {
+    local source="${BASH_SOURCE[0]}"
+    # resolve $source until the file is no longer a symlink
+    while [ -h "$source" ]; do
+        SOURCE_DIR="$( cd -P "$( dirname "$source" )" && pwd )"
+        source="$(readlink "$source")"
+        # if $source was a relative symlink, we need to resolve it relative to the path where the symlink file was located
+        [[ $source != /* ]] && source="$SOURCE_DIR/$source"
+    done
+    SOURCE_DIR="$( cd -P "$( dirname "$source" )" && pwd )"
+}
+
+
 initSynchVariables() {
     shopt -s dotglob
 
-    SOURCE_DIR="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+    initSourceDir
+    
     BACKUP_DIR="$SOURCE_DIR"/backup
     REVERT_FILE="$SOURCE_DIR"/dotrevert.sh
     TEMP_FILE="$SOURCE_DIR"/files.tmp

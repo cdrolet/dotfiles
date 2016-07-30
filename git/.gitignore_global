@@ -25,6 +25,7 @@ Icon
 Session.vim
 .netrwhist
 *~
+*.swp
 
 # ----------------------------------------------------------------------------
 # Java / Scala / IntelliJ IDEA
@@ -39,7 +40,7 @@ deploy.log
 *.classpath
 *.settings
 *.project
-*.swp
+
 
 # Maven
 target/
