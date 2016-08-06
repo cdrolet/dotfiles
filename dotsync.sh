@@ -13,7 +13,6 @@ ind() {
 
 readCommandArgs() {
     FORCE=1
-    REVERT=1
 
     while getopts 'ft:v' flag; do
         case "${flag}" in
@@ -79,20 +78,20 @@ selectFiles() {
 
 selectFileTree() {
 
-  if isIllegible "$1"; then
-      selectFile $1
-      return
-  fi
+    if isIllegible "$1"; then
+        selectFile $1
+        return
+    fi
 
-  local level=0
-  [ ! -z "$2" ] && level=$2
+    local level=0
+    [ ! -z "$2" ] && level=$2
 
-  # look for dotfiles in subfolders
-  if [ -d "$1" ] && [ "$level" -lt $MAX_SCAN_LEVEL ]; then
-      if ! isIgnored $(basename "$1"); then
-          scanDir "$1" $((level+1))
-      fi
-  fi
+    # look for dotfiles in subfolders
+    if [ -d "$1" ] && [ "$level" -lt $MAX_SCAN_LEVEL ]; then
+        if ! isIgnored $(basename "$1"); then
+            scanDir "$1" $((level+1))
+        fi
+    fi
 }
 
 scanDir() {
