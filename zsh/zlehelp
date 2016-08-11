@@ -5,8 +5,12 @@ jobs
 # directory stack
 
 cd -
-pushd
-popd
+cd <old> <new> -> then the shell will look for the first occurrence of the string `<old>' in the current directory, and try to replace it with `<new>'
+pushd <dir> -> cd to the dir and add current to the stack
+pushd cd to last dir and swap entry in stack
+popd -> remove top stack item and cd to it
+dirs -v   ->  give the dir stack
+
 f -l
 ^R search
 
