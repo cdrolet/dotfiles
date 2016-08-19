@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+#TODO prevent the link of .*~ files
+#TODO removed broken links to .dotfiles
+
 out() {
     printf "\n"
     for text in "$@";do
@@ -83,8 +86,7 @@ selectFileTree() {
         return
     fi
 
-    local level=0
-    [ ! -z "$2" ] && level=$2
+    local level=${2:-0}
 
     # look for dotfiles in subfolders
     if [ -d "$1" ] && [ "$level" -lt $MAX_SCAN_LEVEL ]; then
@@ -224,7 +226,7 @@ confirmLinkCreation() {
 backupAndLinkFiles() {
     backupHome
     symlinkFiles
-    ind; ln -sf $REVERT_FILE $HOME
+    ind; ln -sf ${REVERT_FILE} $HOME
 }
 
 backupHome() {
@@ -233,10 +235,10 @@ backupHome() {
         return
     fi
     
-    [ ! -d "$DIRECTORY" ] && mkdir "$BACKUP_DIR"
+    [ ! -d ${DIRECTORY} ] && mkdir "$BACKUP_DIR"
 
-    out "Transfering existing files to "$BACKUP_DIR":"
-    printf "%s\r" ${OVERWRITTEN_FILES[@]} > "$TEMP_FILE"
+    out "Transfering existing files to ${BACKUP_DIR}:"
+    printf "%s\r" "${OVERWRITTEN_FILES[@]}" > "$TEMP_FILE"
     rsync -ahH --files-from="$TEMP_FILE" --out-format='    %f' "$HOME" "$BACKUP_DIR"
     rm "$TEMP_FILE"
 }
@@ -244,7 +246,7 @@ backupHome() {
 symlinkFiles() {
     out "Creating symbolic links in home:"
     for file in "${SELECTED_FILES[@]}";do
-        ind; ln -svf $file $HOME
+        ind; ln -svf ${file} $HOME
     done
 }
 
