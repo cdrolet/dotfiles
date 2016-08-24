@@ -83,3 +83,20 @@ ESC D kill 1 word forward
 ^R search backward (2x and recall last search)
 ESC< go first line
 ESC> go last line
+
+
+^X^X
+history search
+
+^Space
+go sub folder in completion
+
+^Xs
+sudo
+
+memtop
+top 10mem hogs
+
+newest
+newest files
+

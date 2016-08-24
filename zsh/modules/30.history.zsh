@@ -1,6 +1,5 @@
 ##############################################################
-# 16.2.4 History
-# http://zsh.sourceforge.net/Doc/Release/Options.html#Options
+# History
 ##############################################################
 
 # Different files for root and standard user

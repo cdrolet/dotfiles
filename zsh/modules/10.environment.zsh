@@ -7,12 +7,6 @@ export ZSH_CACHE="$XDG_CACHE_HOME/zsh"
 mkdir -p $ZSH_CACHE
 
 ##############################################################
-# COLORS 
-##############################################################
-
-export ZSH_DIRCOLORS="$HOME/.dircolors/dircolors.256dark"
-
-##############################################################
 # SEARCH PATH
 ##############################################################
 
@@ -22,23 +16,12 @@ export PATH=$HOME/.local/sbin:$PATH
 export PATH=$ZSH_CONFIG_HOME/bin:$PATH
 
 ##############################################################
-# FUNCTION PATH
+# OTHERS
 ##############################################################
 
-local function_path="$ZSH_CONFIG_HOME/functions"
+export ZSH_DIRCOLORS="$HOME/.dircolors/dircolors.256dark"
+export EDITOR="vim"
 
-# Autoload function path
-# adds all directories below function_path to `$fpath', while ignoring "CVS" directories
-# http://unix.stackexchange.com/questions/33255/how-to-define-and-load-your-own-shell-function-in-zsh
-fpath=(
-    $function_path
-    $function_path/**/*~*/(CVS)#(/N)
-    "${fpath[@]}"
-)
-
-# -U disables alias expansion while the function is being loaded.
-# -z forces zsh-style autoloading even if KSH_AUTOLOAD is set for whatever reason.
-autoload -Uz $function_path/*(:t)
 
 ##############################################################
 # LOCALE
