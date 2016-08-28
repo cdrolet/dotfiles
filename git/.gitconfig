@@ -30,7 +30,6 @@
 
 [diff]
 	tool = vimdiff
-	submodule = diff
 
 [filter "lfs"]
 	clean = git-lfs clean -- %f

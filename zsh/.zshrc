@@ -15,7 +15,7 @@ initHome() {
     ZSH_ALIASES=$ZSH_CONFIG_HOME/aliases
     ZSH_OS=$ZSH_CONFIG_HOME/os
     ZSH_FUNCTIONS=$ZSH_CONFIG_HOME/functions
-    
+    setopt EXTENDED_GLOB
 }
 
 initModules() {
