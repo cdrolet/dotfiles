@@ -20,8 +20,7 @@ export PATH=$ZSH_CONFIG_HOME/bin:$PATH
 ##############################################################
 
 export ZSH_DIRCOLORS="$HOME/.dircolors/dircolors.256dark"
-export EDITOR="vim"
-
+#export EDITOR="vim"
 
 ##############################################################
 # LOCALE
@@ -29,7 +28,8 @@ export EDITOR="vim"
 
 # only define LC_CTYPE if undefined
 if [[ -z "$LC_CTYPE" && -z "$LC_ALL" ]]; then
-	export LC_CTYPE=${LANG%%:*} # pick the first entry from LANG
+    # pick the first entry from LANG
+	export LC_CTYPE=${LANG%%:*}
 fi
 
 ##############################################################

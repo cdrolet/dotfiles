@@ -10,32 +10,36 @@ initHome() {
     done
 
     export ZSH_CONFIG_HOME="$( cd -P "$( dirname "$source" )" && pwd )"
-    
     ZSH_MODULES=$ZSH_CONFIG_HOME/modules
-    ZSH_ALIASES=$ZSH_CONFIG_HOME/aliases
-    ZSH_OS=$ZSH_CONFIG_HOME/os
-    ZSH_FUNCTIONS=$ZSH_CONFIG_HOME/functions
-    setopt EXTENDED_GLOB
+    ZSH_FUNCTIONS="functions"
+    
+    export PROMPT_HIDDEN_USER=(root c cdrolet)
 }
 
-initModules() {
-    for file in $(ls $ZSH_MODULES/*.zsh | sort); do
-        echo " ===> $file " 
-        source $file
+scanModules() {
+    for module in $(ls -d $ZSH_MODULES/<0-100>.* | sort -t'.' -k1n); do
+        scanFunctions $module
+        scanSource $module
     done
 }
 
-initFunctions() {
-    # http://unix.stackexchange.com/questions/33255/how-to-define-and-load-your-own-shell-function-in-zsh
-    fpath=(
-        $ZSH_FUNCTIONS
-        "${fpath[@]}"
-    )
-    autoload -Uz $ZSH_FUNCTIONS/*(.)
+scanFunctions() {
+    functionsPath=$1/$ZSH_FUNCTIONS
+    if [ ! -d $functionsPath ]; then
+        return 1;
+    fi
+    
+    echo ">>>" + $functionsPath
+    
+    fpath=($functionsPath $fpath)
+    
+    for function in $(echo $functionsPath/*(.N)); do
+        autoload -Uz $function
+    done
 }
 
-initAliases() {
-    for file in $(ls ZSH_ALIASES/**/*.zsh); do
+scanSource() {
+    for file in $(echo $1/**/*.zsh(.N)); do
         echo " ---> $file " 
         source $file
     done
@@ -43,13 +47,7 @@ initAliases() {
 
 initHome
 
-initModules
-
-initFunctions
-
-initAliases
+scanModules
 
 # Need to install the command-not-found hook
 # Pacman: pkgfile
-# TODO to be moved, in os?
-source /usr/share/doc/pkgfile/command-not-found.zsh

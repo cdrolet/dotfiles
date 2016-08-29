@@ -16,7 +16,7 @@ setopt PUSHD_IGNORE_DUPS
 setopt PUSHD_MINUS
 
 ##############################################################
-# Alias
+# ALIAS
 ##############################################################
 
 for index ({1..9}) alias "$index"="cd +${index}"; unset index

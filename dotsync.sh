@@ -2,6 +2,7 @@
 
 #TODO prevent the link of .*~ files
 #TODO removed broken links to .dotfiles
+#TODO symlink to existing dir didn't work
 
 out() {
     printf "\n"
@@ -235,7 +236,7 @@ backupHome() {
         return
     fi
     
-    [ ! -d ${DIRECTORY} ] && mkdir "$BACKUP_DIR"
+    [ ! -d ${BACKUP_DIR} ] && mkdir "$BACKUP_DIR"
 
     out "Transfering existing files to ${BACKUP_DIR}:"
     printf "%s\r" "${OVERWRITTEN_FILES[@]}" > "$TEMP_FILE"

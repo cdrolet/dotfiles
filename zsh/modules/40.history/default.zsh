@@ -1,8 +1,7 @@
 ##############################################################
-# History
+# ENVIRONMENT
 ##############################################################
 
-# Different files for root and standard user
 if (( ! EUID )); then
     HISTFILE=$ZSH_CACHE/history_root
 else
@@ -13,6 +12,9 @@ fi
 SAVEHIST=10000
 HISTSIZE=12000
 
+##############################################################
+# OPTIONS
+##############################################################
 
 # If this is set, zsh sessions will append their history list to the history file, rather than replace it. Thus, multiple parallel zsh sessions will all have the new entries from their history lists added to the history file, in the order that they were entered. The file will still be periodically re-written to trim it when the number of lines grows 20% beyond the value specified by $SAVEHIST (see also the HIST_SAVE_BY_COPY option).
 setopt INC_APPEND_HISTORY
@@ -39,7 +41,7 @@ setopt HIST_NO_STORE
 setopt SHARE_HISTORY
 
 ##############################################################
-# Alias
+# ALIAS
 ##############################################################
 
 # Show all history with timestamp: yyyy-mm-dd
