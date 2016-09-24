@@ -39,12 +39,4 @@ fi
 # treat  the ‘#’, ‘~’ and ‘^’ characters as part of patterns for filename generation, etc.  (An initial unquoted ‘~’ always produces named directory expansion.)
 setopt EXTENDED_GLOB
 
-# do not allows > redirection to truncate existing files, and >> to create files. >! must be used to truncate a file, and >>! to create a file.
-setopt NO_CLOBBER
 
-# if unset, output flow control via start/stop characters (usually assigned to ^S/^Q) is disabled in the shell’s editor,
-# so I can reuse these keys for more useful feature
-setopt NO_FLOW_CONTROL
-
-# no Beep on error in ZLE.
-setopt NO_BEEP

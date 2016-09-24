@@ -2,7 +2,7 @@
 # DEBUGGING
 ##############################################################
 
-function printHookFunctions () {
+printHookFunctions () {
     print -C 1 ":::pwd_functions:" $chpwd_functions
     print -C 1 ":::periodic_functions:" $periodic_functions
     print -C 1 ":::precmd_functions:" $precmd_functions
@@ -18,6 +18,7 @@ r() {
     unfunction $f:t 2> /dev/null
     autoload -Uz $f:t
 }
+
 
 # web feed alternative to rss
 # atomtitles () { curl --silent $1 | xmlstarlet sel -N atom="http://www.w3.org/2005/Atom" -t -m /atom:feed/atom:entry -v atom:title -n}
@@ -54,6 +55,10 @@ tmux-neww-in-cwd() {
     tmux neww "cd '$DIR'; $SHELL"
 }
 
+echoAndRun() {
+    echo "$@"
+    "$@"
+}
 
 ##############################################################
 # AUTOLOAD

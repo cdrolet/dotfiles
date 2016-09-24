@@ -45,5 +45,11 @@ setopt SHARE_HISTORY
 ##############################################################
 
 # Show all history with timestamp: yyyy-mm-dd
-alias history='fc -il 1'
+alias h='fc -il 1'
 
+##############################################################
+# KEYS
+##############################################################
+
+bindkey -M emacs "$key_info[Control]P" history-substring-search-up
+bindkey -M emacs "$key_info[Control]N" history-substring-search-down
