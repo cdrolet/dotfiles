@@ -1,4 +1,0 @@
- 
-[submodule "modules/history/external"]
-	path = modules/history/external
-	url = https://github.com/zsh-users/zsh-history-substring-search.git

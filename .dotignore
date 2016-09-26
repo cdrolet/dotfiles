@@ -1,7 +1,7 @@
 tmp
 .dotignore
 .gitignore
-.gitmodule
+.gitmodules
 .git
 .
 ..
