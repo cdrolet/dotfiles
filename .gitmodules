@@ -1,3 +1,6 @@
-[submodule "zsh/modules/40.history/external"]
-	path = zsh/modules/40.history/external
+[submodule "zsh/modules/90.history/external"]
+	path = zsh/modules/90.history/external
 	url = https://github.com/zsh-users/zsh-history-substring-search
+[submodule "zsh/modules/89.syntax-highlighting/external"]
+	path = zsh/modules/89.syntax-highlighting/external
+	url = https://github.com/zsh-users/zsh-syntax-highlighting

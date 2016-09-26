@@ -39,8 +39,13 @@ scanFunctions() {
 }
 
 scanSource() {
+    setopt extended_glob
     for file in $(echo $1/**/*.zsh(.N)); do
-        echo " ---> $file " 
+        name=$( dirname "$file" )
+        if [[ ${name#*external} != $name ]]; then
+            continue;
+        fi
+        echo " ---> $file "
         source $file
     done
 }

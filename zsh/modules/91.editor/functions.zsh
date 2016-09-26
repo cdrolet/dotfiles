@@ -111,3 +111,5 @@ backward-delete-to-slash () {
   zle .backward-delete-word
 }
 zle -N backward-delete-to-slash
+
+

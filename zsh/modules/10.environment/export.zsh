@@ -34,3 +34,5 @@ if [[ -z "$LC_CTYPE" && -z "$LC_ALL" ]]; then
 	export LC_CTYPE=${LANG%%:*}
 fi
 
+# Reset to default key bindings.
+bindkey -d

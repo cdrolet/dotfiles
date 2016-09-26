@@ -59,8 +59,7 @@ done
 # KEY BINDINGS
 ##############################################################
 
-# Reset to default key bindings.
-bindkey -d
+
 
 # Adding Control arrow as additional backward / forward
 for key in "$key_info[Escape]"{B,b} "${(s: :)key_info[ControlLeft]}"
@@ -86,68 +85,65 @@ if (( $+widgets[history-incremental-pattern-search-backward] )); then
   bindkey -M emacs "$key_info[Control]S" history-incremental-pattern-search-forward
 fi
 
-for keymap in 'emacs' 'viins'; do
-  bindkey -M "$keymap" "$key_info[Home]" beginning-of-line
-  bindkey -M "$keymap" "$key_info[End]" end-of-line
+bindkey -M emacs "$key_info[Control]P" history-substring-search-up
+bindkey -M emacs "$key_info[Control]N" history-substring-search-down
 
-  bindkey -M "$keymap" "$key_info[Insert]" overwrite-mode
-  bindkey -M "$keymap" "$key_info[Delete]" delete-char
-  bindkey -M "$keymap" "$key_info[Backspace]" backward-delete-char
+bindkey -M emacs "$key_info[Home]" beginning-of-line
+bindkey -M emacs "$key_info[End]" end-of-line
 
-  bindkey -M "$keymap" "$key_info[Left]" backward-char
-  bindkey -M "$keymap" "$key_info[Right]" forward-char
+bindkey -M emacs "$key_info[Insert]" overwrite-mode
+bindkey -M emacs "$key_info[Delete]" delete-char
+bindkey -M emacs "$key_info[Backspace]" backward-delete-char
 
-  # Expand history on space.
-  # if you type a space after a command that starts with ! (or ^) to refer to (part of) a previous command,
-  # that history reference is expanded. If you just type a space, the history reference is expanded when you press Enter.
-  bindkey -M "$keymap" ' ' magic-space
+bindkey -M emacs "$key_info[Left]" backward-char
+bindkey -M emacs "$key_info[Right]" forward-char
 
-  # Clear screen.
-  bindkey -M "$keymap" "$key_info[Control]L" clear-screen
-
-  # Expand command name to full path.
-  for key in "$key_info[Escape]"{E,e}
-    bindkey -M "$keymap" "$key" expand-cmd-path
-
-  # Duplicate the previous word.
-  for key in "$key_info[Escape]"{M,m}
-    bindkey -M "$keymap" "$key" copy-prev-shell-word
-
-  # Use a more flexible push-line.
-  # push-line: clears the prompt and waits for you to type something else.
-  # After executing this new command, it restores your original prompt.
-  # push-line-or-edit: in addition to push-line behavior, if you are typing a continuation line of a
-  # multi-line command, redraws the lines as a single block of text, which allows you to edit anything
-  # you have typed so far.
-  for key in "$key_info[Control]Q" "$key_info[Escape]"{q,Q}
-    bindkey -M "$keymap" "$key" push-line-or-edit
-
-  # Bind Shift + Tab to go to the previous menu item.
-  bindkey -M "$keymap" "$key_info[BackTab]" reverse-menu-complete
-
-  # Complete in the middle of word.
-  bindkey -M "$keymap" "$key_info[Control]I" expand-or-complete
-
-  # Display an indicator when completing.
-  bindkey -M "$keymap" "$key_info[Control]I" expand-or-complete-with-indicator
-
-  # Insert 'sudo ' at the beginning of the line.
-  bindkey -M "$keymap" "$key_info[Control]X$key_info[Control]S" prepend-sudo
-
-  # Delete backward to slash
-  bindkey -M "$keymap" "$key_info[Control]Y" backward-delete-to-slash
-
-  # 2 control X is completion from history
-  bindkey -M "$keymap" "$key_info[Control]X$key_info[Control]X" hist-complete
-
-done
+bindkey -M emacs "$key_info[Up]" history-substring-search-up
+bindkey -M emacs "$key_info[Down]" history-substring-search-down
 
 
-##############################################################
-# TODO
-##############################################################
-# bindkey -M emacs "$key_info[Control]P" history-substring-search-up
-# bindkey -M emacs "$key_info[Control]N" history-substring-search-down
+# Expand history on space.
+# if you type a space after a command that starts with ! (or ^) to refer to (part of) a previous command,
+# that history reference is expanded. If you just type a space, the history reference is expanded when you press Enter.
+bindkey -M emacs ' ' magic-space
+
+# Clear screen.
+bindkey -M emacs "$key_info[Control]L" clear-screen
+
+# Expand command name to full path.
+for key in "$key_info[Escape]"{E,e}
+  bindkey -M emacs "$key" expand-cmd-path
+
+# Duplicate the previous word.
+for key in "$key_info[Escape]"{M,m}
+  bindkey -M emacs "$key" copy-prev-shell-word
+
+# Use a more flexible push-line.
+# push-line: clears the prompt and waits for you to type something else.
+# After executing this new command, it restores your original prompt.
+# push-line-or-edit: in addition to push-line behavior, if you are typing a continuation line of a
+# multi-line command, redraws the lines as a single block of text, which allows you to edit anything
+# you have typed so far.
+for key in "$key_info[Control]Q" "$key_info[Escape]"{q,Q}
+  bindkey -M emacs "$key" push-line-or-edit
+
+# Bind Shift + Tab to go to the previous menu item.
+bindkey -M emacs "$key_info[BackTab]" reverse-menu-complete
+
+# Complete in the middle of word.
+bindkey -M emacs "$key_info[Control]I" expand-or-complete
+
+# Display an indicator when completing.
+bindkey -M emacs "$key_info[Control]I" expand-or-complete-with-indicator
+
+# Insert 'sudo ' at the beginning of the line.
+bindkey -M emacs "$key_info[Control]X$key_info[Control]S" prepend-sudo
+
+# Delete backward to slash
+bindkey -M emacs "$key_info[Control]Y" backward-delete-to-slash
+
+# 2 control X is completion from history
+bindkey -M emacs "$key_info[Control]X$key_info[Control]X" hist-complete
 
 # use emacs-style zsh bindings
 bindkey -e
