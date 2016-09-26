@@ -2,6 +2,7 @@
 # ENVIRONMENT
 ##############################################################
 
+# Separate history for root and regular user
 if (( ! EUID )); then
     HISTFILE=$ZSH_CACHE/history_root
 else
@@ -47,9 +48,6 @@ setopt SHARE_HISTORY
 # Show all history with timestamp: yyyy-mm-dd
 alias h='fc -il 1'
 
-##############################################################
-# KEYS
-##############################################################
+# Lists the ten most used commands.
+alias history-stat="history 0 | awk '{print \$2}' | sort | uniq -c | sort -n -r | head"
 
-bindkey -M emacs "$key_info[Control]P" history-substring-search-up
-bindkey -M emacs "$key_info[Control]N" history-substring-search-down

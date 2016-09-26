@@ -1,11 +1,3 @@
- 
-
-# ctrl+x,s adds sudo to the line
-run-with-sudo() {
-    LBUFFER="sudo $LBUFFER" 
-}
-zle -N run-with-sudo
-bindkey '^Xs' run-with-sudo
 
 # Top ten memory hogs
 # http://www.commandlinefu.com/commands/view/7139/top-ten-memory-hogs
@@ -74,15 +66,6 @@ massmove () {
     ls > ls; paste ls ls > ren; vi ren; sed 's/^/mv /' ren|bash; rm ren ls
 }
 
-# delete-to-previous-slash
-# http://www.zsh.org/mla/users/2005/msg01314.html
-backward-delete-to-slash () {
-  local WORDCHARS=${WORDCHARS//\//}
-  zle .backward-delete-word
-}
-zle -N backward-delete-to-slash
-# bind to control Y
-bindkey "^U" backward-delete-to-slash
 
 # TODO
 # query Wikipedia via console over DNS

@@ -26,9 +26,6 @@ zmodload -i zsh/complist
 # in menu selection ctrl+space to go to subdirectories
 bindkey -M menuselect '^@' accept-and-infer-next-history
 
-# 2x control is completion from history
-bindkey '^X^X' hist-complete
-
 ##############################################################
 # STYLES
 ##############################################################
@@ -90,10 +87,9 @@ zstyle ':completion:*:matches' group 'yes'
 zstyle ':completion:*:options' description 'yes'
 zstyle ':completion:*:options' auto-description '%d'
 
-# 2x control is completion from history!!!
+# 2x control is completion from history
 zle -C hist-complete complete-word _generic
 zstyle ':completion:hist-complete:*' completer _history
-
 
 # array completion element sorting.
 zstyle ':completion:*:*:-subscript-:*' tag-order indexes parameters

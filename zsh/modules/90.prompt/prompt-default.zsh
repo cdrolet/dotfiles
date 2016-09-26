@@ -35,6 +35,9 @@ prompt_status() {
     [ $RETVAL -ne 0 ] && symbols+="${SYMBOL_FORMAT}☠"
     [ $UID -eq 0 ] && symbols+="${SYMBOL_FORMAT}ϟ"
     [ $(jobs -l | wc -l) -gt 0 ] && symbols+="${SYMBOL_FORMAT}⚙"
+    if [[ $editor_info[overwrite] == "O" ]]; then
+        symbols+="${SYMBOL_FORMAT}⊕"
+    fi
 
     [ -n "$symbols" ] && prompt_segment black default "$symbols"
 }
