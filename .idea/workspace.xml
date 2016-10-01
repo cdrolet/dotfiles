@@ -46,18 +46,8 @@
       <file leaf-file-name="icons.zsh" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/zsh/modules/70.prompt/external/functions/icons.zsh">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4824">
+            <state relative-caret-position="239">
               <caret line="134" column="63" selection-start-line="134" selection-start-column="62" selection-end-line="134" selection-end-column="63" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="L1.zsh" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/zsh/modules/70.prompt/L1.zsh">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="36">
-              <caret line="38" column="35" selection-start-line="38" selection-start-column="34" selection-end-line="38" selection-end-column="35" />
               <folding />
             </state>
           </provider>
@@ -73,7 +63,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="suggestions.zsh" pinned="false" current-in-tab="true">
+      <file leaf-file-name="suggestions.zsh" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/zsh/modules/66.suggestions/suggestions.zsh">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="0">
@@ -93,7 +83,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="init.zsh" pinned="false" current-in-tab="false">
+      <file leaf-file-name="init.zsh" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/zsh/modules/70.prompt/init.zsh">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="504">
@@ -189,9 +179,9 @@
         <option value="$PROJECT_DIR$/zsh/modules/95.prompt/prompt-default.zsh" />
         <option value="$PROJECT_DIR$/zsh/modules/95.prompt/external/functions/icons.zsh" />
         <option value="$PROJECT_DIR$/zsh/modules/95.prompt/prompt" />
-        <option value="$PROJECT_DIR$/zsh/modules/70.prompt/init.zsh" />
         <option value="$PROJECT_DIR$/zsh/.zshrc" />
         <option value="$PROJECT_DIR$/zsh/modules/66.suggestions/suggestions.zsh" />
+        <option value="$PROJECT_DIR$/zsh/modules/70.prompt/init.zsh" />
       </list>
     </option>
   </component>
@@ -955,12 +945,12 @@
       <workItem from="1474897964101" duration="3322000" />
       <workItem from="1474901398626" duration="32000" />
       <workItem from="1474901437929" duration="24660000" />
-      <workItem from="1475349063771" duration="2938000" />
+      <workItem from="1475349063771" duration="4758000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="52992000" />
+    <option name="totallyTimeSpent" value="54812000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="3840" height="2124" extended-state="6" />
@@ -1275,7 +1265,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/zsh/modules/70.prompt/external/functions/icons.zsh">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4824">
+        <state relative-caret-position="239">
           <caret line="134" column="63" selection-start-line="134" selection-start-column="62" selection-end-line="134" selection-end-column="63" />
           <folding />
         </state>
@@ -1313,18 +1303,26 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/zsh/modules/70.prompt/L1.zsh">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="36">
-          <caret line="38" column="35" selection-start-line="38" selection-start-column="34" selection-end-line="38" selection-end-column="35" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/zsh/.zshrc">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="684">
           <caret line="19" column="0" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/zsh/modules/66.suggestions/suggestions.zsh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/zsh/modules/70.prompt/L1.zsh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="36">
+          <caret line="38" column="35" selection-start-line="38" selection-start-column="34" selection-end-line="38" selection-end-column="35" />
           <folding />
         </state>
       </provider>
@@ -1341,14 +1339,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="504">
           <caret line="14" column="0" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/zsh/modules/66.suggestions/suggestions.zsh">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
