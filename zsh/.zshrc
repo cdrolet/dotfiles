@@ -17,8 +17,10 @@ initHome() {
 }
 
 scanModules() {
+
     for module in $(ls -d $ZSH_MODULES/<0-100>.* | sort -t'.' -k1n); do
         scanFunctions $module
+
         scanSource $module
     done
 }
@@ -51,6 +53,7 @@ scanSource() {
         source $file
     done
 }
+
 
 initHome
 

@@ -1,5 +1,5 @@
 
-source "${0:h}/external/powerlevel9k.zsh-theme" || return 1
+#source "${0:h}/external/powerlevel9k.zsh-theme" || return 1
 
 POWERLEVEL9K_SHORTEN_DIR_LENGTH=2
 # https://github.com/bhilburn/powerlevel9k#customizing-prompt-segments

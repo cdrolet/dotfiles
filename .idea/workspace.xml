@@ -53,20 +53,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="powerlevel9k.zsh-theme" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/zsh/modules/70.prompt/external/powerlevel9k.zsh-theme">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2844">
-              <caret line="79" column="0" selection-start-line="79" selection-start-column="0" selection-end-line="79" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="L1.zsh" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/zsh/modules/70.prompt/L1.zsh">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1368">
+            <state relative-caret-position="36">
               <caret line="38" column="35" selection-start-line="38" selection-start-column="34" selection-end-line="38" selection-end-column="35" />
               <folding />
             </state>
@@ -83,17 +73,17 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="suggestions.zsh" pinned="false" current-in-tab="false">
+      <file leaf-file-name="suggestions.zsh" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/zsh/modules/66.suggestions/suggestions.zsh">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="60" />
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="linux.zsh" pinned="false" current-in-tab="true">
+      <file leaf-file-name="linux.zsh" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/zsh/modules/80.os/linux.zsh">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="576">
@@ -108,6 +98,16 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="504">
               <caret line="14" column="0" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name=".zshrc" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/zsh/.zshrc">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="684">
+              <caret line="19" column="0" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -176,7 +176,6 @@
         <option value="$PROJECT_DIR$/zsh/modules/25.function/function-default.zsh" />
         <option value="$PROJECT_DIR$/zsh/modules/30.utility/functions.zsh" />
         <option value="$PROJECT_DIR$/zsh/modules/89.syntax-highlighting/highlight.zsh" />
-        <option value="$PROJECT_DIR$/zsh/.zshrc" />
         <option value="$PROJECT_DIR$/zsh/modules/30.utilities/functions.zsh" />
         <option value="$PROJECT_DIR$/zsh/modules/90.history/substring-search.zsh" />
         <option value="$PROJECT_DIR$/zsh/modules/89.syntax/highlight.zsh" />
@@ -191,6 +190,8 @@
         <option value="$PROJECT_DIR$/zsh/modules/95.prompt/external/functions/icons.zsh" />
         <option value="$PROJECT_DIR$/zsh/modules/95.prompt/prompt" />
         <option value="$PROJECT_DIR$/zsh/modules/70.prompt/init.zsh" />
+        <option value="$PROJECT_DIR$/zsh/.zshrc" />
+        <option value="$PROJECT_DIR$/zsh/modules/66.suggestions/suggestions.zsh" />
       </list>
     </option>
   </component>
@@ -954,16 +955,16 @@
       <workItem from="1474897964101" duration="3322000" />
       <workItem from="1474901398626" duration="32000" />
       <workItem from="1474901437929" duration="24660000" />
-      <workItem from="1475349063771" duration="1661000" />
+      <workItem from="1475349063771" duration="2938000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="51715000" />
+    <option name="totallyTimeSpent" value="52992000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="3840" height="2124" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -972,13 +973,13 @@
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26740506" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.47046414" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.12553191" sideWeight="0.762419" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.12553191" sideWeight="0.76371306" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.4978903" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.12553191" sideWeight="0.237581" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.12553191" sideWeight="0.23628692" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -1155,13 +1156,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/zsh/.zshrc">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1168">
-          <caret line="51" column="0" selection-start-line="51" selection-start-column="0" selection-end-line="51" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/zsh/modules/70.tmux/tmux-default.zsh" />
     <entry file="file://$PROJECT_DIR$/zsh/modules/20.utilities/autoload.zsh">
       <provider selected="true" editor-type-id="text-editor">
@@ -1271,14 +1265,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/zsh/modules/70.prompt/L1.zsh">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1368">
-          <caret line="38" column="35" selection-start-line="38" selection-start-column="34" selection-end-line="38" selection-end-column="35" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/zsh/modules/70.prompt/external/powerlevel9k.zsh-theme">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2844">
@@ -1291,22 +1277,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="4824">
           <caret line="134" column="63" selection-start-line="134" selection-start-column="62" selection-end-line="134" selection-end-column="63" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/zsh/modules/70.prompt/prompt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="144">
-          <caret line="4" column="14" selection-start-line="4" selection-start-column="14" selection-end-line="4" selection-end-column="14" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/zsh/modules/66.suggestions/suggestions.zsh">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="60" />
           <folding />
         </state>
       </provider>
@@ -1335,6 +1305,38 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/zsh/modules/80.os/linux.zsh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="576">
+          <caret line="16" column="2" selection-start-line="16" selection-start-column="2" selection-end-line="16" selection-end-column="2" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/zsh/modules/70.prompt/L1.zsh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="36">
+          <caret line="38" column="35" selection-start-line="38" selection-start-column="34" selection-end-line="38" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/zsh/.zshrc">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="684">
+          <caret line="19" column="0" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/zsh/modules/70.prompt/prompt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="144">
+          <caret line="4" column="14" selection-start-line="4" selection-start-column="14" selection-end-line="4" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/zsh/modules/70.prompt/init.zsh">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="504">
@@ -1343,10 +1345,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/zsh/modules/80.os/linux.zsh">
+    <entry file="file://$PROJECT_DIR$/zsh/modules/66.suggestions/suggestions.zsh">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="576">
-          <caret line="16" column="2" selection-start-line="16" selection-start-column="2" selection-end-line="16" selection-end-column="2" />
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
