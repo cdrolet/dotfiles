@@ -42,10 +42,12 @@ scanSource() {
     setopt extended_glob
     for file in $(echo $1/**/*.zsh(.N)); do
         name=$( dirname "$file" )
+
+        #skip external directory
         if [[ ${name#*external} != $name ]]; then
             continue;
         fi
-        echo " ---> $file "
+        echo " - $file "
         source $file
     done
 }
@@ -53,6 +55,7 @@ scanSource() {
 initHome
 
 scanModules
+
 
 # Need to install the command-not-found hook
 # Pacman: pkgfile

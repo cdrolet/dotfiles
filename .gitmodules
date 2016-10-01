@@ -1,12 +1,15 @@
-[submodule "zsh/modules/90.history/external"]
-	path = zsh/modules/90.history/external
-	url = https://github.com/zsh-users/zsh-history-substring-search
-[submodule "zsh/modules/89.syntax-highlighting/external"]
-	path = zsh/modules/89.syntax-highlighting/external
+[submodule "zsh/modules/60.syntax/zsh-syntax-highlighting"]
+	path = zsh/modules/60.syntax/zsh-syntax-highlighting
 	url = https://github.com/zsh-users/zsh-syntax-highlighting
-[submodule "zsh/modules/94.suggestions/external"]
-	path = zsh/modules/94.suggestions/external
+[submodule "zsh/modules/60.syntax/external"]
+	path = zsh/modules/60.syntax/external
+	url = https://github.com/zsh-users/zsh-syntax-highlighting
+[submodule "zsh/modules/62.history/external"]
+	path = zsh/modules/62.history/external
+	url = https://github.com/zsh-users/zsh-history-substring-search
+[submodule "zsh/modules/66.suggestions/zsh-autosuggestions"]
+	path = zsh/modules/66.suggestions/zsh-autosuggestions
 	url = https://github.com/zsh-users/zsh-autosuggestions
-[submodule "zsh/modules/95.prompt/external"]
-	path = zsh/modules/95.prompt/external
-	url = https://github.com/bhilburn/powerlevel9k.git
+[submodule "zsh/modules/70.prompt/external"]
+	path = zsh/modules/70.prompt/external
+	url = https://github.com/bhilburn/powerlevel9k

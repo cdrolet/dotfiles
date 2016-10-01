@@ -18,7 +18,7 @@ export PATH=$ZSH_CONFIG_HOME/bin:$PATH
 ##############################################################
 # OTHERS
 ##############################################################
-
+export TERM="xterm-256color"
 export ZSH_DIRCOLORS="$HOME/.dircolors/dircolors.256dark"
 export EDITOR="vi"
 # Treat these characters as part of a word.
