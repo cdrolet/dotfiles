@@ -2,48 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c0fbd531-3258-43b8-8214-f191e47ab949" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fonts/Envy-Code-R/Envy%20Code%20R%20Bold%20for%20Powerline.ttf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fonts/Envy-Code-R/Envy%20Code%20R%20Italic%20for%20Powerline.ttf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fonts/Envy-Code-R/Envy%20Code%20R%20for%20Powerline.ttf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fonts/Envy-Code-R/Envy-Code-R-Bold.ttf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fonts/Envy-Code-R/Envy-Code-R-Italic.ttf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fonts/Envy-Code-R/Envy-Code-R.ttf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fonts/Inconsolata-dz/Inconsolata-dz.otf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fonts/SourceCodePro/SourceCodePro-Black.otf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fonts/SourceCodePro/SourceCodePro-Black.ttf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fonts/SourceCodePro/SourceCodePro-BlackIt.otf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fonts/SourceCodePro/SourceCodePro-BlackIt.ttf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fonts/SourceCodePro/SourceCodePro-Bold.otf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fonts/SourceCodePro/SourceCodePro-Bold.ttf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fonts/SourceCodePro/SourceCodePro-BoldIt.otf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fonts/SourceCodePro/SourceCodePro-BoldIt.ttf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fonts/SourceCodePro/SourceCodePro-ExtraLight.otf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fonts/SourceCodePro/SourceCodePro-ExtraLight.ttf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fonts/SourceCodePro/SourceCodePro-ExtraLightIt.otf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fonts/SourceCodePro/SourceCodePro-ExtraLightIt.ttf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fonts/SourceCodePro/SourceCodePro-It.otf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fonts/SourceCodePro/SourceCodePro-It.ttf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fonts/SourceCodePro/SourceCodePro-Light.otf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fonts/SourceCodePro/SourceCodePro-Light.ttf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fonts/SourceCodePro/SourceCodePro-LightIt.otf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fonts/SourceCodePro/SourceCodePro-LightIt.ttf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fonts/SourceCodePro/SourceCodePro-Medium.otf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fonts/SourceCodePro/SourceCodePro-Medium.ttf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fonts/SourceCodePro/SourceCodePro-MediumIt.otf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fonts/SourceCodePro/SourceCodePro-MediumIt.ttf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fonts/SourceCodePro/SourceCodePro-Regular.otf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fonts/SourceCodePro/SourceCodePro-Regular.ttf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fonts/SourceCodePro/SourceCodePro-Semibold.otf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fonts/SourceCodePro/SourceCodePro-Semibold.ttf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fonts/SourceCodePro/SourceCodePro-SemiboldIt.otf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fonts/SourceCodePro/SourceCodePro-SemiboldIt.ttf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fonts/fonts.dir" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.dotfiles.iml" afterPath="$PROJECT_DIR$/.dotfiles.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.dotignore" afterPath="$PROJECT_DIR$/.dotignore" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dotrevert.sh" afterPath="$PROJECT_DIR$/dotrevert.sh" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dotsync.sh" afterPath="$PROJECT_DIR$/dotsync.sh" />
     </list>
     <ignored path=".dotfiles.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -135,7 +95,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name=".dotignore" pinned="false" current-in-tab="true">
+      <file leaf-file-name=".dotignore" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/.dotignore">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="360">
@@ -145,11 +105,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="false">
+      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/.gitignore">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="5" column="5" selection-start-line="5" selection-start-column="5" selection-end-line="5" selection-end-column="5" />
+            <state relative-caret-position="0">
+              <caret line="0" column="6" selection-start-line="0" selection-start-column="6" selection-end-line="0" selection-end-column="6" />
               <folding />
             </state>
           </provider>
@@ -214,10 +174,10 @@
         <option value="$PROJECT_DIR$/zsh/modules/66.suggestions/suggestions.zsh" />
         <option value="$PROJECT_DIR$/zsh/modules/70.prompt/init.zsh" />
         <option value="$PROJECT_DIR$/zsh/modules/20.utilities/functions.zsh" />
-        <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/.dotignore" />
         <option value="$PROJECT_DIR$/dotrevert.sh" />
         <option value="$PROJECT_DIR$/dotsync.sh" />
+        <option value="$PROJECT_DIR$/.gitignore" />
       </list>
     </option>
   </component>
@@ -722,16 +682,16 @@
       <workItem from="1475349063771" duration="6026000" />
       <workItem from="1475368402618" duration="7583000" />
       <workItem from="1475416253392" duration="162000" />
-      <workItem from="1475418924529" duration="477000" />
+      <workItem from="1475418924529" duration="620000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="64302000" />
+    <option name="totallyTimeSpent" value="64445000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="3840" height="2124" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -1078,14 +1038,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="5" column="5" selection-start-line="5" selection-start-column="5" selection-end-line="5" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/dotrevert.sh">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="4752">
@@ -1106,6 +1058,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="360">
           <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="6" selection-start-line="0" selection-start-column="6" selection-end-line="0" selection-end-column="6" />
           <folding />
         </state>
       </provider>
