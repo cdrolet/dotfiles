@@ -1,8 +1,6 @@
-backup
+
 tmp
 tmp/*
 tests
 tests/*
 .test*
-.idea
-*.iml

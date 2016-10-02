@@ -2,8 +2,46 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c0fbd531-3258-43b8-8214-f191e47ab949" name="Default" comment="">
+      <change type="DELETED" beforePath="$PROJECT_DIR$/backup/.dircolors/dircolors.256dark" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/backup/.fonts/AnonymousPro/Anonymice Powerline Bold Italic.ttf" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/backup/.fonts/AnonymousPro/Anonymice Powerline Bold.ttf" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/backup/.fonts/AnonymousPro/Anonymice Powerline Italic.ttf" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/backup/.fonts/AnonymousPro/Anonymice Powerline.ttf" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/backup/.fonts/AnonymousPro/LICENSE.txt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/backup/.fonts/AnonymousPro/README.rst" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/backup/.fonts/AnonymousPro/fonts.dir" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/backup/.fonts/AnonymousPro/fonts.scale" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/backup/.fonts/Inconsolata-dz/Inconsolata-dz.otf" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/backup/.fonts/SourceCodePro/SourceCodePro-Black.otf" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/backup/.fonts/SourceCodePro/SourceCodePro-Black.ttf" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/backup/.fonts/SourceCodePro/SourceCodePro-BlackIt.otf" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/backup/.fonts/SourceCodePro/SourceCodePro-BlackIt.ttf" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/backup/.fonts/SourceCodePro/SourceCodePro-Bold.otf" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/backup/.fonts/SourceCodePro/SourceCodePro-Bold.ttf" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/backup/.fonts/SourceCodePro/SourceCodePro-BoldIt.otf" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/backup/.fonts/SourceCodePro/SourceCodePro-BoldIt.ttf" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/backup/.fonts/SourceCodePro/SourceCodePro-ExtraLight.otf" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/backup/.fonts/SourceCodePro/SourceCodePro-ExtraLight.ttf" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/backup/.fonts/SourceCodePro/SourceCodePro-ExtraLightIt.otf" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/backup/.fonts/SourceCodePro/SourceCodePro-ExtraLightIt.ttf" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/backup/.fonts/SourceCodePro/SourceCodePro-It.otf" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/backup/.fonts/SourceCodePro/SourceCodePro-It.ttf" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/backup/.fonts/SourceCodePro/SourceCodePro-Light.otf" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/backup/.fonts/SourceCodePro/SourceCodePro-Light.ttf" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/backup/.fonts/SourceCodePro/SourceCodePro-LightIt.otf" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/backup/.fonts/SourceCodePro/SourceCodePro-LightIt.ttf" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/backup/.fonts/SourceCodePro/SourceCodePro-Medium.otf" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/backup/.fonts/SourceCodePro/SourceCodePro-Medium.ttf" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/backup/.fonts/SourceCodePro/SourceCodePro-MediumIt.otf" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/backup/.fonts/SourceCodePro/SourceCodePro-MediumIt.ttf" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/backup/.fonts/SourceCodePro/SourceCodePro-Regular.otf" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/backup/.fonts/SourceCodePro/SourceCodePro-Regular.ttf" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/backup/.fonts/SourceCodePro/SourceCodePro-Semibold.otf" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/backup/.fonts/SourceCodePro/SourceCodePro-Semibold.ttf" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/backup/.fonts/SourceCodePro/SourceCodePro-SemiboldIt.otf" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/backup/.fonts/SourceCodePro/SourceCodePro-SemiboldIt.ttf" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/backup/.fonts/fonts.dir" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path=".dotfiles.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -108,8 +146,8 @@
       <file leaf-file-name=".gitignore" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/.gitignore">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="6" selection-start-line="0" selection-start-column="6" selection-end-line="0" selection-end-column="6" />
+            <state relative-caret-position="216">
+              <caret line="6" column="0" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -682,12 +720,12 @@
       <workItem from="1475349063771" duration="6026000" />
       <workItem from="1475368402618" duration="7583000" />
       <workItem from="1475416253392" duration="162000" />
-      <workItem from="1475418924529" duration="620000" />
+      <workItem from="1475418924529" duration="834000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="64445000" />
+    <option name="totallyTimeSpent" value="64659000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="3840" height="2124" extended-state="6" />
@@ -1064,8 +1102,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="6" selection-start-line="0" selection-start-column="6" selection-end-line="0" selection-end-column="6" />
+        <state relative-caret-position="216">
+          <caret line="6" column="0" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
           <folding />
         </state>
       </provider>
