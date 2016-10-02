@@ -3,6 +3,8 @@ tmp
 .gitignore
 .gitmodules
 .git
+.idea
+.dotfiles.iml
 .
 ..
 *.*~

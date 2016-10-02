@@ -66,6 +66,11 @@ massmove () {
     ls > ls; paste ls ls > ren; vi ren; sed 's/^/mv /' ren|bash; rm ren ls
 }
 
+colortest () {
+    for code ({000..255}) print -P -- "$code: %F{$code}This is how your text would look like%f"
+}
+
+
 echoAndRun() {
     echo "$@"
     "$@"
@@ -92,7 +97,9 @@ reloadFunctions() {
     autoload -Uz $f:t
 }
 
-
+##############################################################
 # TODO
+##############################################################
+
 # query Wikipedia via console over DNS
 # translate via google language tools

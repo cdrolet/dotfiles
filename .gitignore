@@ -3,3 +3,5 @@ tmp/*
 tests
 tests/*
 .test*
+.idea
+*.iml

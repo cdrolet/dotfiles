@@ -145,7 +145,11 @@ removeFiles() {
 
 restoreFiles() {
     echo
-    rsync -ahH --out-format='    %f' "$BACKUP_DIR"/* "$HOME"
+    for file in "${$BACKUP_DIR}"/*; do
+        mv -fvt "$HOME" "$file"
+    done
+
+#    rsync -ahH --out-format='    %f' "$BACKUP_DIR"/* "$HOME"
 }
 
 cleanup() {

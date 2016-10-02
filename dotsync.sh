@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
-#TODO prevent the link of .*~ files
-#TODO removed broken links to .dotfiles
-#TODO symlink to existing dir didn't work
+#TODO prevent the link of .*~ files (dotignore didn't work with globals)
 
 out() {
     printf "\n"
@@ -47,11 +45,12 @@ initSynchVariables() {
     
     BACKUP_DIR="$SOURCE_DIR"/backup
     REVERT_FILE="$SOURCE_DIR"/dotrevert.sh
-    TEMP_FILE="$SOURCE_DIR"/files.tmp
+#    TEMP_FILE="$SOURCE_DIR"/files.tmp
     SELECTED_FILES=()
     SKIPPED_FILES=()
     OVERWRITTEN_FILES=()
     REJECTED_FILES=()
+    BROKEN_FILES=()
     readarray -t IGNORED_FILES < "$SOURCE_DIR"/.dotignore
     IGNORED_FILES+=("$(basename "$BACKUP_DIR")")
     MAX_SCAN_LEVEL=2
@@ -166,9 +165,9 @@ areFileLinkPointToward() {
 isIgnored() {
 
     for element in "${IGNORED_FILES[@]}";do
-    if [[ "$1" == "$element" ]];then
-        return 0;
-    fi
+        if [[ "$1" == "$element" ]];then
+            return 0;
+        fi
     done;
     return 1;
 }
@@ -187,6 +186,53 @@ selectFile() {
 
     ind; echo "+ Selecting "$1" (new dotfile)"
 }
+
+removeBrokenSymLinks() {
+
+    out "Looking for broken symbolic links:"
+
+    lookForBrokenLinks
+
+    if [ "${#BROKEN_FILES[@]}" -eq 0 ];then
+        out "No broken symbolic links detected."
+        return
+    else
+        confirmBrokenLinkRemoval
+    fi
+
+}
+
+lookForBrokenLinks() {
+    for file in "$HOME"/*; do
+
+        if [ ! -e "$file" ]; then
+            if areFileLinkPointToward "$file" "$SOURCE_DIR"; then
+                BROKEN_FILES+=($file)
+                ind; echo "- $file"
+           fi
+        fi
+
+    done
+}
+
+confirmBrokenLinkRemoval() {
+
+    echo "${#BROKEN_FILES[@]} broken symbolic links pointing to $SOURCE_DIR"
+
+    read -p "Do you want to remove them? (y/n) " -n 1;
+    out
+    if [[ $REPLY =~ ^[Yy]$ ]];then
+        removeBrokenLinkFiles
+    fi
+
+}
+
+removeBrokenLinkFiles() {
+    for file in "${BROKEN_FILES[@]}"; do
+        rm -fv "$file"
+    done
+}
+
 
 createSymLinks() {
 
@@ -239,15 +285,21 @@ backupHome() {
     [ ! -d ${BACKUP_DIR} ] && mkdir "$BACKUP_DIR"
 
     out "Transfering existing files to ${BACKUP_DIR}:"
-    printf "%s\r" "${OVERWRITTEN_FILES[@]}" > "$TEMP_FILE"
-    rsync -ahH --files-from="$TEMP_FILE" --out-format='    %f' "$HOME" "$BACKUP_DIR"
-    rm "$TEMP_FILE"
+
+    for file in "${OVERWRITTEN_FILES[@]}";do
+        mv -fvt "$BACKUP_DIR" "$file"
+    done
+
+
+#    printf "%s\r" "${OVERWRITTEN_FILES[@]}" > "$TEMP_FILE"
+#    rsync -ahH --files-from="$TEMP_FILE" --out-format='    %f' "$HOME" "$BACKUP_DIR"
+#    rm "$TEMP_FILE"
 }
 
 symlinkFiles() {
     out "Creating symbolic links in home:"
     for file in "${SELECTED_FILES[@]}";do
-        ind; ln -svf ${file} $HOME
+        ind; ln -sfnv ${file} $HOME
     done
 }
 
@@ -273,7 +325,8 @@ unset -f isIgnored
     unset SOURCE_DIR
     unset BACKUP_DIR
     unset REVERT_FILE
-    unset TEMP_FILE
+#    unset TEMP_FILE
+    unset BROKEN_FILES
     unset IGNORED_FILES
     unset MAX_SCAN_LEVEL
 
@@ -285,6 +338,8 @@ initSynchVariables
 updateFromRepo
 
 readCommandArgs "$@"
+
+removeBrokenSymLinks
 
 createSymLinks
 
