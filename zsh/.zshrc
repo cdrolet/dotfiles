@@ -30,9 +30,7 @@ scanFunctions() {
     if [ ! -d $functionsPath ]; then
         return 1;
     fi
-    
-    echo ">>>" + $functionsPath
-    
+
     fpath=($functionsPath $fpath)
     
     for function in $(echo $functionsPath/*(.N)); do
@@ -49,7 +47,7 @@ scanSource() {
         if [[ ${name#*external} != $name ]]; then
             continue;
         fi
-        echo " - $file "
+#       echo " - $file "
         source $file
     done
 }
@@ -59,6 +57,6 @@ initHome
 
 scanModules
 
-
+# INSTALL
 # Need to install the command-not-found hook
 # Pacman: pkgfile
