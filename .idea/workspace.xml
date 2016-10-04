@@ -4,7 +4,6 @@
     <list default="true" id="9d4f3eab-840b-4125-ae8c-05c4f9220f74" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tmux/plugins/tmux-sidebar" afterPath="$PROJECT_DIR$/tmux/plugins/tmux-sidebar" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dotrevert.sh" afterPath="$PROJECT_DIR$/dotrevert.sh" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/zsh/modules/70.prompt/init.zsh" afterPath="$PROJECT_DIR$/zsh/modules/70.prompt/init.zsh" />
     </list>
     <ignored path=".dotfiles.iws" />
@@ -69,8 +68,8 @@
       <file leaf-file-name="init.zsh" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/zsh/modules/70.prompt/init.zsh">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="756">
-              <caret line="21" column="32" selection-start-line="21" selection-start-column="32" selection-end-line="21" selection-end-column="32" />
+            <state relative-caret-position="612">
+              <caret line="17" column="104" selection-start-line="17" selection-start-column="104" selection-end-line="17" selection-end-column="104" />
               <folding />
             </state>
           </provider>
@@ -693,12 +692,12 @@
       <workItem from="1475447062277" duration="2378000" />
       <workItem from="1475452457181" duration="2050000" />
       <workItem from="1475540318650" duration="6777000" />
-      <workItem from="1475547343770" duration="1291000" />
+      <workItem from="1475547343770" duration="1482000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="12496000" />
+    <option name="totallyTimeSpent" value="12687000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="3840" height="2124" extended-state="6" />
@@ -1083,8 +1082,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/zsh/modules/70.prompt/init.zsh">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="756">
-          <caret line="21" column="32" selection-start-line="21" selection-start-column="32" selection-end-line="21" selection-end-column="32" />
+        <state relative-caret-position="612">
+          <caret line="17" column="104" selection-start-line="17" selection-start-column="104" selection-end-line="17" selection-end-column="104" />
           <folding />
         </state>
       </provider>
