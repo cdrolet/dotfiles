@@ -48,8 +48,7 @@ initRevert() {
     shopt -s dotglob
 
     initSourceDir
-    
-    
+
     BACKUP_DIR="$SOURCE_DIR"/backup
     TO_REMOVE_FILES=()
     TO_RESTORE_FILES=()
@@ -96,7 +95,8 @@ selectFilesToRestore() {
         out "Scanning backup files to restore:"
     fi
     for file in $BACKUP_DIR/*;do
-    
+        [ ! -e $file ] && continue
+
         local filename="$(basename $file)"
         [[ ! -z $TARGET ]] && [[ "$filename" != $TARGET ]] && continue
         
@@ -109,6 +109,7 @@ selectFilesToRestore() {
         TO_RESTORE_FILES+=($file)
         ind; echo "+ Selecting "$file""
     done
+
     if [ ${#TO_RESTORE_FILES[@]} -eq 0 ]; then
         ind; echo "No file to be restored from backup." 
     fi
@@ -145,7 +146,7 @@ removeFiles() {
 
 restoreFiles() {
     echo
-    for file in "${$BACKUP_DIR}"/*; do
+    for file in $BACKUP_DIR/*; do
         mv -fvt "$HOME" "$file"
     done
 
