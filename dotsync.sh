@@ -51,7 +51,8 @@ initSynchVariables() {
     OVERWRITTEN_FILES=()
     REJECTED_FILES=()
     BROKEN_FILES=()
-    readarray -t IGNORED_FILES < "$SOURCE_DIR"/.dotignore
+    IGNORED_FILES=($(awk -F= '{print $1}' $SOURCE_DIR/.dotignore))
+    #readarray -t IGNORED_FILES < "$SOURCE_DIR"/.dotignore
     IGNORED_FILES+=("$(basename "$BACKUP_DIR")")
     MAX_SCAN_LEVEL=2
 
@@ -63,7 +64,7 @@ updateFromRepo() {
 
     cd "$SOURCE_DIR"
     git pull origin master
-#    git submodule foreach git pull origin master
+    git submodule foreach git pull origin master
     cd
     out
 }
