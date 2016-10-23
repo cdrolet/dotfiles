@@ -5,3 +5,4 @@ tests
 tests/*
 .test*
 backup
+ssh/
