@@ -38,7 +38,8 @@ alias ls=' ls --color=auto'
 alias l=" ls -lAhtr"
 
 # standard directory view
-alias v=" clear; l -g"    
+alias v=" clear; l -g"
+
 # show all files in all subdirs plain in a list
 alias vs=" v **/*(.)"     
 

@@ -288,7 +288,7 @@ backupHome() {
     out "Transfering existing files to ${BACKUP_DIR}:"
 
     for file in "${OVERWRITTEN_FILES[@]}";do
-        mv -fvt "$BACKUP_DIR" "$file"
+        mv -fv "$file" "$BACKUP_DIR"
     done
 
 
