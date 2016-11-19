@@ -10,3 +10,6 @@
 [submodule "zsh/modules/70.prompt/external"]
 	path = zsh/modules/70.prompt/external
 	url = https://github.com/bhilburn/powerlevel9k
+[submodule "zsh/modules/55.directory/external"]
+	path = zsh/modules/55.directory/external
+	url = https://github.com/rupa/z

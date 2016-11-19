@@ -5,7 +5,6 @@ fi
 
 export PATH="$(brew --prefix coreutils)/libexec/gnubin:/usr/local/bin:$PATH"
 
-
 # Darwin ls command does not support --color option.
 alias l=" gls -oAhtr --group-directories-first --color=always"
 

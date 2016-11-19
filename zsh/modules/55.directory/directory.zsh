@@ -39,10 +39,16 @@ alias v=" clear; l -g"
 # show all files in all subdirs plain in a list
 alias vs=" v **/*(.)"     
 
+##############################################################
+# Directory Jump
+##############################################################
 
-##############################################################
-# TODO
-##############################################################
-# Add bookmark manipulation here
-# static named directories
-# https://github.com/vincentbernat/zshrc/blob/master/rc/bookmarks.zsh
+source "${0:h}/external/z.sh" || return 1
+
+# add z directory recording
+add_directory_to_z_db () {
+    z --add "$(pwd -P)"
+}
+
+autoload -Uz add-zsh-hook
+add-zsh-hook precmd add_directory_to_z_db

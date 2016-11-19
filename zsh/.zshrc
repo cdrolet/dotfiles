@@ -1,6 +1,8 @@
 
 initHome() {
+
     local source=~/.zshrc
+
     # resolve $source until the file is no longer a symlink
     while [ -h "$source" ]; do
         ZSH_CONFIG_HOME="$( cd -P "$( dirname "$source" )" && pwd )"
@@ -20,12 +22,12 @@ scanModules() {
 
     for module in $(ls -d $ZSH_MODULES/<0-100>.* | sort -t'.' -k1n); do
         scanFunctions $module
-
         scanSource $module
     done
 }
 
 scanFunctions() {
+
     functionsPath=$1/$ZSH_FUNCTIONS
     if [ ! -d $functionsPath ]; then
         return 1;
@@ -39,6 +41,7 @@ scanFunctions() {
 }
 
 scanSource() {
+
     setopt extended_glob
     for file in $(echo $1/**/*.zsh(.N)); do
         name=$( dirname "$file" )
@@ -47,7 +50,7 @@ scanSource() {
         if [[ ${name#*external} != $name ]]; then
             continue;
         fi
-#       echo " - $file "
+
         source $file
     done
 }
@@ -56,6 +59,7 @@ scanSource() {
 initHome
 
 scanModules
+
 
 # INSTALL
 # Need to install the command-not-found hook
