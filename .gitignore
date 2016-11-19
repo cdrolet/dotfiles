@@ -6,3 +6,4 @@ tests/*
 .test*
 backup
 ssh/
+!intellij/settings.jar

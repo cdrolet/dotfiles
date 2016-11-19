@@ -12,14 +12,11 @@ setopt AUTO_PUSHD
 # don’t push multiple copies of the same directory onto the directory stack.
 setopt PUSHD_IGNORE_DUPS
 
-# exchanges the meanings of ‘+’ and ‘-’ when used with a number to specify a directory in the stack.
-setopt PUSHD_MINUS
-
 ##############################################################
 # ALIAS
 ##############################################################
 
-for index ({1..9}) alias "$index"="cd +${index}"; unset index
+for index ({0..9}) alias "$index"="cd +${index}"; unset index
 
 alias -g ...='../..'
 alias -g ....='../../..'
@@ -34,8 +31,7 @@ alias cd....=' ....'
 
 alias d=' dirs -v | head -10'
 
-alias ls=' ls --color=auto'
-alias l=" ls -lAhtr"
+alias l=" ls --group-directories-first -lAhtr"
 
 # standard directory view
 alias v=" clear; l -g"

@@ -27,6 +27,7 @@
 	editor = vim 
 	autocrlf = input
 	pager = less
+	excludesfile = ~/.gitignore_global
 
 [diff]
 	tool = vimdiff
