@@ -7,3 +7,4 @@ autoload -Uz zmv
 alias mmv='noglob zmv -W'
 
 autoload -Uz colors
+autoload -Uz add-zsh-hook

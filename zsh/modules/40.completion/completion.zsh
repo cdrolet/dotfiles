@@ -13,8 +13,11 @@ setopt COMPLETE_ALIASES
 setopt ALWAYS_TO_END
 
 ##############################################################
-# MODULE
+# FUNCTIONS
 ##############################################################
+
+# Add zsh-completions to $fpath.
+fpath=("${0:h}/external/src" $fpath)
 
 # load completions widgets
 zmodload -i zsh/complist
@@ -129,7 +132,7 @@ zstyle ':completion:*:(ssh|scp|rsync):*:hosts-host' ignored-patterns '*(.|:)*' l
 zstyle ':completion:*:(ssh|scp|rsync):*:hosts-domain' ignored-patterns '<->.<->.<->.<->' '^[-[:alnum:]]##(.[-[:alnum:]]##)##' '*@*'
 zstyle ':completion:*:(ssh|scp|rsync):*:hosts-ipaddr' ignored-patterns '^(<->.<->.<->.<->|(|::)([[:xdigit:].]##:(#c,2))##(|%*))' '127.0.0.<->' '255.255.255.255' '::1' 'fe80::*'
 
-# to avoid getting offerer the same filename again event if it's already on the command line
+# to avoid getting offered the same filename again if it's already on the command line
 zstyle ':completion:*:(rm|kill|diff):*' ignore-line other
 
 # rm: bak files first, logs and then all the rest
@@ -137,7 +140,7 @@ zstyle ':completion::*:rm:*:*' file-patterns '*.o:object-files:object\ file *(~|
 
 
 ##############################################################
-# TODO
+# TODO not tested, didn't work or don't know how to trigger
 ##############################################################
 
 # - not tested yet

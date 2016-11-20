@@ -50,5 +50,5 @@ add_directory_to_z_db () {
     z --add "$(pwd -P)"
 }
 
-autoload -Uz add-zsh-hook
+
 add-zsh-hook precmd add_directory_to_z_db

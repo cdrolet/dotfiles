@@ -13,3 +13,6 @@
 [submodule "zsh/modules/55.directory/external"]
 	path = zsh/modules/55.directory/external
 	url = https://github.com/rupa/z
+[submodule "zsh/modules/40.completion/external"]
+	path = zsh/modules/40.completion/external
+	url = https://github.com/zsh-users/zsh-completions

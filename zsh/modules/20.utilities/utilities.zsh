@@ -1,3 +1,6 @@
+##############################################################
+# FUNCTIONS
+##############################################################
 
 # Top ten memory hogs
 # http://www.commandlinefu.com/commands/view/7139/top-ten-memory-hogs
@@ -75,6 +78,21 @@ echoAndRun() {
     echo "$@"
     "$@"
 }
+
+##############################################################
+# ALIAS
+##############################################################
+
+# recursive dos2unix in current directory
+alias dos2lf='dos2unix `find ./ -type f`'
+
+# Network connections
+# Often useful to prefix with SUDO to see more system level network usage
+alias network.connections='lsof -l -i +L -R -V'
+alias network.established='lsof -l -i +L -R -V | grep ESTABLISHED'
+alias network.internalip="ifconfig en0 | egrep -o '([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)'"
+alias network.externalip='curl -s http://checkip.dyndns.org/ | sed "s/[a-zA-Z<>/ :]//g"'
+
 
 ##############################################################
 # DEBUGGING

@@ -18,6 +18,9 @@ fi
 
 # At this point, $LS_COLORS should have beeen initialized from dircolors and possibly .dircolors
 
+
+
+
 # Load command-not-found
 # Debian-based
 if [[ -s '/etc/zsh_command_not_found' ]]; then
