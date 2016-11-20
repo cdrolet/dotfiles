@@ -83,7 +83,7 @@ echoAndRun() {
 # ALIAS
 ##############################################################
 
-# recursive dos2unix in current directory
+# Recursive dos2unix in current directory
 alias dos2lf='dos2unix `find ./ -type f`'
 
 # Network connections
@@ -93,6 +93,16 @@ alias network.established='lsof -l -i +L -R -V | grep ESTABLISHED'
 alias network.internalip="ifconfig en0 | egrep -o '([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)'"
 alias network.externalip='curl -s http://checkip.dyndns.org/ | sed "s/[a-zA-Z<>/ :]//g"'
 
+# Files
+# used, anywhere on the filesystem
+alias files.usage='sudo fs_usage -e -f filesystem|grep -v CACHE_HIT|grep -v grep'
+# being opened
+alias files.open='sudo fs_usage -e -f filesystem|grep -v CACHE_HIT|grep -v grep|grep open'
+# in use in the Users directory
+alias files.usage.user='sudo fs_usage -e -f filesystem|grep -v CACHE_HIT|grep -v grep|grep Users'
+
+# npm install -g vtop
+alias vtop="vtop --theme wizard"
 
 ##############################################################
 # DEBUGGING

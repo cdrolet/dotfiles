@@ -52,3 +52,30 @@ alias gitrm="gitRemoveBranch"
 
 # Update submodules
 alias gitu="echoAndRun git submodule update --remote"
+
+# assumes git-up is installed (gem install git-up)
+# switches to 'develop' branch, updates all local branches (nicely using git-up), removes all local branches already merged into 'develop'
+alias gitdev='git checkout develop; git-up; git branch --merged develop | grep -v "\* develop" | xargs -n 1 git branch -d; git branch;'
+
+removeSubModule() {
+    submodule_name=$(echo "$1" | sed 's/\/$//'); shift
+
+    exit_err() {
+      [ $# -gt 0 ] && echo "fatal: $*" 1>&2
+      exit 1
+    }
+
+    if git submodule status "$submodule_name" >/dev/null 2>&1; then
+      git submodule deinit -f "$submodule_name"
+      git rm -f "$submodule_name"
+
+      git config -f .gitmodules --remove-section "submodule.$submodule_name"
+      if [ -z "$(cat .gitmodules)" ]; then
+        git rm -f .gitmodules
+      else
+        git add .gitmodules
+      fi
+    else
+      exit_err "Submodule '$submodule_name' not found"
+    fi
+}
