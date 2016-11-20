@@ -25,6 +25,9 @@ else
     which gdircolors > /dev/null && eval "`gdircolors -b`"
 fi
 
+#iterm2 integration to zsh
+test -e "$HOME/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
 ##############################################################
 # FUNCTIONS
 ##############################################################

@@ -1,6 +1,10 @@
 [user]
-	name = charles drolet 
-	email = charles.drokar@gmail.com
+  name = Charles Drolet
+  email = cdrolet@expedia.com
+
+[github]
+  # https://github.com/blog/180-local-github-config
+  user = cdrolet
 
 [color]
 	ui = auto

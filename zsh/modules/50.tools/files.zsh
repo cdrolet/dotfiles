@@ -46,6 +46,10 @@ massmove () {
     ls > ls; paste ls ls > ren; vi ren; sed 's/^/mv /' ren|bash; rm ren ls
 }
 
+fixperms(){
+    find . \( -name "*.sh" -or -type d \) -exec chmod 755 {} \; && find . -type f ! -name "*.sh" -exec chmod 644 {} \;
+}
+
 ##############################################################
 # ALIAS
 ##############################################################

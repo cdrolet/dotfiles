@@ -1,29 +1,192 @@
-readonly MAVEN_THREADS='-T 1C'
-readonly MAVEN_OPTIONS='$MAVEN_THREADS'
+##############################################################
+# FUNCTIONS
+##############################################################
 
-function mavenTree {
-	echoAndRun mvn dependency:tree -Dverbose -Dincludes="$*"
+# mvn-color based on https://gist.github.com/1027800
+BOLD=`tput bold`
+UNDERLINE_ON=`tput smul`
+UNDERLINE_OFF=`tput rmul`
+TEXT_BLACK=`tput setaf 0`
+TEXT_RED=`tput setaf 1`
+TEXT_GREEN=`tput setaf 2`
+TEXT_YELLOW=`tput setaf 3`
+TEXT_BLUE=`tput setaf 4`
+TEXT_MAGENTA=`tput setaf 5`
+TEXT_CYAN=`tput setaf 6`
+TEXT_WHITE=`tput setaf 7`
+BACKGROUND_BLACK=`tput setab 0`
+BACKGROUND_RED=`tput setab 1`
+BACKGROUND_GREEN=`tput setab 2`
+BACKGROUND_YELLOW=`tput setab 3`
+BACKGROUND_BLUE=`tput setab 4`
+BACKGROUND_MAGENTA=`tput setab 5`
+BACKGROUND_CYAN=`tput setab 6`
+BACKGROUND_WHITE=`tput setab 7`
+RESET_FORMATTING=`tput sgr0`
+
+readonly MAVEN_THREADS='-T 1C'
+
+# Wrapper function for Maven's mvn command.
+mvn-color()
+{
+  (
+  # Filter mvn output using sed. Before filtering set the locale to C, so invalid characters won't break some sed implementations
+  unset LANG
+  LC_CTYPE=C mvn $@ | sed -e "s/\(\[INFO\]\ BUILD SUCCESSFUL\)/${TEXT_GREEN}\1${RESET_FORMATTING}/g" \
+               -e "s/\(\[WARNING\]\)\(.*\)/${TEXT_YELLOW}\1${RESET_FORMATTING}\2/g" \
+               -e "s/\(\[ERROR\]\)\(.*\)/${TEXT_RED}\1${RESET_FORMATTING}\2/g" \
+               -e "s/Tests run: \([^,]*\), Failures: \([^,]*\), Errors: \([^,]*\), Skipped: \([^,]*\)/${TEXT_GREEN}Tests run: \1${RESET_FORMATTING}, Failures: ${TEXT_RED}\2${RESET_FORMATTING}, Errors: ${TEXT_RED}\3${RESET_FORMATTING}, Skipped: ${TEXT_YELLOW}\4${RESET_FORMATTING}/g"
+
+  # Make sure formatting is reset
+  echo -ne ${RESET_FORMATTING}
+  )
 }
 
-#function gitflowrelease {
-	#git reset --hard HEAD &&
-	#git clean -f -d &&
-	#git checkout master &&
-	#git pull &&
-	#git checkout develop &&
-	#git pull &&
-	#mvn jgitflow:release-start &&
-	#mvn jgitflow:release-start
-#}
+listMavenCompletions() {
+     reply=(
+        # common lifecycle
+        clean process-resources compile process-test-resources test-compile test integration-test package verify install deploy site
 
-alias mvni="echoAndRun mvn install $MAVEN_OPTIONS"
+        # common plugins
+        deploy failsafe install site surefire checkstyle javadoc jxr pmd ant antrun archetype assembly dependency enforcer gpg help release repository source eclipse idea jetty cargo jboss tomcat tomcat6 tomcat7 exec versions war ear ejb android scm buildnumber nexus repository sonar license hibernate3 liquibase flyway gwt
 
-alias mvnc="echoAndRun mvn clean $MAVEN_OPTIONS"
+        # deploy
+        deploy:deploy-file
+        # failsafe
+        failsafe:integration-test failsafe:verify
+        # install
+        install:install-file
+        # site
+        site:site site:deploy site:run site:stage site:stage-deploy
+        # surefire
+        surefire:test
 
-alias mvnci="echoAndRun mvn clean install $MAVEN_OPTIONS"
+        # checkstyle
+        checkstyle:checkstyle checkstyle:check
+        # javadoc
+        javadoc:javadoc javadoc:jar javadoc:aggregate
+        # jxr
+        jxr:jxr
+        # pmd
+        pmd:pmd pmd:cpd pmd:check pmd:cpd-check
 
-alias mvns="echoAndRun mvn install -DskipTests $MAVEN_OPTIONS"
+        # ant
+        ant:ant ant:clean
+        # antrun
+        antrun:run
+        # archetype
+        archetype:generate archetype:create-from-project archetype:crawl
+        # assembly
+        assembly:single assembly:assembly
+        # dependency
+        dependency:analyze dependency:analyze-dep-mgt dependency:analyze-only dependency:analyze-report dependency:build-classpath dependency:copy dependency:copy-dependencies dependency:get dependency:go-offline dependency:list dependency:purge-local-repository dependency:resolve dependency:resolve-plugins dependency:sources dependency:tree dependency:unpack dependency:unpack-dependencies
+        # enforcer
+        enforcer:enforce
+        # gpg
+        gpg:sign gpg:sign-and-deploy-file
+        # help
+        help:active-profiles help:all-profiles help:describe help:effective-pom help:effective-settings help:evaluate help:expressions help:system
+        # release
+        release:clean release:prepare release:rollback release:perform release:stage release:branch release:update-versions
+        # repository
+        repository:bundle-create repository:bundle-pack
+        # source
+        source:aggregate source:jar source:jar-no-fork
 
-alias mvnt="mavenTree"
+        # eclipse
+        eclipse:clean eclipse:eclipse
+        # idea
+        idea:clean idea:idea
 
-#alias mvnrelease="gitflowrelease"
+        # jetty
+        jetty:run jetty:run-exploded
+        # cargo
+        cargo:start cargo:run cargo:stop cargo:deploy cargo:undeploy cargo:help
+        # jboss
+        jboss:start jboss:stop jboss:deploy jboss:undeploy jboss:redeploy
+        # tomcat
+        tomcat:start tomcat:stop tomcat:deploy tomcat:undeploy tomcat:redeploy
+        # tomcat6
+        tomcat6:run tomcat6:run-war tomcat6:run-war-only tomcat6:stop tomcat6:deploy tomcat6:undeploy
+        # tomcat7
+        tomcat7:run tomcat7:run-war tomcat7:run-war-only tomcat7:deploy
+	# tomee
+        tomee:run tomee:run-war tomee:run-war-only tomee:stop tomee:deploy tomee:undeploy
+        # spring-boot
+        spring-boot:run spring-boot:repackage
+        # exec
+        exec:exec exec:java
+        # versions
+        versions:display-dependency-updates versions:display-plugin-updates versions:display-property-updates versions:update-parent versions:update-properties versions:update-child-modules versions:lock-snapshots versions:unlock-snapshots versions:resolve-ranges versions:set versions:use-releases versions:use-next-releases versions:use-latest-releases versions:use-next-snapshots versions:use-latest-snapshots versions:use-next-versions versions:use-latest-versions versions:commit versions:revert
+        # scm
+        scm:add scm:checkin scm:checkout scm:update scm:status
+        # buildnumber
+        buildnumber:create buildnumber:create-timestamp buildnumber:help buildnumber:hgchangeset
+
+        # war
+        war:war war:exploded war:inplace war:manifest
+        # ear
+        ear:ear ear:generate-application-xml
+        # ejb
+        ejb:ejb
+        # android
+        android:apk android:apklib android:deploy android:deploy-dependencies android:dex android:emulator-start android:emulator-stop android:emulator-stop-all android:generate-sources android:help android:instrument android:manifest-update android:pull android:push android:redeploy android:run android:undeploy android:unpack android:version-update android:zipalign android:devices
+        # nexus
+        nexus:staging-list nexus:staging-close nexus:staging-drop nexus:staging-release nexus:staging-build-promotion nexus:staging-profiles-list nexus:settings-download
+        # repository
+        repository:bundle-create repository:bundle-pack repository:help
+
+        # sonar
+        sonar:sonar
+        # license
+        license:format license:check
+        # hibernate3
+        hibernate3:hbm2ddl hibernate3:help
+        # liquibase
+        liquibase:changelogSync liquibase:changelogSyncSQL liquibase:clearCheckSums liquibase:dbDoc liquibase:diff liquibase:dropAll liquibase:help liquibase:migrate liquibase:listLocks liquibase:migrateSQL liquibase:releaseLocks liquibase:rollback liquibase:rollbackSQL liquibase:status liquibase:tag liquibase:update liquibase:updateSQL liquibase:updateTestingRollback
+        # flyway
+        flyway:clean flyway:history flyway:init flyway:migrate flyway:status flyway:validate
+        # gwt
+        gwt:browser gwt:clean gwt:compile gwt:compile-report gwt:css gwt:debug gwt:eclipse gwt:eclipseTest gwt:generateAsync gwt:help gwt:i18n gwt:mergewebxml gwt:resources gwt:run gwt:sdkInstall gwt:source-jar gwt:soyc gwt:test
+
+        # options
+        -Dmaven.test.skip=true -DskipTests -Dmaven.surefire.debug -DenableCiProfile -Dpmd.skip=true -Dcheckstyle.skip=true -Dtycho.mode=maven -Dmaven.test.failure.ignore=true
+
+        # arguments
+        -am -amd -B -C -c -cpu -D -e -emp -ep -f -fae -ff -fn -gs -h -l -N -npr -npu -nsu -o -P -pl -q -rf -s -T -t -U -up -V -v -X
+
+        cli:execute cli:execute-phase
+        archetype:generate generate-sources
+        cobertura:cobertura
+        -Dtest= `if [ -d ./src/test/java ] ; then find ./src/test/java -type f -name '*.java' | grep -v svn | sed 's?.*/\([^/]*\)\..*?-Dtest=\1?' ; fi`
+    );
+}
+
+compctl -K listMavenCompletions mvn
+
+##############################################################
+# ALIAS
+##############################################################
+
+# Override the mvn command with the colorized one.
+alias mvn="echoAndRun mvn-color ${MAVEN_THREADS}"
+
+alias mvnc='mvn clean'
+alias mvni='mvn install'
+alias mvnci='mvn clean install'
+alias mvns='mvn clean install -DskipTests'
+
+alias mvnso='mvn clean install -DskipTests --offline'
+
+alias mvnd='mvn deploy'
+alias mvnp='mvn package'
+alias mvncom='mvn compile'
+alias mvnt='mvn test'
+
+alias mvntree='mvn dependency:tree -Dverbose -Dincludes=$1'
+alias mvnag='mvn archetype:generate'
+alias mvn-updates='mvn versions:display-dependency-updates'
+alias mvns='mvn site'
+alias mvnsrc='mvn dependency:sources'
+alias mvndocs='mvn dependency:resolve -Dclassifier=javadoc'
+
