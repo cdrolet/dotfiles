@@ -53,13 +53,6 @@ function vimHelp {
 			 
 }
 
-function showAllColors {
-  for i in {0..255} ; do
-    echo "\x1b[38;5;${i}mcolour${i}"
-  done	
-}
-
 alias vimh="echoAndRun vimHelp"
 
-#alias colors="echoAndRun showAllColors"
 
