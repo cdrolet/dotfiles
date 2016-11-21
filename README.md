@@ -26,11 +26,12 @@ This script do the following:
   - apply them all at once.
   - create a symlink to the dotrevert.sh script
 
-### usage
+### options
 sh dotsync.sh [-f] [-t filename] 
 
-   -f: don't ask for user confirmation before applying changes.
-   -t: only apply to the specified filename.
+    -f: don't ask for user confirmation before applying changes.
+    
+    -t: only apply to the specified filename.
 
 
 
