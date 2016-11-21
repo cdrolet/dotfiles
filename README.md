@@ -26,12 +26,6 @@ Create symlinks to your dotfiles with the following steps:
   - apply them all at once.
   - create a symlink to the dotrevert.sh script
 
-#### options    
-    sh dotsync.sh [-f] [-t filename] 
-
-    -f: don't ask for user confirmation before applying changes.
-    -t: only apply to the specified filename.
-
 ## dotrevert.sh
 
 Undo the dotsync.sh changes:
@@ -44,6 +38,7 @@ Undo the dotsync.sh changes:
 4. If user confirm to proceed with the changes proposal, apply them all at once.
    
 #### options    
+    sh dotsync.sh [-f] [-t filename] 
     sh dotrevert.sh [-f] [-t filename] 
 
     -f: don't ask for user confirmation before applying changes.
