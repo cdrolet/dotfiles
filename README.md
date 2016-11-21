@@ -29,9 +29,9 @@ This script do the following:
 ### options    
     sh dotsync.sh [-f] [-t filename] 
 
-    -f: don't ask for user confirmation before applying changes.
+    -f    don't ask for user confirmation before applying changes.
     
-    -t: only apply to the specified filename.
+    -t    only apply to the specified filename.
 
 
 
