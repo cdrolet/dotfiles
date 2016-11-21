@@ -36,7 +36,7 @@ Create symlinks to your dotfiles with the following steps:
 
 Undo the dotsync changes and revert your home directory to the backup:
 
-1. Scan the user home directory for any symlinks pointing to file of this repo.
+1. Scan the user home directory for any symlinks pointing to a file of this repo.
 2. Scan the backup folder for any file in it.
 3. Propose to the user the following list of changes:
    - Remove all files from step 1.
