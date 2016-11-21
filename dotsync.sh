@@ -45,14 +45,12 @@ initSynchVariables() {
     
     BACKUP_DIR="$SOURCE_DIR"/backup
     REVERT_FILE="$SOURCE_DIR"/dotrevert.sh
-#    TEMP_FILE="$SOURCE_DIR"/files.tmp
     SELECTED_FILES=()
     SKIPPED_FILES=()
     OVERWRITTEN_FILES=()
     REJECTED_FILES=()
     BROKEN_FILES=()
     IGNORED_FILES=($(awk -F= '{print $1}' $SOURCE_DIR/.dotignore))
-    #readarray -t IGNORED_FILES < "$SOURCE_DIR"/.dotignore
     IGNORED_FILES+=("$(basename "$BACKUP_DIR")")
     MAX_SCAN_LEVEL=2
 
