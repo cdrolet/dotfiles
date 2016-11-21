@@ -5,7 +5,7 @@
 
 Create symlinks to your dotfiles with the following steps:
 
-1. Update your current local dotfiles repo with latest remote changes.
+1. Update your current local dotfiles repo with the latest remote changes.
 
 2. Scan this repo and subfolders for every file and folder starting with a dot.
    Only the root and the first level of subfolder are scanned.
