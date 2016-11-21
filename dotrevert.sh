@@ -1,4 +1,21 @@
 #!/usr/bin/env bash
+#
+#   Author: Charles Drolet
+#   Undo the dotsync.sh changes:
+
+#   1. Scan the user home directory for any symlinks pointing to a file of this repo.
+#   2. Scan the backup folder.
+#   3. Propose to the user the following list of changes:
+#       - Remove all files from step 1 from the home directory.
+#       - Restore all files from step 2 to the home directory.
+#   4. If user confirm to proceed with the changes proposal, apply them all at once.
+#
+#   usage:
+#
+#   sh dotrevert.sh [-f] [-t filename]
+#
+#   -f: don't ask for user confirmation before applying changes.
+#   -t: only apply to the specified filename.
 
 
 out() {
