@@ -13,7 +13,7 @@ Create symlinks to your dotfiles with the following steps:
 3. Propose to the user the following list of changes:
   - Create symlinks from your home directory to the files from step 2.
   - Backup any file in your home repository that may be overwritten by the symlink creation.
-  - Remove old symlinks from your home directory to missing file from this repo.
+  - Remove old symlinks from your home directory to missing file of this repo.
   
   This preview include the name of every files involved and the action that will be taken.
   
