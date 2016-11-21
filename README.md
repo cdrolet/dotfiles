@@ -18,7 +18,7 @@ This script do the following:
   This preview include the name of every files involved and the action that will be taken.
   
   It will also report: 
-    - Rejected file from potential conflict when two files having the same name from different directory.
+    - Rejected file from potential conflict when two files have the same name from different directory.
     - Ignored file when a file name is listed in the .dotignore file
     - Skipped file when a file is already symlinked to this repo.
 
