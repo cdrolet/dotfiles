@@ -34,13 +34,13 @@ Create symlinks to your dotfiles with the following steps:
 
 ## dotrevert.sh
 
-Undo the dotsync changes and revert your home directory to the backup:
+Undo the dotsync.sh changes:
 
 1. Scan the user home directory for any symlinks pointing to a file of this repo.
-2. Scan the backup folder for any file in it.
+2. Scan the backup folder.
 3. Propose to the user the following list of changes:
-   - Remove all files from step 1.
-   - Restore all files from step 2.
+   - Remove all files from step 1 from the home directory.
+   - Restore all files from step 2 to the home directory.
 4. If user confirm to proceed with the changes proposal, apply them all at once.
    
 #### options    
