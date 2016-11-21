@@ -3,7 +3,7 @@
 
 ## dotsync.sh
 
-This script do the following:
+Create symlinks to your dotfiles with the following steps:
 
 1. Update your current local dotfiles repo with latest remote changes.
 
@@ -34,7 +34,7 @@ This script do the following:
 
 ## dotrevert.sh
 
-This script do the following:
+Undo the dotsync changes and revert your home directory to the backup:
 
 1. Scan the user home directory for any symlinks pointing to file of this repo.
 2. Scan the backup folder for any file in it.
