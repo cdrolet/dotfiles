@@ -26,8 +26,8 @@ This script do the following:
   - apply them all at once.
   - create a symlink to the dotrevert.sh script
 
-### options
-sh dotsync.sh [-f] [-t filename] 
+### options    
+    sh dotsync.sh [-f] [-t filename] 
 
     -f: don't ask for user confirmation before applying changes.
     
