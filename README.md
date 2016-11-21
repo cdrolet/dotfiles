@@ -32,8 +32,21 @@ This script do the following:
     -f: don't ask for user confirmation before applying changes.
     -t: only apply to the specified filename.
 
+## dotrevert.sh
 
+This script do the following:
 
+1. Scan the user home directory for any symlinks pointing to file of this repo.
+2. Scan the backup folder for any file in it.
+3. Propose to the user the following list of changes:
+   - Remove all files from step 1.
+   - Restore all files from step 2.
+4. If user confirm to proceed with the changes proposal, apply them all at once.
+   
+### options    
+    sh dotrevert.sh [-f] [-t filename] 
 
+    -f: don't ask for user confirmation before applying changes.
+    -t: only apply to the specified filename.
    
 
