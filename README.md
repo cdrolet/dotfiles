@@ -3,6 +3,11 @@
 
 ## dotsync.sh
 
+sh dotsync.sh [-f] [-t filename] 
+
+   -f don't ask for user confirmation before applying changes
+   -t only apply to the specified filename 
+
 This script do the following:
 
 1. Update your current local dotfiles repo with latest remote changes.
@@ -16,14 +21,18 @@ This script do the following:
   - Remove old symlinks from your home directory to missing file from this repo.
   
   This preview include the name of every files involved and the action that will be taken.
+  
   It will also report: 
     - Rejected file from potential conflict when two files having the same name from different directory.
     - Ignored file when a file name is listed in the .dotignore file
     - Skipped file when a file is already symlinked to this repo.
 
-
 4. If user confirm to proceed with the changes proposal:
   - apply them all at once.
-  - create a symlink to the dotrevert.sh
+  - create a symlink to the dotrevert.sh script
+  
+
+
+
    
 
