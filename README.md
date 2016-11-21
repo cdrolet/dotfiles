@@ -3,11 +3,6 @@
 
 ## dotsync.sh
 
-sh dotsync.sh [-f] [-t filename] 
-
-   -f don't ask for user confirmation before applying changes
-   -t only apply to the specified filename 
-
 This script do the following:
 
 1. Update your current local dotfiles repo with latest remote changes.
@@ -30,7 +25,13 @@ This script do the following:
 4. If user confirm to proceed with the changes proposal:
   - apply them all at once.
   - create a symlink to the dotrevert.sh script
-  
+
+### usage
+sh dotsync.sh [-f] [-t filename] 
+
+   -f don't ask for user confirmation before applying changes.
+   -t only apply to the specified filename.
+
 
 
 
