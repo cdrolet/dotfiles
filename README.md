@@ -7,8 +7,8 @@ This script do the following:
 
 1. Update your current local dotfiles repo with latest remote changes.
 
-2. Scan this repo and subfolders for every file and folder starting with a dot
-  Only the root and the first level of subfolder are scanned.
+2. Scan this repo and subfolders for every file and folder starting with a dot.
+   Only the root and the first level of subfolder are scanned.
 
 3. Propose to the user the following list of changes:
   - Create symlinks from your home directory to the files from step 2.
