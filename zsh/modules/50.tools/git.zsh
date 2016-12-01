@@ -2,7 +2,7 @@
 # FUNCTION
 ##############################################################
 
-gitCommit() {
+gitAddCommit() {
 	echoAndRun git add -A;
 	echoAndRun git commit -m "$*";
 }
@@ -60,7 +60,7 @@ gitRemoveSub() {
 alias gitcl="echoAndRun git clone --recursive"
 
 # Commit
-alias gitc="gitCommit"
+alias gitac="gitAddCommit"
 
 # Checkout
 alias gitco="git checkout develop -b "

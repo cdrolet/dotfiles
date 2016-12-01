@@ -32,8 +32,11 @@ mvn-color()
   (
   # Filter mvn output using sed. Before filtering set the locale to C, so invalid characters won't break some sed implementations
   unset LANG
-  LC_CTYPE=C mvn $@ | sed -e "s/\(BUILD SUCCESS\)/${TEXT_GREEN}\1${RESET_FORMATTING}/g" \
+  LC_CTYPE=C mvn $@ | sed -e "s/\(BUILD SUCCESS\)/${BOLD}${TEXT_GREEN}\1${RESET_FORMATTING}/g" \
+                -e "s/\(SUCCESS\)/${TEXT_GREEN}\1${RESET_FORMATTING}/g" \
+                -e "s/\(BUILD FAILURE\)/${BOLD}${TEXT_RED}\1${RESET_FORMATTING}/g" \
                -e "s/\(\[WARNING\]\)\(.*\)/${TEXT_YELLOW}\1${RESET_FORMATTING}\2/g" \
+               -e "s/\(\[FAILURE\]\)\(.*\)/${TEXT_RED}\1${RESET_FORMATTING}\2/g" \
                -e "s/\(\[ERROR\]\)\(.*\)/${TEXT_RED}\1${RESET_FORMATTING}\2/g" \
                -e "s/Tests run: \([^,]*\), Failures: \([^,]*\), Errors: \([^,]*\), Skipped: \([^,]*\)/${TEXT_GREEN}Tests run: \1${RESET_FORMATTING}, Failures: ${TEXT_RED}\2${RESET_FORMATTING}, Errors: ${TEXT_RED}\3${RESET_FORMATTING}, Skipped: ${TEXT_YELLOW}\4${RESET_FORMATTING}/g"
 
