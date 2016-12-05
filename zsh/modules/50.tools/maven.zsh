@@ -67,7 +67,6 @@ alias mvnt='mvn test'
 alias mvntree='mvn dependency:tree -Dverbose -Dincludes=$1'
 alias mvnag='mvn archetype:generate'
 alias mvn-updates='mvn versions:display-dependency-updates'
-alias mvns='mvn site'
 alias mvnsrc='mvn dependency:sources'
 alias mvndocs='mvn dependency:resolve -Dclassifier=javadoc'
 
