@@ -7,6 +7,10 @@ gitAddCommit() {
 	echoAndRun git commit -m "$*";
 }
 
+gitCommit() {
+	echoAndRun git commit -m "$*";
+}
+
 gitCheckout() {
 	echoAndRun git checkout "$*";
 }
@@ -60,10 +64,19 @@ gitRemoveSub() {
 alias gitcl="echoAndRun git clone --recursive"
 
 # Commit
+alias gitc="gitCommit"
+
+# Commit
 alias gitac="gitAddCommit"
 
 # Checkout
 alias gitco="git checkout develop -b "
+
+# Diff
+alias gitdiff="git difftool"
+
+# Merge
+alias gitmerge="git mergetool"
 
 # Pull
 alias gitpld="echoAndRun git pull origin develop"

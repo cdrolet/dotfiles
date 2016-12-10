@@ -33,8 +33,26 @@
 	pager = less
 	excludesfile = ~/.gitignore_global
 
+
+[merge]
+   tool = intellij
+
+[mergetool "intellij"]
+   cmd = ideawrap merge $(cd $(dirname "$LOCAL") && pwd)/$(basename "$LOCAL") $(cd $(dirname "$REMOTE") && pwd)/$(basename "$REMOTE") $(cd $(dirname "$BASE") && pwd)/$(basename "$BASE") $(cd $(dirname "$MERGED") && pwd)/$(basename "$MERGED")
+   trustExitCode = true
+
 [diff]
-	tool = vimdiff
+   tool = intellij
+
+[difftool "intellij"]
+   cmd = ideawrap diff $(cd $(dirname "$LOCAL") && pwd)/$(basename "$LOCAL") $(cd $(dirname "$REMOTE") && pwd)/$(basename "$REMOTE")
+
+#[merge]
+#    log = true
+#	tool = vimdiff
+
+#[diff]
+#	tool = vimdiff
 
 [filter "lfs"]
 	clean = git-lfs clean -- %f
@@ -49,10 +67,6 @@
 	
 [http]
 	sslVerify = false
-
-[merge]
-    log = true
-	tool = vimdiff
 
 [push]
 	default = matching
