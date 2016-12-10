@@ -6,9 +6,6 @@ fi
 # ENVIRONMENT
 ##############################################################
 
-export INTELLIJ_HOME=/Applications/IntelliJ\ IDEA.app/Contents/MacOS
-export PATH=$INTELLIJ_HOME:$PATH
-
 # GNU Utils in path
 export PATH="$(brew --prefix coreutils)/libexec/gnubin:/usr/local/bin:$PATH"
 
