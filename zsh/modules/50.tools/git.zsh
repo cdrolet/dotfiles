@@ -92,7 +92,6 @@ alias gits="echoAndRun git status -sb"
 # Branch
 alias gitb="echoAndRun git branch -av"
 
-# Release
 
 # Remove
 alias gitrm="gitRemoveBranch"

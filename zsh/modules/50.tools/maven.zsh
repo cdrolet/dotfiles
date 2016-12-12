@@ -70,3 +70,6 @@ alias mvn-updates='mvn versions:display-dependency-updates'
 alias mvnsrc='mvn dependency:sources'
 alias mvndocs='mvn dependency:resolve -Dclassifier=javadoc'
 
+# Release
+alias mvnrelease="echoAndRun mvn jgitflow:release-start"
+alias mvnfinish="echoAndRun mvn jgitflow:release-finish"
