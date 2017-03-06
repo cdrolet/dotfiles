@@ -55,6 +55,7 @@ for key in "${(k)key_info[@]}"; do
 done
 
 
+
 ##############################################################
 # KEY BINDINGS
 ##############################################################
@@ -143,10 +144,56 @@ bindkey -M emacs "$key_info[Control]X$key_info[Control]S" prepend-sudo
 bindkey -M emacs "$key_info[Control]Y" backward-delete-to-slash
 
 # 2 control X is completion from history
-bindkey -M emacs "$key_info[Control]X$key_info[Control]X" hist-complete
+#bindkey -M emacs "$key_info[Control]X$key_info[Control]X" hist-complete
+
+# -A associative array
+typeset -gA keyReferences
+
+function bindKeyReference() {
+    local description=$1
+    local functionName=$2
+    local keys=(${@:3})
+
+    keyReferences+=($description "${keys}")
+
+    echo "!!! ${(@k)keyReferences}"
+    echo "... ${keyReferences[$description]}"
+
+    local allKeys=""
+
+    echo "--- '$keys'"
+
+    for key in ${keys[@]}; do
+        echo "> $key"
+        local k=$key
+        if [[ $key == "["* ]]; then
+            echo ">> $key"
+            k=${key//'['/};
+            k=${k//']'/}
+            k=${key_info[$k]}
+        fi
+        allkeys+=$k;
+    done
+#    allkeys='"'$allkeys'"'
+    echo ">>>>" bindkey -M emacs $allkeys $functionName
+#    echo ">>>>> bindkey -M emacs $allkeys $functionName"
+    bindkey -M emacs $allkeys $functionName
+
+    echo "!!! ${(@k)keyReferences}"
+    echo "... ${keyReferences[$description]}"
+
+
+}
+
+function displayReference() {
+    # Accessing associative array keys
+    for key in ${(@k)keyReferences}; do
+        printf '%-30s▐ %s\n' "$key" "${keyReferences[$key]}"
+    done
+}
+
+bindKeyReference "Completion from history" hist-complete '[Control]' X '[Control]' X
 
 # use emacs-style zsh bindings
 bindkey -e
-
-
 

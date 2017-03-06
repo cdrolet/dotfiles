@@ -186,9 +186,9 @@ isFileInConflictWith() {
 
 areFileLinkPointToward() {
     if [[ -L "$1" ]] && [[ "$(readlink $1)" == "$2"* ]];then
-        return 0
+        return 0;
     fi
-    return 1
+    return 1;
 }
 
 isIgnored() {
