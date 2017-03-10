@@ -54,13 +54,46 @@ for key in "${(k)key_info[@]}"; do
   fi
 done
 
-
-
 ##############################################################
 # KEY BINDINGS
 ##############################################################
 
+# -A associative array
+typeset -gA keyReferences
+keyReferences=()
 
+function addReference() {
+   local description=${1}
+   local keys=(${@:2})
+   keyReferences+=(${description} "${keys}")
+}
+
+function bindKeyReference() {
+    local description=$1
+    local functionName=$2
+    local keys=(${@:3})
+    local allKeys=""
+
+    addReference ${description} "${keys}"
+
+    for key in ${keys[@]}; do
+        local k=$key
+        if [[ $key == "["* ]]; then
+            k=${key//'['/};
+            k=${k//']'/}
+            k=${key_info[$k]}
+        fi
+        allkeys+=$k;
+    done
+    bindkey -M emacs $allkeys $functionName
+}
+
+function displayReference() {
+    # Accessing associative array keys
+    for key in ${(@k)keyReferences}; do
+      printf '%-30s▐ %s\n' "${key}" "${keyReferences[$key]}"
+    done
+}
 
 # Adding Control arrow as additional backward / forward
 for key in "$key_info[Escape]"{B,b} "${(s: :)key_info[ControlLeft]}"
@@ -78,8 +111,7 @@ bindkey -M emacs "$key_info[Escape]_" redo
 # Search previous character.
 bindkey -M emacs "$key_info[Control]X$key_info[Control]B" vi-find-prev-char
 
-# Match bracket.
-bindkey -M emacs "$key_info[Control]X$key_info[Control]]" vi-match-bracket
+bindKeyReference "Match bracket" vi-match-bracket '[Control]' X '[Control]' ']'
 
 if (( $+widgets[history-incremental-pattern-search-backward] )); then
   bindkey -M emacs "$key_info[Control]R" history-incremental-pattern-search-backward
@@ -107,17 +139,19 @@ bindkey -M emacs "$key_info[Down]" history-substring-search-down
 # if you type a space after a command that starts with ! (or ^) to refer to (part of) a previous command,
 # that history reference is expanded. If you just type a space, the history reference is expanded when you press Enter.
 bindkey -M emacs ' ' magic-space
+addReference "Expand history reference (!)" '[Space]'
 
-# Clear screen.
-bindkey -M emacs "$key_info[Control]L" clear-screen
+bindKeyReference "Clear screen" clear-screen '[Control]' L
 
 # Expand command name to full path.
 for key in "$key_info[Escape]"{E,e}
   bindkey -M emacs "$key" expand-cmd-path
+addReference "Expand command to full path" '[Escape]' E
 
 # Duplicate the previous word.
 for key in "$key_info[Escape]"{M,m}
   bindkey -M emacs "$key" copy-prev-shell-word
+addReference "Duplicate previous word" '[Escape]' M
 
 # Use a more flexible push-line.
 # push-line: clears the prompt and waits for you to type something else.
@@ -127,73 +161,20 @@ for key in "$key_info[Escape]"{M,m}
 # you have typed so far.
 for key in "$key_info[Control]Q" "$key_info[Escape]"{q,Q}
   bindkey -M emacs "$key" push-line-or-edit
+addReference "Clear, type and restore" '[Control]' Q
+
 
 # Bind Shift + Tab to go to the previous menu item.
+#TODO Broken? not work on mac need to be tested on arch
 bindkey -M emacs "$key_info[BackTab]" reverse-menu-complete
 
-# Complete in the middle of word.
-bindkey -M emacs "$key_info[Control]I" expand-or-complete
+bindKeyReference "Insert sudo" prepend-sudo '[Control]' X '[Control]' S
 
-# Display an indicator when completing.
-bindkey -M emacs "$key_info[Control]I" expand-or-complete-with-indicator
+bindKeyReference "Delete backward to slash" backward-delete-to-slash '[Control]' Y
 
-# Insert 'sudo ' at the beginning of the line.
-bindkey -M emacs "$key_info[Control]X$key_info[Control]S" prepend-sudo
+bindKeyReference "Complete" expand-or-complete-with-indicator '[Control]' I
 
-# Delete backward to slash
-bindkey -M emacs "$key_info[Control]Y" backward-delete-to-slash
-
-# 2 control X is completion from history
-#bindkey -M emacs "$key_info[Control]X$key_info[Control]X" hist-complete
-
-# -A associative array
-typeset -gA keyReferences
-
-function bindKeyReference() {
-    local description=$1
-    local functionName=$2
-    local keys=(${@:3})
-
-    keyReferences+=($description "${keys}")
-
-    echo "!!! ${(@k)keyReferences}"
-    echo "... ${keyReferences[$description]}"
-
-    local allKeys=""
-
-    echo "--- '$keys'"
-
-    for key in ${keys[@]}; do
-        echo "> $key"
-        local k=$key
-        if [[ $key == "["* ]]; then
-            echo ">> $key"
-            k=${key//'['/};
-            k=${k//']'/}
-            k=${key_info[$k]}
-        fi
-        allkeys+=$k;
-    done
-#    allkeys='"'$allkeys'"'
-    echo ">>>>" bindkey -M emacs $allkeys $functionName
-#    echo ">>>>> bindkey -M emacs $allkeys $functionName"
-    bindkey -M emacs $allkeys $functionName
-
-    echo "!!! ${(@k)keyReferences}"
-    echo "... ${keyReferences[$description]}"
-
-
-}
-
-function displayReference() {
-    # Accessing associative array keys
-    for key in ${(@k)keyReferences}; do
-        printf '%-30s▐ %s\n' "$key" "${keyReferences[$key]}"
-    done
-}
-
-bindKeyReference "Completion from history" hist-complete '[Control]' X '[Control]' X
+bindKeyReference "Complete from history" hist-complete '[Control]' X '[Control]' X
 
 # use emacs-style zsh bindings
 bindkey -e
-

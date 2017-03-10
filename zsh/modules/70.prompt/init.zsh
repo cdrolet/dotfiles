@@ -15,9 +15,9 @@ DEFAULT_USER=$USER
 POWERLEVEL9K_SHORTEN_STRATEGY=truncate_middle
 POWERLEVEL9K_SHORTEN_DIR_LENGTH=2
 
-POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(root_indicator aws docker_machine context rbenv nodeenv rust_version dir vcs)
+POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(root_indicator aws docker_machine context rust_version dir vcs)
 POWERLEVEL9K_RIGHT_SEGMENT_SEPARATOR=''
-POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status background_jobs_joined history_joined time_joined)
+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(rbenv nodeenv status background_jobs_joined history_joined time_joined)
 
 POWERLEVEL9K_SHOW_CHANGESET=true
 
