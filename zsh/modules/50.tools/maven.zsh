@@ -55,7 +55,7 @@ alias mvn="echoAndRun mvn-color ${MAVEN_THREADS}"
 alias mvnc='mvn clean'
 alias mvni='mvn install'
 alias mvnci='mvn clean install'
-alias mvns='mvn clean install -DskipTests'
+alias mvns='mvn clean install -DskipTests -Dcheckstyle.skip=true'
 
 alias mvnso='mvn clean install -DskipTests --offline'
 
