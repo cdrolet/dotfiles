@@ -1,1 +1,1 @@
-gawk '/^[0-9]/ { print "\""$0"\"" > "region.txt" } /^[A-Z]/ { print "\""$0"\"" > "code.txt" }' ids.txt
+gawk '/^[0-9]/ { print "\""$0"\"," > "region.txt" } /^[A-Z]/ { print "\""$0"\"" > "code.txt" }' ids.txt
