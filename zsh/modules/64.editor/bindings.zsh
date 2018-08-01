@@ -68,59 +68,53 @@ function addReference() {
    keyReferences+=(${description} "${keys}")
 }
 
-function bindKeyReference() {
-    local description=$1
-    local functionName=$2
-    local keys=(${@:3})
-    local allKeys=""
-
-    addReference ${description} "${keys}"
-
-    for key in ${keys[@]}; do
-        local k=$key
-        if [[ $key == "["* ]]; then
-            k=${key//'['/};
-            k=${k//']'/}
-            k=${key_info[$k]}
-        fi
-        allkeys+=$k;
-    done
-    bindkey -M emacs $allkeys $functionName
-}
-
-function displayReference() {
+function lskeys() {
     # Accessing associative array keys
     for key in ${(@k)keyReferences}; do
-      printf '%-30s▐ %s\n' "${key}" "${keyReferences[$key]}"
+      printf '%-32s▐ %s\n' "${key}" "${keyReferences[$key]}"
     done
 }
 
-# Adding Control arrow as additional backward / forward
-for key in "$key_info[Escape]"{B,b} "${(s: :)key_info[ControlLeft]}"
+# Jump one word backward/forward
+for key in "$key_info[Escape]"{B,b}
   bindkey -M emacs "$key" emacs-backward-word
-for key in "$key_info[Escape]"{F,f} "${(s: :)key_info[ControlRight]}"
-  bindkey -M emacs "$key" emacs-forward-word
+addReference "Jump one word backward" '[Escape] B'
 
-# Kill to the beginning of the line.
+for key in "$key_info[Escape]"{F,f}
+  bindkey -M emacs "$key" emacs-forward-word
+addReference "Jump one word forward" '[Escape] F'
+
+# Erase to the beginning of the line.
 for key in "$key_info[Escape]"{K,k}
   bindkey -M emacs "$key" backward-kill-line
+addReference "Erase to the beginning of line" '[Escape] K'
 
 # Redo.
-bindkey -M emacs "$key_info[Escape]_" redo
+bindkey -M emacs "$key_info[Control]X$key_info[Control]R" redo
+addReference "Redo" '[Control]' X '[Control]' R
 
-# Search previous character.
-bindkey -M emacs "$key_info[Control]X$key_info[Control]B" vi-find-prev-char
+# Match bracket
+bindkey -M emacs "$key_info[Control]X$key_info[Control]]" vi-match-bracket
+addReference "Match bracket" '[Control]' X '[Control]' ']'
 
-bindKeyReference "Match bracket" vi-match-bracket '[Control]' X '[Control]' ']'
-
+# History search
 if (( $+widgets[history-incremental-pattern-search-backward] )); then
   bindkey -M emacs "$key_info[Control]R" history-incremental-pattern-search-backward
   bindkey -M emacs "$key_info[Control]S" history-incremental-pattern-search-forward
 fi
+addReference "History search backward" '[Control]' R
+addReference "History search forward" '[Control]' S
 
+# History substring search
+bindkey -M emacs "$key_info[Up]" history-substring-search-up
 bindkey -M emacs "$key_info[Control]P" history-substring-search-up
-bindkey -M emacs "$key_info[Control]N" history-substring-search-down
+addReference "History substring search up" '[Up]' 'or' '[Control]' P
 
+bindkey -M emacs "$key_info[Down]" history-substring-search-down
+bindkey -M emacs "$key_info[Control]N" history-substring-search-down
+addReference "History substring search down" '[Down]' 'or' '[Control]' N
+
+# Standards - no need for reference
 bindkey -M emacs "$key_info[Home]" beginning-of-line
 bindkey -M emacs "$key_info[End]" end-of-line
 
@@ -131,17 +125,15 @@ bindkey -M emacs "$key_info[Backspace]" backward-delete-char
 bindkey -M emacs "$key_info[Left]" backward-char
 bindkey -M emacs "$key_info[Right]" forward-char
 
-bindkey -M emacs "$key_info[Up]" history-substring-search-up
-bindkey -M emacs "$key_info[Down]" history-substring-search-down
-
-
-# Expand history on space.
+# Expand history reference
 # if you type a space after a command that starts with ! (or ^) to refer to (part of) a previous command,
 # that history reference is expanded. If you just type a space, the history reference is expanded when you press Enter.
 bindkey -M emacs ' ' magic-space
-addReference "Expand history reference (!)" '[Space]'
+addReference "Expand history reference" '!cmd' '[Space]'
 
-bindKeyReference "Clear screen" clear-screen '[Control]' L
+# Clear screen
+bindkey -M emacs "$key_info[Control]L" clear-screen
+addReference "Clear screen" '[Control]' L
 
 # Expand command name to full path.
 for key in "$key_info[Escape]"{E,e}
@@ -161,20 +153,51 @@ addReference "Duplicate previous word" '[Escape]' M
 # you have typed so far.
 for key in "$key_info[Control]Q" "$key_info[Escape]"{q,Q}
   bindkey -M emacs "$key" push-line-or-edit
-addReference "Clear, type and restore" '[Control]' Q
+addReference "Clear, wait, restore" '[Control]' Q
 
+# Insert sudo.
+bindkey -M emacs "$key_info[Control]X$key_info[Control]S" prepend-sudo
+addReference "Insert sudo" '[Control]' X '[Control]' S
+
+# Erase backward to slash
+bindkey -M emacs "$key_info[Control]Y" backward-delete-to-slash
+addReference "Erase backward to slash" '[Control]' Y
+
+# Complete with indicator...
+bindkey -M emacs "$key_info[Control]I" expand-or-complete-with-indicator
+addReference "Complete" '[Control]' I 'or' '[Tab]'
+
+# Complete from history
+bindkey -M emacs "$key_info[Control]X$key_info[Control]X" hist-complete
+addReference "Complete from history" '[Control]' X '[Control]' X
+
+# defined in completion.zsh
+addReference "In menu, go to subdirectory" '[Control]' '[Space]'
+
+# =================================================
+#               Built-in
+# =================================================
+
+addReference "Undo" '[Control]' X '[Control]' U
+addReference "Erase one word forward" '[Escape]' D
+addReference "Erase one word backward" '[Control]' W
+addReference "Erase entire line" '[Control]' U
+addReference "Erase to end of line" '[Control]' K
+addReference "Jump to beginning of line" '[Control]' A
+addReference "Jump to end of line" '[Control]' E
+addReference "Return and next history line" '[Control]' O
+
+# =================================================
+#               Not Working
+# =================================================
 
 # Bind Shift + Tab to go to the previous menu item.
-#TODO Broken? not work on mac need to be tested on arch
 bindkey -M emacs "$key_info[BackTab]" reverse-menu-complete
 
-bindKeyReference "Insert sudo" prepend-sudo '[Control]' X '[Control]' S
+# Search previous character.
+bindkey -M emacs "$key_info[Control]X$key_info[Control]B" vi-find-prev-char
 
-bindKeyReference "Delete backward to slash" backward-delete-to-slash '[Control]' Y
-
-bindKeyReference "Complete" expand-or-complete-with-indicator '[Control]' I
-
-bindKeyReference "Complete from history" hist-complete '[Control]' X '[Control]' X
+# =================================================
 
 # use emacs-style zsh bindings
 bindkey -e
