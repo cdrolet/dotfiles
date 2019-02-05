@@ -12,7 +12,8 @@ mkdir -p $ZSH_CACHE
 
 export PATH=/usr/local/sbin:$PATH
 export PATH=$HOME/.local/bin:$PATH
-export PATH=$HOME/.local/sbin:$PATH
+export PATH=$HOME/.local/bin:$PATH
+export PATH=$HOME/bin:$PATH
 export PATH=$ZSH_CONFIG_HOME/bin:$PATH
 
 ##############################################################
