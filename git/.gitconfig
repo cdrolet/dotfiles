@@ -1,6 +1,6 @@
 [user]
-  name = Charles Drolet
-  email = cdrolet@expedia.com
+	name = Charles Drolet
+	email = cdrolet@expedia.com
 
 [github]
   # https://github.com/blog/180-local-github-config
@@ -58,6 +58,7 @@
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
 	required = true
+	process = git-lfs filter-process
 
 [format]
 	pretty = oneline
