@@ -8,3 +8,4 @@ backup
 ssh/
 script/utilities/*.txt
 !intellij/settings.jar
+.DS_Store
