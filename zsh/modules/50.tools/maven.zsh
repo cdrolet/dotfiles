@@ -73,3 +73,8 @@ alias mvndocs='mvn dependency:resolve -Dclassifier=javadoc'
 # Release
 alias mvnrelease="echoAndRun mvn jgitflow:release-start"
 alias mvnfinish="echoAndRun mvn jgitflow:release-finish"
+
+# HOTFIX
+
+alias mvnHotfix="echoAndRun mvn jgitflow:hotfix-start"
+alias mvnHotfixFinish="echoAndRun mvn jgitflow:hotfix-finish"
