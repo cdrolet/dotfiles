@@ -9,3 +9,4 @@ ssh/
 script/utilities/*.txt
 !intellij/settings.jar
 .DS_Store
+/zsh/modules/90.work/
