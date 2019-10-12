@@ -16,11 +16,11 @@ export PATH=$HOME/.local/bin:$PATH
 export PATH=$HOME/bin:$PATH
 export PATH=$ZSH_CONFIG_HOME/bin:$PATH
 
-
-
 ##############################################################
 # OTHERS
 ##############################################################
+
+export DOTFILE_HOME=${PWD}
 export TERM="xterm-256color"
 export ZSH_DIRCOLORS="$HOME/.dircolors/dircolors.256dark"
 export EDITOR="vi"
