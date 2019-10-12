@@ -18,3 +18,5 @@ alias bastion-test-east='ssh bastion.us-east-1.test.lodgingshared.expedia.com'
 alias bastion-test-west='ssh bastion.us-west-2.test.lodgingshared.expedia.com'
 alias bastion-prod-east='ssh bastion.us-east-1.prod.lodgingshared.expedia.com'
 alias bastion-prod-west='ssh bastion.us-west-2.prod.lodgingshared.expedia.com'
+
+
