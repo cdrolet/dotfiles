@@ -645,8 +645,8 @@ bot "Trackpad, mouse, keyboard, Bluetooth accessories, and input"
 #defaults -currentHost write NSGlobalDomain com.apple.trackpad.trackpadCornerClickBehavior -int 1
 #defaults -currentHost write NSGlobalDomain com.apple.trackpad.enableSecondaryClick -bool true;ok
 
-#running "Disable 'natural' (Lion-style) scrolling"
-#defaults write NSGlobalDomain com.apple.swipescrolldirection -bool false;ok
+running "Disable 'natural' (Lion-style) scrolling"
+defaults write NSGlobalDomain com.apple.swipescrolldirection -bool false;ok
 
 running "Increase sound quality for Bluetooth headphones/headsets"
 defaults write com.apple.BluetoothAudioAgent "Apple Bitpool Min (editable)" -int 40;ok
