@@ -270,7 +270,7 @@ if [[ $response =~ (y|yes|Y) ]];then
   # need fontconfig to install/build fonts
   require_brew fontconfig
   sudo cp $DOTFILE_HOME/.fonts/EnvyCodeR/*.ttf $HOME/Library/Fonts
-  sudo cp $DOTFILE_HOME/.fonts/FireCode/*.ttf $HOME/Library/Fonts
+  sudo cp $DOTFILE_HOME/.fonts/FiraCode/*.ttf $HOME/Library/Fonts
   sudo cp $DOTFILE_HOME/.fonts/SourceCodePro/*.ttf $HOME/Library/Fonts
   brew tap homebrew/cask-fonts
   require_cask font-fontawesome
