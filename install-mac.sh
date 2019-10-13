@@ -269,10 +269,20 @@ if [[ $response =~ (y|yes|Y) ]];then
   bot "installing fonts"
   # need fontconfig to install/build fonts
   require_brew fontconfig
-  copy $DOTFILE_HOME/.fonts/EnvyCodeR/*.ttf $HOME/Library/Fonts
-  copy $DOTFILE_HOME/.fonts/FireCode/*.ttf $HOME/Library/Fonts
-  copy $DOTFILE_HOME/.fonts/SourceCodePro/*.ttf $HOME/Library/Fonts
+  sudo cp $DOTFILE_HOME/.fonts/EnvyCodeR/*.ttf $HOME/Library/Fonts
+  sudo cp $DOTFILE_HOME/.fonts/FireCode/*.ttf $HOME/Library/Fonts
+  sudo cp $DOTFILE_HOME/.fonts/SourceCodePro/*.ttf $HOME/Library/Fonts
   brew tap homebrew/cask-fonts
+  require_cask font-fontawesome
+  require_cask font-awesome-terminal-fonts
+  require_cask font-hack
+  require_cask font-inconsolata-dz-for-powerline
+  require_cask font-inconsolata-g-for-powerline
+  require_cask font-inconsolata-for-powerline
+  require_cask font-roboto-mono
+  require_cask font-roboto-mono-for-powerline
+  require_cask font-source-code-pro
+  require_cask font-fira-code
   ok
 fi
 
