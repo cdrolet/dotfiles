@@ -183,3 +183,10 @@ zstyle ':completion::*:vi:*:*' file-patterns 'Makefile|*(rc|log)|*.(php|tex|bib|
 # load completions system
 # http://zsh.sourceforge.net/Doc/Release/Completion-System.html
 autoload -Uz compinit && compinit
+
+
+
+#############
+# KUBERNETES
+#############
+[[ /usr/local/bin/kubectl ]] && source <(kubectl completion zsh)

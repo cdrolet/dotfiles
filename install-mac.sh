@@ -285,6 +285,10 @@ if [[ $response =~ (y|yes|Y) ]];then
   ok
 fi
 
+# java / maven
+require_cask adoptopenjdk
+require_brew maven
+
 # node version manager
 require_brew nvm
 

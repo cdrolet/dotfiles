@@ -1,10 +1,10 @@
 [user]
-	name = GITHUBFULLNAME
-	email = GITHUBEMAIL
+	name = cdrolet
+	email = cdrolet@expedia.com
 
 [github]
   # https://github.com/blog/180-local-github-config
-  user = GITHUBUSER
+  user = cdrolet
 
 [color]
 	ui = auto

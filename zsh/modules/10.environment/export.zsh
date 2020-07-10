@@ -39,3 +39,5 @@ fi
 
 # Reset to default key bindings.
 bindkey -d
+
+
