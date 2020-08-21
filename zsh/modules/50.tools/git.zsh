@@ -2,6 +2,7 @@
 # FUNCTION
 ##############################################################
 
+
 gitAddCommit() {
 	echoAndRun git add -A;
 	echoAndRun git commit -m "$*";
@@ -59,6 +60,8 @@ gitRemoveSub() {
 ##############################################################
 # ALIAS
 ##############################################################
+
+alias gitempty=git commit --allow-empty -m "Trigger the build"
 
 # Clone - recursively : init and update all sub modules
 alias gitcl="echoAndRun git clone --recursive"
