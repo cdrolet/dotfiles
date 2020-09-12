@@ -61,7 +61,7 @@ gitRemoveSub() {
 # ALIAS
 ##############################################################
 
-alias gitce=git commit --allow-empty -m "Trigger the build"
+alias gitfake=git commit --allow-empty -m "Trigger the build"
 
 # Clone - recursively : init and update all sub modules
 alias gitcl="echoAndRun git clone --recursive"

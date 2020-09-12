@@ -45,6 +45,11 @@ mvn-color()
   )
 }
 
+mvntree()
+{
+  echoAndRun mvn org.apache.maven.plugins:maven-dependency-plugin:2.10:tree -Dverbose -Dincludes="${1}"
+}
+
 ##############################################################
 # ALIAS
 ##############################################################
@@ -64,7 +69,6 @@ alias mvnp='mvn package'
 alias mvncom='mvn compile'
 alias mvnt='mvn test'
 
-alias mvntree='mvn dependency:tree -Dverbose -Dincludes=$1'
 alias mvnag='mvn archetype:generate'
 alias mvn-updates='mvn versions:display-dependency-updates'
 alias mvnsrc='mvn dependency:sources'
