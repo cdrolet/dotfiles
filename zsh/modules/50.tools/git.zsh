@@ -61,7 +61,7 @@ gitRemoveSub() {
 # ALIAS
 ##############################################################
 
-alias gitfake=git commit --allow-empty -m "Trigger the build"
+alias gitfake="echoAndRun git commit --allow-empty -m 'Fake commit'"
 
 # Clone - recursively : init and update all sub modules
 alias gitcl="echoAndRun git clone --recursive"
@@ -103,6 +103,6 @@ alias gitrm="gitRemoveBranch"
 alias gitupdate="echoAndRun git submodule update --remote"
 
 # assumes git-up is installed (gem install git-up)
-# switches to 'develop' branch, updates all local branches (nicely using git-up), removes all local branches already merged into 'develop'
+# switches to "develop" branch, updates all local branches (nicely using git-up), removes all local branches already merged into 'develop'
 alias gitdev='git checkout develop; git-up; git branch --merged develop | grep -v "\* develop" | xargs -n 1 git branch -d; git branch;'
 
