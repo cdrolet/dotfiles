@@ -11,6 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+alias delete-evicted-pods="kubectl get po --all-namespaces --field-selector 'status.phase!=Running' -o json | kubectl delete -f -"
 
 alias k='kubectl'
 alias ksys='kubectl --namespace=kube-system'
