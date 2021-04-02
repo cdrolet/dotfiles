@@ -24,7 +24,7 @@ BACKGROUND_CYAN=`tput setab 6`
 BACKGROUND_WHITE=`tput setab 7`
 RESET_FORMATTING=`tput sgr0`
 
-readonly MAVEN_THREADS='-T 1C'
+readonly MAVEN_THREADS='-T 1C -Dkotlin.environment.keepalive=true'
 
 # Wrapper function for Maven's mvn command.
 mvn-color()
@@ -72,7 +72,7 @@ alias mvnt='mvn test'
 alias mvnag='mvn archetype:generate'
 alias mvn-updates='mvn versions:display-dependency-updates'
 alias mvnsrc='mvn dependency:sources'
-alias mvndocs='mvn dependency:resolve -Dclassifier=javadoc'
+alias mvndoc='mvn dependency:resolve -Dclassifier=javadoc'
 
 # Release
 alias mvnrelease="echoAndRun mvn jgitflow:release-start -DallowSnapshots=true"
