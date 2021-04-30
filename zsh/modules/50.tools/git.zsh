@@ -8,6 +8,11 @@ gitAddCommit() {
 	echoAndRun git commit -m "$*";
 }
 
+gitAddCommitAmend() {
+	echoAndRun git add -A;
+	echoAndRun git commit --amend;
+}
+
 gitCommit() {
 	echoAndRun git commit -m "$*";
 }
@@ -71,6 +76,8 @@ alias gitc="gitCommit"
 
 # Commit
 alias gitac="gitAddCommit"
+
+alias gitam="gitAddCommitAmend"
 
 # Checkout
 alias gitco="git checkout develop -b "
