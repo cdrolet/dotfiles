@@ -10,7 +10,7 @@ gitAddCommit() {
 
 gitAddCommitAmend() {
 	echoAndRun git add -A;
-	echoAndRun git commit --amend;
+	echoAndRun git commit -m "$*" --amend;
 }
 
 gitCommit() {
