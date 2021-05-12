@@ -51,79 +51,6 @@ else
     ok "skipped";
 fi
 
-# ###########################################################
-# Git Config
-# ###########################################################
-bot "OK, now I am going to update the .gitconfig for your user info:"
-grep 'user = GITHUBUSER' $DOTFILE_HOME/git/.gitconfig > /dev/null 2>&1
-if [[ $? = 0 ]]; then
-    read -r -p "What is your git username? " githubuser
-
-  fullname=`osascript -e "long user name of (system info)"`
-
-  if [[ -n "$fullname" ]];then
-    lastname=$(echo $fullname | awk '{print $2}');
-    firstname=$(echo $fullname | awk '{print $1}');
-  fi
-
-  if [[ -z $lastname ]]; then
-    lastname=`dscl . -read /Users/$(whoami) | grep LastName | sed "s/LastName: //"`
-  fi
-  if [[ -z $firstname ]]; then
-    firstname=`dscl . -read /Users/$(whoami) | grep FirstName | sed "s/FirstName: //"`
-  fi
-  email=`dscl . -read /Users/$(whoami)  | grep EMailAddress | sed "s/EMailAddress: //"`
-
-  if [[ ! "$firstname" ]]; then
-    response='n'
-  else
-    echo -e "I see that your full name is $COL_YELLOW$firstname $lastname$COL_RESET"
-    read -r -p "Is this correct? [Y|n] " response
-  fi
-
-  if [[ $response =~ ^(no|n|N) ]]; then
-    read -r -p "What is your first name? " firstname
-    read -r -p "What is your last name? " lastname
-  fi
-  fullname="$firstname $lastname"
-
-  bot "Great $fullname, "
-
-  if [[ ! $email ]]; then
-    response='n'
-  else
-    echo -e "The best I can make out, your email address is $COL_YELLOW$email$COL_RESET"
-    read -r -p "Is this correct? [Y|n] " response
-  fi
-
-  if [[ $response =~ ^(no|n|N) ]]; then
-    read -r -p "What is your email? " email
-    if [[ ! $email ]];then
-      error "you must provide an email to configure .gitconfig"
-      exit 1
-    fi
-  fi
-
-
-  running "replacing items in .gitconfig with your info ($COL_YELLOW$fullname, $email, $githubuser$COL_RESET)"
-
-  # test if gnu-sed or MacOS sed
-
-  sed -i "s/GITHUBFULLNAME/$firstname $lastname/" $DOTFILE_HOME/git/.gitconfig > /dev/null 2>&1 | true
-  if [[ ${PIPESTATUS[0]} != 0 ]]; then
-    echo
-    running "looks like you are using MacOS sed rather than gnu-sed, accommodating"
-    sed -i '' "s/GITHUBFULLNAME/$firstname $lastname/" $DOTFILE_HOME/git/.gitconfig
-    sed -i '' 's/GITHUBEMAIL/'$email'/' $DOTFILE_HOME/git/.gitconfig
-    sed -i '' 's/GITHUBUSER/'$githubuser'/' $DOTFILE_HOME/git/.gitconfig
-    ok
-  else
-    echo
-    bot "looks like you are already using gnu-sed. woot!"
-    sed -i 's/GITHUBEMAIL/'$email'/' $DOTFILE_HOME/git/.gitconfig
-    sed -i 's/GITHUBUSER/'$githubuser'/' $DOTFILE_HOME/git/.gitconfig
-  fi
-fi
 
 # ###########################################################
 # Images
@@ -502,8 +429,8 @@ sudo chflags uchg /Private/var/vm/sleepimage;ok
 # # See https://github.com/mathiasbynens/dotfiles/issues/237
 # echo "0x08000100:0" > ~/.CFUserTextEncoding;ok
 
-# running "Stop iTunes from responding to the keyboard media keys"
-# launchctl unload -w /System/Library/LaunchAgents/com.apple.rcd.plist 2> /dev/null;ok
+running "Stop iTunes from responding to the keyboard media keys"
+launchctl unload -w /System/Library/LaunchAgents/com.apple.rcd.plist 2> /dev/null;ok
 
 # running "Show icons for hard drives, servers, and removable media on the desktop"
 # defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool true
@@ -529,10 +456,10 @@ sudo chflags uchg /Private/var/vm/sleepimage;ok
 #running "Disable the Launchpad gesture (pinch with thumb and three fingers)"
 #defaults write com.apple.dock showLaunchpadGestureEnabled -int 0;ok
 
-#running "Add a spacer to the left side of the Dock (where the applications are)"
-#defaults write com.apple.dock persistent-apps -array-add '{tile-data={}; tile-type="spacer-tile";}';ok
-#running "Add a spacer to the right side of the Dock (where the Trash is)"
-#defaults write com.apple.dock persistent-others -array-add '{tile-data={}; tile-type="spacer-tile";}';ok
+running "Add a spacer to the left side of the Dock (where the applications are)"
+defaults write com.apple.dock persistent-apps -array-add '{tile-data={}; tile-type="spacer-tile";}';ok
+running "Add a spacer to the right side of the Dock (where the Trash is)"
+defaults write com.apple.dock persistent-others -array-add '{tile-data={}; tile-type="spacer-tile";}';ok
 
 ################################################
 bot "Standard System Changes"
@@ -862,7 +789,7 @@ find "${HOME}/Library/Application Support/Dock" -name "*-*.db" -maxdepth 1 -dele
 # Force a restart of Launchpad with the following command to apply the changes:
 #defaults write com.apple.dock ResetLaunchPad -bool TRUE;killall Dock
 
-bot "Configuring Hot Corners"
+#bot "Configuring Hot Corners"
 # Possible values:
 #  0: no-op
 #  2: Mission Control
@@ -876,13 +803,13 @@ bot "Configuring Hot Corners"
 # 12: Notification Center
 
 running "Top left screen corner → Mission Control"
-defaults write com.apple.dock wvous-tl-corner -int 2
+defaults write com.apple.dock wvous-tl-corner -int 0
 defaults write com.apple.dock wvous-tl-modifier -int 0;ok
 running "Top right screen corner → Desktop"
-defaults write com.apple.dock wvous-tr-corner -int 4
+defaults write com.apple.dock wvous-tr-corner -int 0
 defaults write com.apple.dock wvous-tr-modifier -int 0;ok
 running "Bottom right screen corner → Start screen saver"
-defaults write com.apple.dock wvous-br-corner -int 5
+defaults write com.apple.dock wvous-br-corner -int 0
 defaults write com.apple.dock wvous-br-modifier -int 0;ok
 
 ###############################################################################
@@ -966,15 +893,15 @@ bot "Terminal & iTerm2"
 # running "Only use UTF-8 in Terminal.app"
 # defaults write com.apple.terminal StringEncodings -array 4;ok
 #
-# running "Use a modified version of the Solarized Dark theme by default in Terminal.app"
-# TERM_PROFILE='Solarized Dark xterm-256color';
-# CURRENT_PROFILE="$(defaults read com.apple.terminal 'Default Window Settings')";
-# if [ "${CURRENT_PROFILE}" != "${TERM_PROFILE}" ]; then
-# 	open "./configs/${TERM_PROFILE}.terminal";
-# 	sleep 1; # Wait a bit to make sure the theme is loaded
-# 	defaults write com.apple.terminal 'Default Window Settings' -string "${TERM_PROFILE}";
-# 	defaults write com.apple.terminal 'Startup Window Settings' -string "${TERM_PROFILE}";
-# fi;
+ running "Use a modified version of the Solarized Dark theme by default in Terminal.app"
+ TERM_PROFILE='Solarized Dark xterm-256color';
+ CURRENT_PROFILE="$(defaults read com.apple.terminal 'Default Window Settings')";
+ if [ "${CURRENT_PROFILE}" != "${TERM_PROFILE}" ]; then
+ 	open "./configs/${TERM_PROFILE}.terminal";
+ 	sleep 1; # Wait a bit to make sure the theme is loaded
+ 	defaults write com.apple.terminal 'Default Window Settings' -string "${TERM_PROFILE}";
+ 	defaults write com.apple.terminal 'Startup Window Settings' -string "${TERM_PROFILE}";
+ fi;
 
 #running "Enable “focus follows mouse” for Terminal.app and all X11 apps"
 # i.e. hover over a window and start `typing in it without clicking first
