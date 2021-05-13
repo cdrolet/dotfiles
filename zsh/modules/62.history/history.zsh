@@ -10,8 +10,8 @@ else
 fi
 
 # Big enough to be used with many open shells
-SAVEHIST=10000
-HISTSIZE=12000
+SAVEHIST=15000
+HISTSIZE=15000
 
 ##############################################################
 # OPTIONS
