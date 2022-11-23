@@ -113,3 +113,6 @@ alias gitupdate="echoAndRun git submodule update --remote"
 # switches to "develop" branch, updates all local branches (nicely using git-up), removes all local branches already merged into 'develop'
 alias gitdev='git checkout develop; git-up; git branch --merged develop | grep -v "\* develop" | xargs -n 1 git branch -d; git branch;'
 
+alias gitprune='git checkout master;git fetch --prune origin'
+
+alias gitprunefull='git checkout master;git fsck;git reflog expire --expire=now --all;git gc --prune=now'
