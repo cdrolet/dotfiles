@@ -57,4 +57,3 @@ unsetopt HUP
 
 # Don't report on jobs when shell exit.
 unsetopt CHECK_JOBS
-

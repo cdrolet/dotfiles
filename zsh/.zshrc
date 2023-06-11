@@ -1,4 +1,3 @@
-
 initHome() {
 
     local source=~/.zshrc
@@ -25,6 +24,9 @@ scanModules() {
         scanSource $module
     done
 }
+
+ #stopwatch2=`date +%s`;
+# echo -ne "scan source in $(date -u --date @$((`date +%s` - $stopwatch1)) +%H:%M:%S)\r";
 
 scanFunctions() {
 
@@ -59,11 +61,3 @@ scanSource() {
 initHome
 
 scanModules
-
-# INSTALL
-# Need to install the command-not-found hook
-# Pacman: pkgfile
-
-#test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
-
-export PATH="/usr/local/opt/python@3.7/bin:$PATH"

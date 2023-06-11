@@ -7,7 +7,7 @@ fi
 ##############################################################
 
 # GNU Utils in path
-export PATH="$(brew --prefix coreutils)/libexec/gnubin:/usr/local/bin:$PATH"
+export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:/usr/local/bin:$PATH"
 
 # The OSX way for ls colors.
 export CLICOLOR=1
@@ -45,8 +45,8 @@ function webcam () {
 alias dnsflush='dscacheutil -flushcache'
 
 # Darwin ls command does not support --color option.
-alias l=" gls -oAhtr --group-directories-first --color=always"
-alias ls=" gls --color=always"
+alias l="gls -oAhtr --group-directories-first --color=always"
+alias ls="gls --color=always"
 
 # Copy and paste and prune the useless newline
 alias pbcopynn='tr -d "\n" | pbcopy'
