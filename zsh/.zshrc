@@ -1,5 +1,5 @@
-initHome() {
 
+initHome() {
     local source=~/.zshrc
 
     # resolve $source until the file is no longer a symlink
@@ -56,6 +56,9 @@ scanSource() {
         source $file
     done
 }
+
+# to output execution
+# set -x
 
 
 initHome
