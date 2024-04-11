@@ -76,7 +76,7 @@ alias mvndoc='mvn dependency:resolve -Dclassifier=javadoc'
 
 # Release
 alias mvnrelease="echoAndRun mvn jgitflow:release-start -DallowSnapshots=true"
-alias mvnfinish="echoAndRun mvn jgitflow:release-finish -DallowSnapshots=true"
+alias mvnfinish="echoAndRun mvn jgitflow:release-finish -DallowSnapshots=true -Dmaven.javadoc.skip=true"
 
 # HOTFIX
 
