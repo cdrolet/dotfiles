@@ -26,6 +26,7 @@ export ZSH_DIRCOLORS="$HOME/.dircolors/dircolors.256dark"
 export EDITOR="vi"
 # Treat these characters as part of a word.
 export WORDCHARS='*?_-.[]~&;!#$%^(){}<>'
+export PATH="/opt/homebrew/bin/kubectl:$PATH"
 
 ##############################################################
 # LOCALE

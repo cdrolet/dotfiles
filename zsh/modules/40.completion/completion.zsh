@@ -189,4 +189,7 @@ autoload -Uz compinit && compinit
 #############
 # KUBERNETES
 #############
-[[ /usr/local/bin/kubectl ]] && source <(kubectl completion zsh)
+
+source <(/opt/homebrew/bin/kubectl completion zsh)
+
+#[[ -f /opt/homebrew/bin/kubectl ]] && source <(kubectl completion zsh)

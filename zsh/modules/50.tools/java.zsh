@@ -2,10 +2,11 @@
 # JAVA
 ##############################################################
 
-export JAVA_11_HOME=$(/usr/libexec/java_home -v11)
-export JAVA_17_HOME=$(/usr/libexec/java_home -v17)
+export JAVA_17_HOME=/Users/cdrolet/.sdkman/candidates/java/17.0.0-tem
 
-export JAVA_HOME=$JAVA_17_HOME
+export JAVA_21_HOME=/Users/cdrolet/.sdkman/candidates/java/21.0.3-tem
 
-alias java11='export JAVA_HOME=$JAVA_11_HOME'
+export JAVA_HOME=$JAVA_21_HOME
+
 alias java17='export JAVA_HOME=$JAVA_17_HOME'
+alias java21='export JAVA_HOME=$JAVA_21_HOME'

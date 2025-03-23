@@ -6,8 +6,15 @@ fi
 # ENVIRONMENT
 ##############################################################
 
-# GNU Utils in path
-export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:/usr/local/bin:$PATH"
+# Homebrew paths
+export HOMEBREW_PREFIX="/opt/homebrew"
+export HOMEBREW_CELLAR="/opt/homebrew/Cellar"
+export HOMEBREW_REPOSITORY="/opt/homebrew"
+
+# Set up PATH with both Homebrew and GNU utils
+export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:$PATH"
+export MANPATH="/opt/homebrew/share/man${MANPATH+:$MANPATH}:"
+export INFOPATH="/opt/homebrew/share/info:${INFOPATH:-}"
 
 # The OSX way for ls colors.
 export CLICOLOR=1
@@ -42,7 +49,7 @@ function webcam () {
 ##############################################################
 
 # Flush the DNS on Mac
-alias dnsflush='dscacheutil -flushcache'
+alias dnsflush='sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder'
 
 # Darwin ls command does not support --color option.
 alias l="gls -oAhtr --group-directories-first --color=always"

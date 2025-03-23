@@ -19,7 +19,8 @@ fi
 # At this point, $LS_COLORS should have beeen initialized from dircolors and possibly .dircolors
 
 
-
+alias l=" ls --group-directories-first -lAhtr --color=always"
+alias ls=" ls --color=always"
 
 # Load command-not-found
 # Debian-based

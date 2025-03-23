@@ -330,7 +330,7 @@ symlinkFiles() {
 
 cleanup() {
 
-unset -f isIgnored
+    unset -f isIgnored
     unset -f isIllegible
     unset -f areFilesLinked
     unset -f symlinkFiles

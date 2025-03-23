@@ -31,8 +31,7 @@ alias cd....=' ....'
 
 alias d=' dirs -v | head -10'
 
-alias l=" ls --group-directories-first -lAhtr --color=always"
-alias ls=" ls --color=always"
+
 
 # standard directory view
 alias v=" clear; l -g"
