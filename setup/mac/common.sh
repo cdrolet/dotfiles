@@ -12,6 +12,9 @@ green='\033[32m'
 yellow='\033[33m'
 passed="\033[32m✓\033[0m "
 failed="\033[31m✗\033[0m "
+warned="\033[33m⚠\033[0m "
+successFooter="\n█▀█ █▄▀\n█▄█ █░█\n"
+failureFooter="\n█▀▀ ▄▀█ █ █░░ █░█ █▀█ █▀▀\n█▀░ █▀█ █ █▄▄ █▄█ █▀▄ ██▄\n"
 # Array to store error messages
 errors=()
 
@@ -57,19 +60,27 @@ print_section() {
 }
 
 run_command() {
-    local name="$1"
-    shift # Remove name
-    local command="$@"
-         
+    local description="$1"
+    local command="$2"
+    local warn_only="$3"
     # Execute the command and capture its output
-    if output=$($command 2>&1); then
-        echo -e "$passed $name ${gray}$command${white}"
+    if output=$(eval "$command" 2>&1); then
+        printf "$passed %s ${gray}%s${white}\n" "$description" "$command"
     else
-        echo -e "$failed $name ${gray}$command${white}"
-        echo -e "${red}Error: $output${white}"
-        # Add error to global array
-        errors+=("$name: $output")
-        return 1
+        if [ "$warn_only" = "warning" ]; then
+            printf "$warned %s ${gray}%s${white}\n" "$description" "$command"
+        else
+            printf "$failed %s ${gray}%s${white}\n" "$description" "$command"
+            printf "${red}%s${white}\n" "$output"
+            # Add error to global array, taking only first line and limiting to 50 chars
+            local first_line=$(echo "$output" | head -n 1)
+            local truncated_error="${first_line:0:75}"
+            if [ ${#first_line} -gt 50 ] || [ $(echo "$output" | wc -l) -gt 1 ]; then
+                truncated_error="${truncated_error}..."
+            fi
+            errors+=("$description: $truncated_error")
+            return 1
+        fi
     fi
 }
 
@@ -77,10 +88,19 @@ run_command() {
 # Function to output all errors and ask for confirmation to continue
 check_errors() {
     if [ ${#errors[@]} -gt 0 ]; then
+        printf "\n$failureFooter"
+        print_separator 30
         printf "\n"
-        echo -e "${yellow}The following errors occurred:${white}"
-        for error in "${errors[@]}"; do
-            echo -e "${red}- $error${white}"
+        printf "${yellow}The following errors occurred:${white}\n"
+        # Show only first 5 errors
+        for i in "${!errors[@]}"; do
+            if [ $i -lt 5 ]; then
+                printf "${red}- ${errors[$i]}${white}\n"
+            elif [ $i -eq 5 ]; then
+                local remaining=$(( ${#errors[@]} - 5 ))
+                printf "${red}... and %d more errors${white}\n" "$remaining"
+                break
+            fi
         done
         
         printf "\n"
@@ -93,6 +113,9 @@ check_errors() {
         # Clear errors after confirmation
         errors=()
     else
-        printf "\n\n█▀ █░█ █▀▀ █▀▀ █▀ █▀\n▄█ █▄█ █▄▄ ██▄ ▄█ ▄█\n"
+        printf "\n$successFooter"
+        print_separator 30
+        printf "\n"
+        printf "no errors\n"
     fi
 }

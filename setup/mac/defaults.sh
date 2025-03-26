@@ -32,11 +32,11 @@ run_command "Hide battery percentage" "defaults write com.apple.menuextra.batter
 run_command "Show remaining battery time" "defaults write com.apple.menuextra.battery ShowTime -string YES"
 
 print_section "Keyboard"
-run_command "Enable full keyboard access" "defaults write -g AppleKeyboardUIMode -int 3"
-run_command "Disable press-and-hold for keys in favor of key repeat" "defaults write -g ApplePressAndHoldEnabled -bool false"
-run_command "Set fast keyboard repeat rate" "defaults write -g KeyRepeat -int 1"
-run_command "Set fast initial keyboard repeat delay" "defaults write -g InitialKeyRepeat -int 5"
-run_command "Disable auto-correct" "defaults write -g NSAutomaticSpellingCorrectionEnabled -bool false"
+run_command "Enable full keyboard access" "defaults write NSGlobalDomain AppleKeyboardUIMode -int 3"
+run_command "Disable press-and-hold for keys in favor of key repeat" "defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false"
+run_command "Set moderate keyboard repeat rate" "defaults write NSGlobalDomain KeyRepeat -int 2"
+run_command "Set moderate initial keyboard repeat delay" "defaults write NSGlobalDomain InitialKeyRepeat -int 15"
+run_command "Disable auto-correct" "defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false"
 
 print_section "Trackpad"
 run_command "Enable tap to click" "defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true"
@@ -102,7 +102,7 @@ run_command "Enable 2D Dock" "defaults write com.apple.dock no-glass -bool true"
 run_command "Enable auto-hide" "defaults write com.apple.dock autohide -bool true"
 run_command "Make hidden app icons translucent" "defaults write com.apple.dock showhidden -bool true"
 run_command "Set minimize animation to scale" "defaults write com.apple.dock mineffect -string scale"
-run_command "Set smaller dock size" "defaults write com.apple.dock tilesize -integer 40"
+run_command "Set smaller dock size" "defaults write com.apple.dock tilesize -integer 36"
 
 print_section "Dashboard"
 run_command "Enable Dashboard dev mode" "defaults write com.apple.dashboard devmode -bool true"
@@ -112,6 +112,10 @@ run_command "Prevent Time Machine from prompting to use new hard drives" "defaul
 
 print_section "Terminal"
 run_command "Use only UTF-8 in Terminal" "defaults write com.apple.terminal StringEncodings -array 4"
+run_command "Create iTerm2 dynamic profiles directory" "mkdir -p $HOME/Library/Application\ Support/iTerm2/DynamicProfiles"
+run_command "Copy iTerm2 profiles" "cp -r $HOME/project/dotfiles/configs/iterm-custom.json $HOME/Library/Application\ Support/iTerm2/DynamicProfiles/"
+run_command "Install iTerm2 shell integration" "curl -L https://iterm2.com/shell_integration/zsh -o ~/.iterm2_shell_integration.zsh"
+
 
 print_section "iTunes"
 run_command "Disable Ping sidebar" "defaults write com.apple.iTunes disablePingSidebar -bool true"
@@ -123,11 +127,12 @@ Finder
 Dock
 SystemUIServer
 cfprefsd
+iTerm2
 )
 
 print_section "Kill affected applications"
 for app in "${appsToKill[@]}"; do
-    run_command "Kill $app" "killall $app"
+    run_command "Kill $app" "killall $app" warning
 done 
 
 check_errors
