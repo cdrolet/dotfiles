@@ -1,3 +1,6 @@
+typeset -i record_metrics=2 # 0 to disable metrics, 1 for only > 0 seconds, 2 for all
+# to output execution
+# set -x
 initHome() {
     local source=~/.zshrc
 
@@ -42,13 +45,13 @@ scanFunctions() {
 }
 
 scanSource() {
-
     setopt extended_glob
     for file in $(echo $1/**/*.zsh(.N)); do
         name=$( dirname "$file" )
+        filename=$( basename "$file" )
 
-        #skip external directory
-        if [[ ${name#*external} != $name ]]; then
+        #skip external directory and files starting with #
+        if [[ ${name#*external} != $name ]] || [[ $filename == \#* ]]; then
             continue;
         fi
 
@@ -62,14 +65,11 @@ sdkMan() {
     [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 }
 
+ # 0 to disable metrics, 1 for only > 0 seconds, 2 for all
 track() {
     local step_stopwatch=0
     if [ $record_metrics -gt 0 ]; then
-        if command -v gdate >/dev/null 2>&1; then
-            step_stopwatch=$(gdate +%s%N)
-        else
-            step_stopwatch=$(($(date +%s) * 1000)) # Fallback to milliseconds using regular date
-        fi
+        step_stopwatch=$(/opt/homebrew/bin/gdate +%s%3N)
     fi
 
     # Execute the function passed as parameters
@@ -78,47 +78,32 @@ track() {
     eval "$function_call"
 
     if [ $record_metrics -gt 0 ]; then
-        if command -v gdate >/dev/null 2>&1; then
-            end_time=$(gdate +%s%N)
-            local totalTime=$(( (end_time - step_stopwatch) / 1000000 )) # Convert to milliseconds
-        else
-            end_time=$(($(date +%s) * 1000))
-            local totalTime=$((end_time - step_stopwatch))
-        fi
-        if [ $record_metrics -eq 2 ] || ([ $record_metrics -eq 1 ] && [ $totalTime -gt 0 ]); then
-            if [ $totalTime -ge 1000 ]; then
-                printf "- %s loaded in %.2f seconds\n" "$function_call" "$(( totalTime / 1000.0 ))"
+        local end_time=$(/opt/homebrew/bin/gdate +%s%3N) 
+        local total_time=$((end_time - step_stopwatch))
+        if [ $record_metrics -eq 2 ] || ([ $record_metrics -eq 1 ] && [ $total_time -gt 0 ]); then
+            if [ $total_time -ge 1000 ]; then
+                printf "- %s loaded in %.2f seconds\n" "$function_call" "$(( total_time / 1000.0 ))"
             else
-                echo "- $function_call loaded in ${totalTime}ms"
+                echo "- $function_call loaded in ${total_time}ms"
             fi
         fi
     fi
 }
 
-# to output execution
-# set -x
-record_metrics=1 # 0 to disable metrics, 1 for only > 0 seconds, 2 for all
-if command -v gdate >/dev/null 2>&1; then
-    full_stopwatch=$(gdate +%s%N)
-else
-    full_stopwatch=$(($(date +%s) * 1000))
-fi
+full_stopwatch=$(/opt/homebrew/bin/gdate +%s%3N)
 
 track "initHome"
 track "scanModules"
 track "sdkMan"
 
 if [ $record_metrics -gt 0 ]; then
-    if command -v gdate >/dev/null 2>&1; then
-        end_time=$(gdate +%s%N)
-        total_ms=$(( (end_time - full_stopwatch) / 1000000 ))
+    
+    end_time=$(/opt/homebrew/bin/gdate +%s%3N)
+    total_time=$((end_time - full_stopwatch))
+    
+    if [ $total_time -ge 1000 ]; then
+        printf "Total startup time: %.2f seconds\n" "$(( total_time / 1000.0 ))"
     else
-        end_time=$(($(date +%s) * 1000))
-        total_ms=$((end_time - full_stopwatch))
-    fi
-    if [ $total_ms -ge 1000 ]; then
-        printf "Total startup time: %.2f seconds\n" "$(( total_ms / 1000.0 ))"
-    else
-        echo "Total startup time: ${total_ms}ms"
+        echo "Total startup time: ${total_time}ms"
     fi
 fi

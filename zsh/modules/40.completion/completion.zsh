@@ -1,4 +1,3 @@
-
 ##############################################################
 # OPTIONS
 ##############################################################
@@ -21,6 +20,28 @@ fpath=("${0:h}/external/src" $fpath)
 
 # load completions widgets
 zmodload -i zsh/complist
+
+# Initialize completion system with caching
+autoload -Uz compinit
+
+# Only check compinit once a day
+if [[ -n ~/.zcompdump(#qN.mh+24) ]]; then
+  compinit
+else
+  compinit -C
+fi
+
+# Cache completion for commands that are slow to complete
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path "$ZSH_CACHE"
+
+# Lazy load kubectl completion
+kubectl() {
+    if ! type __start_kubectl >/dev/null 2>&1; then
+        source <(/opt/homebrew/bin/kubectl completion zsh)
+    fi
+    command kubectl "$@"
+}
 
 ##############################################################
 # KEYS
@@ -73,10 +94,6 @@ zstyle ':completion:*:*:*:users' ignored-patterns \
         
 # don't complete unavailable commands like completion functions and hook functions
 zstyle ':completion:*:functions' ignored-patterns '(_*|pre(cmd|exec))'
-
-# caching 
-zstyle ':completion:*' use-cache on
-zstyle ':completion:*' cache-path "$ZSH_CACHE"
 
 # grouping / headline / ...
 zstyle ':completion:*' format ' %F{yellow}-- %d --%f'
@@ -189,7 +206,5 @@ autoload -Uz compinit && compinit
 #############
 # KUBERNETES
 #############
-
-source <(/opt/homebrew/bin/kubectl completion zsh)
 
 #[[ -f /opt/homebrew/bin/kubectl ]] && source <(kubectl completion zsh)
