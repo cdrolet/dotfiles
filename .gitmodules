@@ -10,3 +10,6 @@
 [submodule "zsh/modules/40.completion/external"]
 	path = zsh/modules/40.completion/external
 	url = https://github.com/zsh-users/zsh-completions
+[submodule "zsh/modules/60.syntax/external"]
+	path = zsh/modules/60.syntax/external
+	url = https://github.com/zdharma-continuum/fast-syntax-highlighting.git
