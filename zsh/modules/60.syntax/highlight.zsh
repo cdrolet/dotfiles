@@ -1,4 +1,6 @@
-source "${0:h}/external/zsh-syntax-highlighting.zsh" || return 1
+source "${0:h}/external/fast-syntax-highlighting.plugin.zsh" || return 1
 
-ZSH_HIGHLIGHT_HIGHLIGHTERS=(main)
-ZSH_HIGHLIGHT_STYLES[unknown-token]="fg=red"
+# Configure fast-syntax-highlighting
+FAST_HIGHLIGHT[use_brackets]=1
+FAST_HIGHLIGHT[use_async]=1
+FAST_HIGHLIGHT[use_async_always]=1

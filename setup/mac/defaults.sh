@@ -1,9 +1,10 @@
-#!/bin/bash
+#!/bin/zsh
 
 # Source common.sh from the same directory as this script
 source "$(dirname "$0")/common.sh"
+source "$(dirname "$0")/dock_functions.sh"
 
-print_header "Mac Defaults"
+print_header "Defaults"
 
 print_section "System-wide"
 run_command "Disable resume system-wide" "defaults write NSGlobalDomain NSQuitAlwaysKeepsWindows -bool false"
@@ -91,7 +92,47 @@ run_command "Set top left corner modifier" "defaults write com.apple.dock wvous-
 run_command "Set top right corner to Desktop" "defaults write com.apple.dock wvous-tr-corner -int 4"
 run_command "Set top right corner modifier" "defaults write com.apple.dock wvous-tr-modifier -int 0"
 
-print_section "Dock"
+print_section "Dock apps"
+
+declare -a appsToDock=(
+    '/Applications/Qobuz.app'
+    '/System/Applications/Notes.app'
+    '/Applications/Brave\ Browser.app'
+    '/Applications/Bitwarden.app'
+    '/Applications/Cursor.app'
+    '/Applications/iTerm.app'
+    '/Applications/Warp.app'
+);
+declare -a utilitiesToDock=(
+    '/System/Applications/System\ Settings.app'
+    '/System/Applications/Utilities/Activity\ Monitor.app'
+    '/System/Applications/Utilities/Print\ Center.app'
+);
+declare -a foldersToDock=(
+   # ~/Downloads
+);
+
+run_command "Clear dock" "clear_dock"
+
+for app in "${appsToDock[@]}"; do
+    run_command "Add $app to dock" "add_app_to_dock $app"
+done
+
+run_command "Add spacer to dock" "add_small_spacer_to_dock"
+
+for app in "${utilitiesToDock[@]}"; do
+    run_command "Add $app to dock" "add_app_to_dock $app"
+done
+
+for folder in "${foldersToDock[@]}"; do
+    run_command "Add $folder to dock" "add_folder_to_dock $folder"
+done
+
+#run_command "Reset dock" "reset_dock"
+
+print_section "Dock settings"
+
+run_command "Disable recent apps from dock" "disable_recent_apps_from_dock"
 run_command "Enable highlight hover effect for grid view" "defaults write com.apple.dock mouse-over-hilte-stack -bool true"
 run_command "Enable spring loading for all items" "defaults write com.apple.dock enable-spring-load-actions-on-all-items -bool true"
 run_command "Show process indicators" "defaults write com.apple.dock show-process-indicators -bool true"
@@ -104,6 +145,32 @@ run_command "Make hidden app icons translucent" "defaults write com.apple.dock s
 run_command "Set minimize animation to scale" "defaults write com.apple.dock mineffect -string scale"
 run_command "Set smaller dock size" "defaults write com.apple.dock tilesize -integer 36"
 
+
+# # Customize Dock
+# ## Delete Dock
+# defaults write com.apple.dock persistent-apps -array
+
+# # Add system icons
+# declare -a sys_icons=(
+#     "/Applications/System Settings"
+#     "/Volumes/Preboot/Cryptexes/App/System/Applications/Safari"
+#     )
+# for sys_icon in "${sys_icons[@]}"; do
+#     defaults write com.apple.dock persistent-apps -array-add "<dict><key>tile-data</key><dict><key>file-data</key><dict><key>_CFURLString</key><string>/System${sys_icon}.app</string><key>_CFURLStringType</key><integer>0</integer></dict></dict></dict>"
+# done
+
+# ## Add application icons
+# declare -a icons=("Google Chrome" "Slack" "Sourcetree" "IntelliJ IDEA CE" "XCode" "Android Studio" "iTerm" "Postman" "Postgres" "pgAdmin 4")
+# for icon in "${icons[@]}"; do
+#     if [ -d "/Applications/${icon}.app" ]; then
+#         if ! defaults read com.apple.dock | grep "${icon}"; then
+#             defaults write com.apple.dock persistent-apps -array-add "<dict><key>tile-data</key><dict><key>file-data</key><dict><key>_CFURLString</key><string>/Applications/${icon}.app</string><key>_CFURLStringType</key><integer>0</integer></dict></dict></dict>"
+#         fi
+#     fi
+# done
+
+
+
 print_section "Dashboard"
 run_command "Enable Dashboard dev mode" "defaults write com.apple.dashboard devmode -bool true"
 
@@ -114,8 +181,9 @@ print_section "Terminal"
 run_command "Use only UTF-8 in Terminal" "defaults write com.apple.terminal StringEncodings -array 4"
 run_command "Create iTerm2 dynamic profiles directory" "mkdir -p $HOME/Library/Application\ Support/iTerm2/DynamicProfiles"
 run_command "Copy iTerm2 profiles" "cp -r $HOME/project/dotfiles/configs/iterm-custom.json $HOME/Library/Application\ Support/iTerm2/DynamicProfiles/"
-run_command "Install iTerm2 shell integration" "curl -L https://iterm2.com/shell_integration/zsh -o ~/.iterm2_shell_integration.zsh"
-
+run_command "Install iTerm2 shell integration" "curl -L https://iterm2.com/shell_integration/zsh -o $HOME/.iterm2_shell_integration.zsh"
+run_command "Make shell integration executable" "chmod +x $HOME/.iterm2_shell_integration.zsh"
+run_command "Run iTerm2 shell integration" "$HOME/.iterm2_shell_integration.zsh"
 
 print_section "iTunes"
 run_command "Disable Ping sidebar" "defaults write com.apple.iTunes disablePingSidebar -bool true"
