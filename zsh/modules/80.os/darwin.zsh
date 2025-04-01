@@ -51,9 +51,6 @@ function webcam () {
 # Flush the DNS on Mac
 alias dnsflush='sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder'
 
-# Darwin ls command does not support --color option.
-alias l="gls -oAhtr --group-directories-first --color=always"
-alias ls="gls --color=always"
 
 # Copy and paste and prune the useless newline
 alias pbcopynn='tr -d "\n" | pbcopy'

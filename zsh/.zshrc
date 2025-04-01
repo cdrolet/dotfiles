@@ -1,6 +1,7 @@
-typeset -i record_metrics=2 # 0 to disable metrics, 1 for only > 0 seconds, 2 for all
+typeset -i record_metrics=0 # 0 to disable metrics, 1 for only > 0 seconds, 2 for all
 # to output execution
 # set -x
+
 initHome() {
     local source=~/.zshrc
 

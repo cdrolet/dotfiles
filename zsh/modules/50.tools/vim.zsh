@@ -53,6 +53,5 @@ function vimHelp {
 			 
 }
 
+alias vim="nvim"
 alias vimh="echoAndRun vimHelp"
-
-

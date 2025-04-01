@@ -6,7 +6,7 @@
 # show newest files
 # http://www.commandlinefu.com/commands/view/9015/find-the-most-recently-changed-files-recursively
 newest () {
-    find . -type f -printf '%TY-%Tm-%Td %TT %p\n' | grep -v cache | grep -v ".hg" | grep -v ".git" | sort -r | less
+    fd --type f --exclude 'cache' --exclude '.hg' --exclude '.git' --changed-within 1d --exec stat -f "%Sm %N" {} \; | sort -r
 }
 
 # compress to bz2
@@ -31,23 +31,18 @@ untar() {
 # backup a file with a timestamp
 # http://www.commandlinefu.com/commands/view/7294/backup-a-file-with-a-date-time-stamp
 bak () {
-    oldname=$1;
-    if [ "$oldname" != "" ]; then
-        datepart=$(date +%Y-%m-%d);
-        firstpart=`echo $oldname | cut -d "." -f 1`;
-        newname=`echo $oldname | sed s/$firstpart/$firstpart.$datepart/`;
-        cp -R ${oldname} ${newname};
+    if [ -n "$1" ]; then
+        cp -R "$1" "${1%.*}.$(date +%Y-%m-%d).${1##*.}"
     fi
 }
 
-# rename files in a directory in an edited list fashion
-# http://www.commandlinefu.com/commands/view/7818/
-massmove () {
-    ls > ls; paste ls ls > ren; vi ren; sed 's/^/mv /' ren|bash; rm ren ls
-}
-
-fixperms(){
-    find . \( -name "*.sh" -or -type d \) -exec chmod 755 {} \; && find . -type f ! -name "*.sh" -exec chmod 644 {} \;
+# 1.Make shell scripts executable
+# 2.Ensure directories are traversable
+# 3.Set regular files to be readable by everyone but only writable by the owner
+fixperms() {
+    fd -t d -x chmod 755 {} \;
+    fd -t f -x chmod 644 {} \;
+    fd -t f -e sh -x chmod 755 {} \;
 }
 
 ##############################################################
@@ -55,6 +50,7 @@ fixperms(){
 ##############################################################
 
 # Recursive dos2unix in current directory
+# Converts all files in the current directory and its subdirectories from DOS/Windows line endings (CRLF - \r\n) to Unix line endings (LF - \n).
 alias dos2lf='dos2unix `find ./ -type f`'
 
 # files used, anywhere on the filesystem
@@ -63,3 +59,13 @@ alias files.usage='sudo fs_usage -e -f filesystem|grep -v CACHE_HIT|grep -v grep
 alias files.open='sudo fs_usage -e -f filesystem|grep -v CACHE_HIT|grep -v grep|grep open'
 # files in use in the Users directory
 alias files.usage.user='sudo fs_usage -e -f filesystem|grep -v CACHE_HIT|grep -v grep|grep Users'
+
+# Using modern tools
+alias grep='rg'
+alias find='fd'
+alias cat='bat'
+alias ls='eza'
+alias l="eza -oAhtr --group-directories-first"
+alias ll='eza -l'
+alias la='eza -lah --git --group-directories-first --sort=size'
+alias tree='eza --tree'

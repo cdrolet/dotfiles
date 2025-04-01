@@ -6,6 +6,21 @@
   # https://github.com/blog/180-local-github-config
   user = cdrolet
 
+[interactive]
+    diffFilter = delta --color-only
+
+[delta]
+    navigate = true    # use n and N to move between diff sections
+    light = false      # set to true if you're in a terminal with a light background color
+    side-by-side = true
+    line-numbers = true
+    syntax-theme = Dracula
+    plus-style = "syntax #2A363B"
+    minus-style = "syntax #3F2D3D"
+    plus-emph-style = "syntax #2D4F3D"
+    minus-emph-style = "syntax #613038"
+
+
 [color]
 	ui = auto
 	interactive = auto
@@ -28,24 +43,28 @@
 	untracked = red bold
 	
 [core]
-	editor = vim 
+	editor = nvim 
 	autocrlf = input
-	pager = less
+	pager = delta
 	excludesfile = ~/.gitignore_global
 
-
 [merge]
-   tool = intellij
-
-[mergetool "intellij"]
-   cmd = idea merge $(cd $(dirname "$LOCAL") && pwd)/$(basename "$LOCAL") $(cd $(dirname "$REMOTE") && pwd)/$(basename "$REMOTE") $(cd $(dirname "$BASE") && pwd)/$(basename "$BASE") $(cd $(dirname "$MERGED") && pwd)/$(basename "$MERGED")
-   trustExitCode = true
+	tool = vimdiff
+	conflictstyle = diff3
 
 [diff]
-   tool = intellij
+    tool = vimdiff
+    colorMoved = default
 
-[difftool "intellij"]
-   cmd = idea diff $(cd $(dirname "$LOCAL") && pwd)/$(basename "$LOCAL") $(cd $(dirname "$REMOTE") && pwd)/$(basename "$REMOTE")
+#[mergetool "intellij"]
+#   cmd = idea merge $(cd $(dirname "$LOCAL") && pwd)/$(basename "$LOCAL") $(cd $(dirname "$REMOTE") && pwd)/$(basename "$REMOTE") $(cd $(dirname "$BASE") && pwd)/$(basename "$BASE") $(cd $(dirname "$MERGED") && pwd)/$(basename "$MERGED")
+#   trustExitCode = true
+
+#[diff]
+#   tool = intellij
+
+#[difftool "intellij"]
+#   cmd = idea diff $(cd $(dirname "$LOCAL") && pwd)/$(basename "$LOCAL") $(cd $(dirname "$REMOTE") && pwd)/$(basename "$REMOTE")
 
 #[merge]
 #    log = true
@@ -63,9 +82,7 @@
 [format]
 	pretty = oneline
 
-[github]
-	user = cdrolet	
-	
+
 [http]
 	sslVerify = false
 
@@ -73,7 +90,7 @@
 	default = matching
 
 [web]
-	browser = google-chrome
+	browser = brave
 	
 [url "https://github.com/"]
     insteadOf = gh:

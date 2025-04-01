@@ -2,9 +2,72 @@
 
 # Source common.sh from the same directory as this script
 source "$(dirname "$0")/common.sh"
-source "$(dirname "$0")/dock_functions.sh"
 
 print_header "Defaults"
+
+print_section "Dock apps"
+
+declare -a appsToDock=(
+    '/Applications/Brave\ Browser.app'
+    '/System/Applications/Mail.app'
+    '/Applications/Qobuz.app'
+    '/Applications/Bitwarden.app'
+    '/Applications/Obsidian.app'
+);
+
+declare -a devAppsToDock=(
+    '/Applications/Cursor.app'
+    '/Applications/iTerm.app'
+    '/Applications/Warp.app'
+);
+
+declare -a utilitiesToDock=(
+    '/System/Applications/System\ Settings.app'
+    '/System/Applications/Utilities/Activity\ Monitor.app'
+    '/System/Applications/Utilities/Print\ Center.app'
+);
+declare -a foldersToDock=(
+   # ~/Downloads
+);
+
+run_command "Clear dock" "clear_dock"
+
+for app in "${appsToDock[@]}"; do
+    run_command "Add $app to dock" "add_app_to_dock $app"
+done
+
+run_command "Add spacer to dock" "add_small_spacer_to_dock"
+
+for app in "${devAppsToDock[@]}"; do
+    run_command "Add $app to dock" "add_app_to_dock $app"
+done
+
+run_command "Add spacer to dock" "add_small_spacer_to_dock"
+
+for app in "${utilitiesToDock[@]}"; do
+    run_command "Add $app to dock" "add_app_to_dock $app"
+done
+
+for folder in "${foldersToDock[@]}"; do
+    run_command "Add $folder to dock" "add_folder_to_dock $folder"
+done
+
+#run_command "Reset dock" "reset_dock"
+
+print_section "Dock settings"
+
+run_command "Disable recent apps from dock" "disable_recent_apps_from_dock"
+run_command "Enable highlight hover effect for grid view" "defaults write com.apple.dock mouse-over-hilte-stack -bool true"
+run_command "Enable spring loading for all items" "defaults write com.apple.dock enable-spring-load-actions-on-all-items -bool true"
+run_command "Show process indicators" "defaults write com.apple.dock show-process-indicators -bool true"
+run_command "Disable opening application animations" "defaults write com.apple.dock launchanim -bool false"
+run_command "Remove auto-hiding delay" "defaults write com.apple.Dock autohide-delay -float 0"
+run_command "Remove hiding animation" "defaults write com.apple.dock autohide-time-modifier -float 0"
+run_command "Enable 2D Dock" "defaults write com.apple.dock no-glass -bool true"
+run_command "Enable auto-hide" "defaults write com.apple.dock autohide -bool true"
+run_command "Make hidden app icons translucent" "defaults write com.apple.dock showhidden -bool true"
+run_command "Set minimize animation to scale" "defaults write com.apple.dock mineffect -string scale"
+run_command "Set smaller dock size" "defaults write com.apple.dock tilesize -integer 36"
 
 print_section "System-wide"
 run_command "Disable resume system-wide" "defaults write NSGlobalDomain NSQuitAlwaysKeepsWindows -bool false"
@@ -79,12 +142,14 @@ run_command "Allow quitting via ⌘ + Q" "defaults write com.apple.finder QuitMe
 run_command "Disable window animations" "defaults write com.apple.finder DisableAllAnimations -bool true"
 run_command "Show all filename extensions" "defaults write NSGlobalDomain AppleShowAllExtensions -bool true"
 run_command "Show status bar" "defaults write com.apple.finder ShowStatusBar -bool true"
+run_command "Show path bar" "defaults write com.apple.finder ShowPathbar -bool true"
 run_command "Enable text selection in Quick Look" "defaults write com.apple.finder QLEnableTextSelection -bool true"
 run_command "Show POSIX path in Finder title" "defaults write com.apple.finder _FXShowPosixPathInTitle -bool true"
 run_command "Disable .DS_Store on network volumes" "defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true"
 run_command "Disable file extension change warning" "defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false"
 run_command "Disable Trash empty warning" "defaults write com.apple.finder WarnOnEmptyTrash -bool false"
 run_command "Enable secure empty Trash" "defaults write com.apple.finder EmptyTrashSecurely -bool true"
+run_command "Open in list view" "defaults write com.apple.finder FXPreferredViewStyle -string 'Nlsv'"
 
 print_section "Desktop"
 run_command "Set top left corner to Mission Control" "defaults write com.apple.dock wvous-tl-corner -int 2"
@@ -92,84 +157,14 @@ run_command "Set top left corner modifier" "defaults write com.apple.dock wvous-
 run_command "Set top right corner to Desktop" "defaults write com.apple.dock wvous-tr-corner -int 4"
 run_command "Set top right corner modifier" "defaults write com.apple.dock wvous-tr-modifier -int 0"
 
-print_section "Dock apps"
+print_section "Mail"
+execute_default "Disable reply animations" "defaults write com.apple.Mail DisableReplyAnimations -bool true"
+execute_default "Disable send animations" "defaults write com.apple.Mail DisableSendAnimations -bool true"
+execute_default "Copy email addresses without names" "defaults write com.apple.mail AddressesIncludeNameOnPasteboard -bool false"
 
-declare -a appsToDock=(
-    '/Applications/Qobuz.app'
-    '/System/Applications/Notes.app'
-    '/Applications/Brave\ Browser.app'
-    '/Applications/Bitwarden.app'
-    '/Applications/Cursor.app'
-    '/Applications/iTerm.app'
-    '/Applications/Warp.app'
-);
-declare -a utilitiesToDock=(
-    '/System/Applications/System\ Settings.app'
-    '/System/Applications/Utilities/Activity\ Monitor.app'
-    '/System/Applications/Utilities/Print\ Center.app'
-);
-declare -a foldersToDock=(
-   # ~/Downloads
-);
-
-run_command "Clear dock" "clear_dock"
-
-for app in "${appsToDock[@]}"; do
-    run_command "Add $app to dock" "add_app_to_dock $app"
-done
-
-run_command "Add spacer to dock" "add_small_spacer_to_dock"
-
-for app in "${utilitiesToDock[@]}"; do
-    run_command "Add $app to dock" "add_app_to_dock $app"
-done
-
-for folder in "${foldersToDock[@]}"; do
-    run_command "Add $folder to dock" "add_folder_to_dock $folder"
-done
-
-#run_command "Reset dock" "reset_dock"
-
-print_section "Dock settings"
-
-run_command "Disable recent apps from dock" "disable_recent_apps_from_dock"
-run_command "Enable highlight hover effect for grid view" "defaults write com.apple.dock mouse-over-hilte-stack -bool true"
-run_command "Enable spring loading for all items" "defaults write com.apple.dock enable-spring-load-actions-on-all-items -bool true"
-run_command "Show process indicators" "defaults write com.apple.dock show-process-indicators -bool true"
-run_command "Disable opening application animations" "defaults write com.apple.dock launchanim -bool false"
-run_command "Remove auto-hiding delay" "defaults write com.apple.Dock autohide-delay -float 0"
-run_command "Remove hiding animation" "defaults write com.apple.dock autohide-time-modifier -float 0"
-run_command "Enable 2D Dock" "defaults write com.apple.dock no-glass -bool true"
-run_command "Enable auto-hide" "defaults write com.apple.dock autohide -bool true"
-run_command "Make hidden app icons translucent" "defaults write com.apple.dock showhidden -bool true"
-run_command "Set minimize animation to scale" "defaults write com.apple.dock mineffect -string scale"
-run_command "Set smaller dock size" "defaults write com.apple.dock tilesize -integer 36"
-
-
-# # Customize Dock
-# ## Delete Dock
-# defaults write com.apple.dock persistent-apps -array
-
-# # Add system icons
-# declare -a sys_icons=(
-#     "/Applications/System Settings"
-#     "/Volumes/Preboot/Cryptexes/App/System/Applications/Safari"
-#     )
-# for sys_icon in "${sys_icons[@]}"; do
-#     defaults write com.apple.dock persistent-apps -array-add "<dict><key>tile-data</key><dict><key>file-data</key><dict><key>_CFURLString</key><string>/System${sys_icon}.app</string><key>_CFURLStringType</key><integer>0</integer></dict></dict></dict>"
-# done
-
-# ## Add application icons
-# declare -a icons=("Google Chrome" "Slack" "Sourcetree" "IntelliJ IDEA CE" "XCode" "Android Studio" "iTerm" "Postman" "Postgres" "pgAdmin 4")
-# for icon in "${icons[@]}"; do
-#     if [ -d "/Applications/${icon}.app" ]; then
-#         if ! defaults read com.apple.dock | grep "${icon}"; then
-#             defaults write com.apple.dock persistent-apps -array-add "<dict><key>tile-data</key><dict><key>file-data</key><dict><key>_CFURLString</key><string>/Applications/${icon}.app</string><key>_CFURLStringType</key><integer>0</integer></dict></dict></dict>"
-#         fi
-#     fi
-# done
-
-
+print_section "Startup applications"
+run_command "Enable Rectangle to start automatically" "osascript -e 'tell application \"System Events\" to make login item at end with properties {path:\"/Applications/Rectangle.app\", hidden:true}'"
+run_command "Enable ProtonVPN to start automatically" "osascript -e 'tell application \"System Events\" to make login item at end with properties {path:\"/Applications/ProtonVPN.app\", hidden:true}'"
 
 print_section "Dashboard"
 run_command "Enable Dashboard dev mode" "defaults write com.apple.dashboard devmode -bool true"
@@ -215,10 +210,6 @@ check_errors
 # 4. Then uncomment and run the following command:
 #execute_command "Disable local Time Machine backups" "tmutil disable local"
 
-# print_section "Mail"
-# execute_default "Disable reply animations" "defaults write com.apple.Mail DisableReplyAnimations -bool true"
-# execute_default "Disable send animations" "defaults write com.apple.Mail DisableSendAnimations -bool true"
-# execute_default "Copy email addresses without names" "defaults write com.apple.mail AddressesIncludeNameOnPasteboard -bool false"
 
 
 # print_section "Safari"
