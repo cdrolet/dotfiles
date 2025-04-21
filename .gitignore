@@ -5,7 +5,8 @@ tests
 tests/*
 .test*
 backup
-ssh/
 .DS_Store
 /zsh/modules/90.work/
 git
+*.code-workspace
+idea/

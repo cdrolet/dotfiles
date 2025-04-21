@@ -43,7 +43,7 @@
 	untracked = red bold
 	
 [core]
-	editor = nvim 
+	editor = nvim
 	autocrlf = input
 	pager = delta
 	excludesfile = ~/.gitignore_global
@@ -103,3 +103,5 @@
     
 [url "https://github.com/cdrolet/"]
     insteadOf = home:
+[init]
+	defaultBranch = main
