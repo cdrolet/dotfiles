@@ -176,3 +176,14 @@ configure_git() {
         skipped "Git already configured" "git config --global user.name '$name' && git config --global user.email '$email' && git config --global core.editor '$editor' && git config --global init.defaultBranch '$default_branch'"
     fi
 }
+
+# Function to update git submodules with option to force update
+force_update_git_submodules() {
+    run "Change to dotfiles directory" "cd $HOME/project/dotfiles"
+    run "Git pull" "git pull"
+    # Force update by resetting local changes to submodules
+    run "Resetting submodule changes" "git submodule foreach --recursive 'git reset --hard HEAD && git clean -fdx'"
+    run "Force updating submodules" "git submodule update --init --recursive --force"
+    
+    return 0
+}

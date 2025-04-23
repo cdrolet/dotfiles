@@ -38,14 +38,9 @@ declare -A essential_tools=(
     ["eza"]=false
     ["delta"]=false
     ["duti"]=false
-    ["git"]=false
-    ["gh"]=false
-    ["gist"]=false
     ["kitty"]=true
 )
 brew_install_from_map "Essential Tools" "essential_tools"
-
-configure_git "cdrolet" "17693777+cdrolet@users.noreply.github.com" "nvim" "main"
 
 declare -A development_languages=(
     ["node"]=false
@@ -88,12 +83,10 @@ declare -A browsers=(
 )
 brew_install_from_map "Browsers" "browsers"
 
-
 declare -A mac_utilities=(
     ["appcleaner"]=true
 )
 brew_install_from_map "Various mac utilities" "mac_utilities"
-
 
 declare -A proton=(
     ["proton-drive"]=true
@@ -118,26 +111,30 @@ declare -A productivity=(
 )
 brew_install_from_map "Productivity" "productivity"
 
+declare -A git_tools=(  
+    ["git"]=false
+    ["gh"]=false
+    ["gist"]=false
+)
+brew_install_from_map "Git tools" "git_tools"
+configure_git "cdrolet" "17693777+cdrolet@users.noreply.github.com" "nvim" "main"
+# Only authenticate if not already authenticated
+if ! check_github_auth; then
+    run "Authenticate into github" "gh auth login"fi
+fi
+
 section "Dotfiles"
 # Check if project directory exists before creating it
 if [ ! -d "$HOME/project" ]; then
     run "Create project directory" "mkdir -p $HOME/project"
 fi
-
-# Only authenticate if not already authenticated
-if ! check_github_auth; then
-    run "Authenticate into github" "gh auth login"
-fi
-
 # Clone dotfiles if they don't already exist
 if [ ! -d "$HOME/project/dotfiles" ]; then
     run "Clone dotfiles" "gh repo clone cdrolet/dotfiles $HOME/project/dotfiles"
-    run "Change to dotfiles directory" "cd $HOME/project/dotfiles"
-    run "Update submodules" "git submodule update --init --recursive"
+    force_update_git_submodules
     run "Run dot sync" "./dotsync.sh"
 else
     skipped "Dotfiles repository already cloned"
-    run "Update dotfiles" "cd $HOME/project/dotfiles && git pull"
-    run "Update submodules" "cd $HOME/project/dotfiles && git submodule update --init --recursive"
+    force_update_git_submodules
 fi
 
