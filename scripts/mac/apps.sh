@@ -8,7 +8,7 @@
 SCRIPT_DIR="$( cd "$( dirname "$(dirname "${BASH_SOURCE[0]}")" )" && pwd )"
 source "$SCRIPT_DIR/lib/_common.sh"
 source "$SCRIPT_DIR/mac/_install_utilities.sh"
-
+source "$SCRIPT_DIR/lib/_git.sh"
 sub_header "Applications"
 
 section "Brew"
@@ -123,18 +123,5 @@ if ! check_github_auth; then
     run "Authenticate into github" "gh auth login"fi
 fi
 
-section "Dotfiles"
-# Check if project directory exists before creating it
-if [ ! -d "$HOME/project" ]; then
-    run "Create project directory" "mkdir -p $HOME/project"
-fi
-# Clone dotfiles if they don't already exist
-if [ ! -d "$HOME/project/dotfiles" ]; then
-    run "Clone dotfiles" "gh repo clone cdrolet/dotfiles $HOME/project/dotfiles"
-    force_update_git_submodules
-    run "Run dot sync" "./dotsync.sh"
-else
-    skipped "Dotfiles repository already cloned"
-    force_update_git_submodules
-fi
+
 

@@ -8,7 +8,7 @@
 source "$(dirname "${BASH_SOURCE[0]}")/_core.sh"
 source "$(dirname "${BASH_SOURCE[0]}")/_ui.sh"
 source "$(dirname "${BASH_SOURCE[0]}")/_errors.sh"
-
+source "$(dirname "${BASH_SOURCE[0]}")/_utils.sh"
 # Function to check if a command exists and install it if necessary
 install() {
     local command_name="$1"   # Name of the command to check (e.g., "brew")
@@ -86,7 +86,7 @@ spin() {
         # On success, just take the first line
         output=$(head -n 1 "$tmp_file")
     fi
-    
+
     rm -f "$tmp_file"
     
     clear_line
@@ -163,6 +163,35 @@ run_commands() {
         
         run "$description" "$command" "$success_handler" "$failure_handler"
     done
+}
+
+track_command() {
+    step_stopwatch=$(get_timestamp_ms)
+
+    # Execute the function passed as parameters
+    local function_call="$@"
+    local function_name="$1"
+
+    eval "$function_call"
+
+    local end_time=$(get_timestamp_ms) 
+    
+    # Ensure both values are integers for math
+    step_stopwatch=${step_stopwatch%%[!0-9]*}
+    
+    end_time=${end_time%%[!0-9]*}
+    
+    local total_time=$((end_time - step_stopwatch))
+
+    if [ $total_time -gt 0 ]; then
+        if [ $total_time -ge 1000 ]; then
+            # Calculate seconds with proper floating point in zsh
+            local seconds=$((total_time / 1000.0))
+            printf "• %s loaded in %.2f seconds\n" "$function_call" "$seconds"
+        else
+            printf "• $function_call loaded in ${total_time}ms\n"
+        fi
+    fi
 }
 
 rwarn() {

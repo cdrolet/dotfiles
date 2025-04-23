@@ -39,6 +39,7 @@ source "$(dirname "${BASH_SOURCE[0]}")/_core.sh"
 source "$(dirname "${BASH_SOURCE[0]}")/_errors.sh"
 source "$(dirname "${BASH_SOURCE[0]}")/_ui.sh"
 source "$(dirname "${BASH_SOURCE[0]}")/_commands.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/_git.sh"
 source "$(dirname "${BASH_SOURCE[0]}")/_utils.sh"
 
 sudo -v

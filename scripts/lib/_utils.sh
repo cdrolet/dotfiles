@@ -10,7 +10,7 @@ source "$(dirname "${BASH_SOURCE[0]}")/_core.sh"
 # Function to print execution time if last_stage is true
 print_execution_time() {
     if [ -n "${start_time+x}" ]; then
-        local end_time=$(date +%s)
+        local end_time=$(get_timestamp)
         local total_time=$((end_time - start_time))
         local formatted_time=$(format_time $total_time)
         printf "\n${blue}Total execution time: ${white}%s\n\n" "$formatted_time"
@@ -52,4 +52,35 @@ pluralize() {
     else
         echo "$plural"
     fi
+}
+
+# Cross-platform date function that works with millisecond precision
+# Usage: get_timestamp [format]
+# Default format: epoch seconds (like date +%s)
+# Optional formats: 
+#   ms - milliseconds since epoch using best available method
+get_timestamp() {
+    local format="${1:-s}"
+    
+    case "$format" in
+        ms)
+            # Attempt to get millisecond precision with standard date
+            # First try using %N (nanoseconds) which works on GNU date (Linux)
+            local nano=$(date +%N 2>/dev/null)
+            
+            if [ -n "$nano" ] && [ "$nano" != "%N" ]; then
+                # If %N works, combine seconds with first 3 digits of nanoseconds
+                local sec=$(date +%s)
+                echo "${sec}${nano:0:3}"
+            else
+                # Fallback: just use seconds and pad with zeros for milliseconds
+                # Less precise but works everywhere
+                date +%s000
+            fi
+            ;;
+        *)
+            # Default to seconds precision (standard date works everywhere)
+            date +%s
+            ;;
+    esac
 } 

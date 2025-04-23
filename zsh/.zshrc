@@ -66,11 +66,35 @@ sdkMan() {
     [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 }
 
+get_timestamp_ms() {
+    # First try using date with nanoseconds (%N) which works on GNU date (Linux)
+    local nano=$(date +%N 2>/dev/null)
+    
+    # Check if nano is actually numeric (not %N or empty)
+    if [[ "$nano" =~ ^[0-9]+$ ]]; then
+        # If %N works, combine seconds with first 3 digits of nanoseconds
+        local sec=$(date +%s)
+        echo "${sec}${nano:0:3}"
+    else
+        # Try common locations of gdate on macOS
+        for gdate_path in /opt/homebrew/bin/gdate /usr/local/bin/gdate; do
+            if [ -x "$gdate_path" ]; then
+                $gdate_path +%s%3N
+                return
+            fi
+        done
+        
+        # Final fallback: just use seconds (with 000 for milliseconds)
+        # Less precise but works everywhere
+        echo "$(date +%s)000"
+    fi
+} 
+
  # 0 to disable metrics, 1 for only > 0 seconds, 2 for all
 track() {
     local step_stopwatch=0
     if [ $record_metrics -gt 0 ]; then
-        step_stopwatch=$(/opt/homebrew/bin/gdate +%s%3N)
+        step_stopwatch=$(get_timestamp_ms)
     fi
 
     # Execute the function passed as parameters
@@ -79,19 +103,26 @@ track() {
     eval "$function_call"
 
     if [ $record_metrics -gt 0 ]; then
-        local end_time=$(/opt/homebrew/bin/gdate +%s%3N) 
+        local end_time=$(get_timestamp_ms) 
+        
+        # Ensure both values are integers for math
+        step_stopwatch=${step_stopwatch%%[!0-9]*}
+        end_time=${end_time%%[!0-9]*}
+        
         local total_time=$((end_time - step_stopwatch))
         if [ $record_metrics -eq 2 ] || ([ $record_metrics -eq 1 ] && [ $total_time -gt 0 ]); then
             if [ $total_time -ge 1000 ]; then
-                printf "- %s loaded in %.2f seconds\n" "$function_call" "$(( total_time / 1000.0 ))"
+                # Calculate seconds with proper floating point in zsh
+                local seconds=$((total_time / 1000.0))
+                printf "• %s loaded in %.2f seconds\n" "$function_call" "$seconds"
             else
-                echo "- $function_call loaded in ${total_time}ms"
+                printf "• $function_call loaded in ${total_time}ms\n"
             fi
         fi
     fi
 }
 
-full_stopwatch=$(/opt/homebrew/bin/gdate +%s%3N)
+full_stopwatch=$(get_timestamp_ms)
 
 track "initHome"
 track "scanModules"
@@ -99,11 +130,18 @@ track "sdkMan"
 
 if [ $record_metrics -gt 0 ]; then
     
-    end_time=$(/opt/homebrew/bin/gdate +%s%3N)
+    end_time=$(get_timestamp_ms)
+    
+    # Ensure both values are integers for math
+    full_stopwatch=${full_stopwatch%%[!0-9]*}
+    end_time=${end_time%%[!0-9]*}
+    
     total_time=$((end_time - full_stopwatch))
     
     if [ $total_time -ge 1000 ]; then
-        printf "Total startup time: %.2f seconds\n" "$(( total_time / 1000.0 ))"
+        # Calculate seconds with proper floating point
+        local seconds=$((total_time / 1000.0))
+        printf "Total startup time: %.2f seconds\n" "$seconds"
     else
         echo "Total startup time: ${total_time}ms"
     fi
