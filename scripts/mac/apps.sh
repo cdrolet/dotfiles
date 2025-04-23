@@ -44,7 +44,8 @@ declare -A essential_tools=(
     ["kitty"]=true
 )
 brew_install_from_map "Essential Tools" "essential_tools"
-run "Configuring git" " git config --global user.name 'cdrolet' && git config --global user.email '17693777+cdrolet@users.noreply.github.com' && git config --global core.editor 'nvim' && git config --global init.defaultBranch 'main'"
+
+configure_git "cdrolet" "17693777+cdrolet@users.noreply.github.com" "nvim" "main"
 
 declare -A development_languages=(
     ["node"]=false
@@ -87,6 +88,13 @@ declare -A browsers=(
 )
 brew_install_from_map "Browsers" "browsers"
 
+
+declare -A mac_utilities=(
+    ["appcleaner"]=true
+)
+brew_install_from_map "Various mac utilities" "mac_utilities"
+
+
 declare -A proton=(
     ["proton-drive"]=true
     ["protonmail-bridge"]=true
@@ -101,7 +109,7 @@ declare -A music=(
 brew_install_from_map "Music" "music"
 
 declare -A productivity=(
-    ["raycast"]=true
+#    ["alfred"]=true
     ["boost-note"]=true
     ["obsidian"]=true
     ["rectangle"]=true
