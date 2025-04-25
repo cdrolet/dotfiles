@@ -1,5 +1,17 @@
 #!/usr/bin/env bash
 
+
+# Detect OS type and extract OS name before any number
+detect_os() {
+    # Get the lowercase OS type
+    local os_type=$(uname -s | tr '[:upper:]' '[:lower:]')
+    
+    # Extract OS name before any number (darwin20.6.0 -> darwin)
+    os_name=$(echo "$os_type" | sed -E 's/([a-z]+)[0-9.].*/\1/')
+    
+    echo "$os_name"
+}
+
 # Get the absolute path of the directory containing install.sh
 SCRIPT_DIR="$( cd "$( dirname "$(dirname "${BASH_SOURCE[0]}")" )" && pwd )"
 
@@ -51,13 +63,3 @@ else
     warning "No system configuration found for $OS_NAME"
 fi
 
-# Detect OS type and extract OS name before any number
-detect_os() {
-    # Get the lowercase OS type
-    local os_type=$(uname -s | tr '[:upper:]' '[:lower:]')
-    
-    # Extract OS name before any number (darwin20.6.0 -> darwin)
-    os_name=$(echo "$os_type" | sed -E 's/([a-z]+)[0-9.].*/\1/')
-    
-    echo "$os_name"
-}
