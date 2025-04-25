@@ -47,17 +47,15 @@ source "$SCRIPT_DIR/scripts/dotsync.sh"
 
 sync_dotfiles $SCRIPT_DIR
 
-# Source OS-specific scripts if they exist
-section "OS-specific configuration for $OS_NAME"
-
 # Get the OS name
 OS_NAME=$(detect_os)
-info "Detected operating system: $OS_NAME"
+# Source OS-specific scripts if they exist
+sub_header "OS-specific configuration for $OS_NAME"
 
 # Check for OS-specific system script
-if [ -f "$SCRIPT_DIR/scripts/$OS_NAME/setup.sh" ]; then
+if [ -f "$SCRIPT_DIR/$OS_NAME/setup.sh" ]; then
     info "Loading $OS_NAME setup"
-    source "$SCRIPT_DIR/scripts/$OS_NAME/setup.sh"
+    source "$SCRIPT_DIR/$OS_NAME/setup.sh"
 else
     last_stage=true
     warning "No system configuration found for $OS_NAME"
