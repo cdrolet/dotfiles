@@ -31,6 +31,15 @@
 #
 ########################################################################################
 
+# Check if the library is already loaded
+if [ -n "${COMMON_LIB_LOADED+x}" ]; then
+    # Already loaded, return silently
+    return 0
+fi
+
+# Mark the library as loaded
+COMMON_LIB_LOADED=true
+
 # Increase the maximum nested function level to prevent "maximum nested function level reached" errors
 FUNCNEST=100
 

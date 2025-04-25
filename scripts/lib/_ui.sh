@@ -56,9 +56,6 @@ ind() {
 }
 
 header() {
-    if [ "$header_printed" = true ]; then
-        return
-    fi
     # Determine which header to use based on simulation mode
     local header_text
     local color="$white"
@@ -71,17 +68,8 @@ header() {
     fi
     
     # Print the header with appropriate color
-    printf "\n${color}%b" "$header_text"
-    
-    # Print separator 
-    separator 60
-    
-    # Reset color
-    printf "${white}\n"
-    
-    # Mark header as printed
-    header_printed=true
-    
+    printf "\n${color}%b${white}\n\n" "$header_text"
+       
     # Print each setting using the helper function
     print_setting "Verbose level" "$verbose" "$DEFAULT_VERBOSE"
     print_setting "Simulation mode" "$is_simulation" "$DEFAULT_SIMULATION"
@@ -222,7 +210,7 @@ print_message() {
 }
 
 simulation_header() {
-    if [ "$is_simulation" = true ] && [ "$header_printed" = false ]; then
+    if [ "$is_simulation" = true ] && { [ ! -n "${header_printed+x}" ] || [ "$header_printed" = false ]; }; then
         header
     fi
 }

@@ -7,7 +7,7 @@ source "$SCRIPT_DIR/scripts/lib/_common.sh"
 
 cd "$SCRIPT_DIR"
 
-sub_header "Updating git submodules"
+sub_header "Updating git repositories"
 
 spin "pulling origin master" "git pull origin master"
 spin "pulling submodules" "git submodule foreach git pull origin master"
@@ -15,13 +15,17 @@ spin "pulling submodules" "git submodule foreach git pull origin master"
 # Check if project directory exists before creating it
 if [ ! -d "$HOME/project" ]; then
     run "Create project directory" "mkdir -p $HOME/project"
+else
+    skipped "Project directory already exists"
 fi
+
 # Clone dotfiles if they don't already exist
 if [ ! -d "$HOME/project/dotfiles" ]; then
     run "Clone dotfiles" "gh repo clone cdrolet/dotfiles $HOME/project/dotfiles"
 else
     skipped "Dotfiles repository already cloned"
 fi
+
 force_update_git_submodules
 
 sub_header "Syncing dotfiles"

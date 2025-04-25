@@ -12,7 +12,6 @@ DEFAULT_SKIP_CONFIRMATION=false
 
 # Global state variables
 declare -g last_stage=false
-declare -g header_printed=false
 
 if [ -z "${skip_confirmation+x}" ]; then
     declare -g skip_confirmation=$DEFAULT_SKIP_CONFIRMATION

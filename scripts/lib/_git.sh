@@ -37,7 +37,13 @@ configure_git() {
 
 # Function to update git submodules with option to force update
 force_update_git_submodules() {
-    run "Change to dotfiles directory" "cd $HOME/project/dotfiles"
+
+    if [ "$(pwd)" != "$HOME/project/dotfiles" ]; then
+        run "Change to dotfiles directory" "cd $HOME/project/dotfiles"
+    else
+        skipped "Already in dotfiles directory"
+    fi
+    
     run "Git pull" "git pull"
     # Force update by resetting local changes to submodules
     run "Resetting submodule changes" "git submodule foreach --recursive 'git reset --hard HEAD && git clean -fdx'"

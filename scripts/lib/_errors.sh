@@ -29,6 +29,8 @@ handle_error() {
         if [[ -n "$shell_error" ]]; then
             errors+=("$shell_error")
         fi
+        show_cursor
+        unset COMMON_LIB_LOADED
         exit $exit_code
     fi
     return 0  # Return 0 to prevent script from exiting
@@ -38,6 +40,8 @@ handle_error() {
 check_state() {
     if [ ${#errors[@]} -gt 0 ]; then
         error_footer
+        show_cursor
+        unset COMMON_LIB_LOADED
         exit 1
     elif [ ${#failures[@]} -gt 0 ]; then
         failure_footer
@@ -48,6 +52,7 @@ check_state() {
             if [[ ! "$confirm" =~ ^[Yy]$ ]]; then
                 printf "Aborting...\n"
                 show_cursor
+                unset COMMON_LIB_LOADED
                 exit 1
             fi
         fi
@@ -57,6 +62,12 @@ check_state() {
     else
         success_footer
     fi
+    
+    # Only unset if this is the last stage
+    if [ "$last_stage" = true ]; then
+        unset COMMON_LIB_LOADED
+    fi
+    
     show_cursor
 }
 
