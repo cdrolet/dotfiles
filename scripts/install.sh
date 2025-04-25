@@ -1,22 +1,18 @@
 #!/bin/bash
 
 # Get the absolute path of the directory containing install.sh
-INSTALL_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+SCRIPT_DIR="$( cd "$( dirname "$(dirname "${BASH_SOURCE[0]}")" )" && pwd )"
 
-source "$INSTALL_DIR/scripts/_common.sh"
-# Source the dotsync script with the absolute path to the install directory
-source "$INSTALL_DIR/scripts/dotsync.sh" "$INSTALL_DIR"
+source "$SCRIPT_DIR/scripts/_common.sh"
+# Source git utilities for submodule management
+source "$SCRIPT_DIR/scripts/lib/_git.sh"
 
-sub_header "Installing dotfiles"
+cd "$SCRIPT_DIR"
 
-cd "$INSTALL_DIR"
-
-section "Updating git submodules"
+sub_header "Updating git submodules"
 
 spin "pulling origin master" "git pull origin master"
 spin "pulling submodules" "git submodule foreach git pull origin master"
-
-section "Syncing dotfiles"
 
 # Check if project directory exists before creating it
 if [ ! -d "$HOME/project" ]; then
@@ -25,14 +21,41 @@ fi
 # Clone dotfiles if they don't already exist
 if [ ! -d "$HOME/project/dotfiles" ]; then
     run "Clone dotfiles" "gh repo clone cdrolet/dotfiles $HOME/project/dotfiles"
-    force_update_git_submodules
-    run "Run dot sync" "./dotsync.sh"
 else
     skipped "Dotfiles repository already cloned"
-    force_update_git_submodules
+fi
+force_update_git_submodules
+
+sub_header "Syncing dotfiles"
+
+# Source the dotsync script with the absolute path to the install directory
+source "$SCRIPT_DIR/scripts/dotsync.sh"
+
+sync_dotfiles $SCRIPT_DIR
+
+# Source OS-specific scripts if they exist
+section "OS-specific configuration for $OS_NAME"
+
+# Get the OS name
+OS_NAME=$(detect_os)
+info "Detected operating system: $OS_NAME"
+
+# Check for OS-specific system script
+if [ -f "$SCRIPT_DIR/scripts/$OS_NAME/setup.sh" ]; then
+    info "Loading $OS_NAME setup"
+    source "$SCRIPT_DIR/scripts/$OS_NAME/setup.sh"
+else
+    last_stage=true
+    warning "No system configuration found for $OS_NAME"
 fi
 
-
-sync_dotfiles $INSTALL_DIR
-
-unset INSTALL_DIR
+# Detect OS type and extract OS name before any number
+detect_os() {
+    # Get the lowercase OS type
+    local os_type=$(uname -s | tr '[:upper:]' '[:lower:]')
+    
+    # Extract OS name before any number (darwin20.6.0 -> darwin)
+    os_name=$(echo "$os_type" | sed -E 's/([a-z]+)[0-9.].*/\1/')
+    
+    echo "$os_name"
+}

@@ -7,6 +7,6 @@
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-clear
 source "$SCRIPT_DIR/mac/apps.sh"
+last_stage=true
 source "$SCRIPT_DIR/mac/defaults.sh"

@@ -88,7 +88,6 @@ read_command_args() {
 initialize_sync_state() {
     shopt -s dotglob
    
-    REVERT_FILE="$SOURCE_DIR"/dotrevert.sh
     SELECTED_FILES=()
     SKIPPED_FILES=()
     OVERWRITTEN_FILES=()
@@ -380,7 +379,6 @@ clean_sync_state() {
 
     # Unset all defined variables
 
-    unset REVERT_FILE
     unset SELECTED_FILES
     unset SKIPPED_FILES
     unset OVERWRITTEN_FILES

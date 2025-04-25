@@ -122,6 +122,3 @@ configure_git "cdrolet" "17693777+cdrolet@users.noreply.github.com" "nvim" "main
 if ! check_github_auth; then
     run "Authenticate into github" "gh auth login"fi
 fi
-
-
-
