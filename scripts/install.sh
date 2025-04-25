@@ -3,9 +3,7 @@
 # Get the absolute path of the directory containing install.sh
 SCRIPT_DIR="$( cd "$( dirname "$(dirname "${BASH_SOURCE[0]}")" )" && pwd )"
 
-source "$SCRIPT_DIR/scripts/_common.sh"
-# Source git utilities for submodule management
-source "$SCRIPT_DIR/scripts/lib/_git.sh"
+source "$SCRIPT_DIR/scripts/lib/_common.sh"
 
 cd "$SCRIPT_DIR"
 
