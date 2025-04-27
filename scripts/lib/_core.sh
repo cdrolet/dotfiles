@@ -11,20 +11,20 @@ DEFAULT_SIMULATION=false
 DEFAULT_SKIP_CONFIRMATION=false
 
 # Global state variables
-declare -g last_stage=false
+LAST_STAGE=true
 
-if [ -z "${skip_confirmation+x}" ]; then
-    declare -g skip_confirmation=$DEFAULT_SKIP_CONFIRMATION
+if [ -z "${SKIP_CONFIRMATION+x}" ]; then
+    SKIP_CONFIRMATION=$DEFAULT_SKIP_CONFIRMATION
 fi
-if [ -z "${is_simulation+x}" ]; then    
-    declare -g is_simulation=$DEFAULT_SIMULATION
+if [ -z "${IS_SIMULATION+x}" ]; then    
+    IS_SIMULATION=$DEFAULT_SIMULATION
 fi
-if [ -z "${verbose+x}" ]; then
-    declare -g verbose=$DEFAULT_VERBOSE
+if [ -z "${VERBOSE+x}" ]; then
+    VERBOSE=$DEFAULT_VERBOSE
 fi
 
 # Start time for execution time tracking
-if [ -z "${start_time+x}" ]; then
-    declare -g start_time=$(date +%s)
+if [ -z "${START_TIME+x}" ]; then
+    START_TIME=$(date +%s)
 fi 
 

@@ -5,19 +5,17 @@
 # Description: Mac system defaults configuration
 ########################################################################################
 
-SCRIPT_DIR="$( cd "$( dirname "$(dirname "${BASH_SOURCE[0]}")" )" && pwd )"
+SYSTEM_SCRIPT_DIR="$( cd "$( dirname "$(dirname "${BASH_SOURCE[0]}")" )" && pwd )"
 
 #last_stage=true
 #verbose=2
 #is_simulation=false
 
-source "$SCRIPT_DIR/lib/_common.sh"
-source "$SCRIPT_DIR/mac/_dock_utilities.sh"
-source "$SCRIPT_DIR/mac/_default_utilities.sh"
+source "$SYSTEM_SCRIPT_DIR/lib/_common.sh"
+source "$SYSTEM_SCRIPT_DIR/darwin/_dock_utilities.sh"
+source "$SYSTEM_SCRIPT_DIR/darwin/_default_utilities.sh"
 
-sudo -v
-
-sub_header "Defaults"
+sub_header "System Settings"
 
 declare -a appsToStartAtLogin=(
     '/Applications/Rectangle.app'
@@ -454,5 +452,4 @@ done
 
 run "Make sure indexing is enabled for the main volume" "sudo mdutil -i on /"
 
-
-
+unset SYSTEM_SCRIPT_DIR

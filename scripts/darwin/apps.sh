@@ -5,10 +5,11 @@
 # Description: Mac application installation and configuration
 ########################################################################################
 
-SCRIPT_DIR="$( cd "$( dirname "$(dirname "${BASH_SOURCE[0]}")" )" && pwd )"
-source "$SCRIPT_DIR/lib/_common.sh"
-source "$SCRIPT_DIR/mac/_install_utilities.sh"
-source "$SCRIPT_DIR/lib/_git.sh"
+APP_SCRIPT_DIR="$( cd "$( dirname "$(dirname "${BASH_SOURCE[0]}")" )" && pwd )"
+source "$APP_SCRIPT_DIR/lib/_common.sh"
+source "$APP_SCRIPT_DIR/darwin/_install_utilities.sh"
+source "$APP_SCRIPT_DIR/lib/_git.sh"
+
 sub_header "Applications"
 
 section "Brew"
@@ -117,8 +118,5 @@ declare -A git_tools=(
     ["gist"]=false
 )
 brew_install_from_map "Git tools" "git_tools"
-configure_git "cdrolet" "17693777+cdrolet@users.noreply.github.com" "nvim" "main"
-# Only authenticate if not already authenticated
-if ! check_github_auth; then
-    run "Authenticate into github" "gh auth login"fi
-fi
+
+unset APP_SCRIPT_DIR

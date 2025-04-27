@@ -5,8 +5,9 @@
 # Description: Main script for Mac setup and configuration
 ########################################################################################
 
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+DARWIN_SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
 
-source "$SCRIPT_DIR/apps.sh"
-last_stage=true
-source "$SCRIPT_DIR/defaults.sh"
+source "$DARWIN_SCRIPT_DIR/apps.sh"
+source "$DARWIN_SCRIPT_DIR/system.sh"
+
+unset DARWIN_SCRIPT_DIR

@@ -63,7 +63,7 @@ read_command_args() {
     if [ $# -eq 0 ]; then
         local error="Error: Path to dotfiles directory is required"
         failure "$error"
-        errors+=("$error")
+        ERRORS+=("$error")
         exit 1
     fi
 
@@ -76,7 +76,7 @@ read_command_args() {
             t) TARGET="${OPTARG}" ;;
             *) local error="Error: Unexpected option ${flag}"
                failure "$error"
-               errors+=("$error")
+               ERRORS+=("$error")
                exit 1 ;;
         esac
     done
@@ -151,7 +151,7 @@ is_valid_dotfile() {
     
     # false if the file is in the ignored list
     if is_in_ignore_list "$filename";then
-        ind; printf "${gray}- Ignoring "$1"${white}\n"
+        ind; printf "${SKIPPED}${GRAY}Ignoring "$1"${white}\n"
         return 1
     fi
 
@@ -169,20 +169,20 @@ is_valid_dotfile() {
         # false if the parent dir is already a symlink to our dotfiles
         if is_linked_to_dotfiles $HOME/"$parent_name" "$SOURCE_DIR";then
             SKIPPED_FILES+=($1)
-            ind; skipped "Skipping $1" "(already symlinked)"
+            ind; skipped "${GRAY}Skipping $1" "(already symlinked)"
             return 1
         fi
         # false if the file is already a symlink to our dotfiles
         if is_linked_to_dotfiles $HOME/"$parent_name/$filename" "$SOURCE_DIR";then
             SKIPPED_FILES+=($1)
-            ind; skipped "Skipping $1" "(already symlinked)"
+            ind; skipped "${GRAY}Skipping $1" "(already symlinked)"
             return 1
         fi
     else
         # false if the file is already a symlink to our dotfiles
         if is_linked_to_dotfiles $HOME/"$filename" "$SOURCE_DIR";then
             SKIPPED_FILES+=($1)
-            ind; skipped "Skipping $1" "(already symlinked)"
+            ind; skipped "${GRAY}Skipping $1" "(already symlinked)"
             return 1
         fi
     fi
@@ -237,11 +237,11 @@ process_dotfile() {
     # check if file exist in home
     if [ -e "$homefile" ];then
         OVERWRITTEN_FILES+=("$1")
-        ind; printf "${blue}*${white} Selecting $1 ${gray}(exist in home)${white}\n"
+        ind; printf "${SUCCESS_SYMBOL}${WHITE} Selecting $1 ${GRAY}(exist in home)${WHITE}\n"
         return
     fi
 
-    ind; printf "${green}+${white} Selecting $1 ${gray}(new dotfile)${white}\n"
+    ind; printf "${SUCCESS_SYMBOL}${WHITE} Selecting $1 ${GRAY}(new dotfile)${WHITE}\n"
 }
 
 clean_broken_links() {
@@ -331,7 +331,7 @@ create_dotfile_symlink() {
     if [[ ! -e "${source}" ]]; then
         local error="Source file does not exist: ${source}"
         ind; failure "$error"
-        errors+=("$error")
+        ERRORS+=("$error")
         return 1
     fi
     
@@ -346,7 +346,7 @@ create_dotfile_symlink() {
     if ! ln -sfn "${source}" "${target}" >/dev/null 2>&1; then
         local error="Failed to create symlink for ${filename}"
         ind; failure "$error"
-        errors+=("$error")
+        ERRORS+=("$error")
         return 1
     fi
 

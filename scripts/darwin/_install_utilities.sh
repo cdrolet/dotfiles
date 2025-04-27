@@ -129,15 +129,5 @@ install_code_extension() {
     run "Installing $extension_id extension" "$code_cmd --install-extension $extension_id"
 }
 
-# Function to check if already authenticated with GitHub
-check_github_auth() {
-    # Try to access GitHub API with current authentication
-    if gh auth status &>/dev/null; then
-        skipped "Already authenticated with GitHub" "gh auth status"
-        return 0
-    else
-        return 1
-    fi
-}
 
 

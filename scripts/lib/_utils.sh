@@ -7,16 +7,16 @@
 
 source "$(dirname "${BASH_SOURCE[0]}")/_core.sh"
 
-# Function to print execution time if last_stage is true
+# Function to print execution time if LAST_STAGE is true
 print_execution_time() {
-    if [ -n "${start_time+x}" ]; then
+    if [ -n "${START_TIME+x}" ]; then
         local end_time=$(get_timestamp)
-        local total_time=$((end_time - start_time))
+        local total_time=$((end_time - START_TIME))
         local formatted_time=$(format_time $total_time)
-        printf "\n${blue}Total execution time: ${white}%s\n\n" "$formatted_time"
+        printf "\n${BLUE}Total execution time: ${WHITE}%s\n\n" "$formatted_time"
         
-        # Unset start_time after printing to prevent multiple prints
-        unset start_time
+        # Unset START_TIME after printing to prevent multiple prints
+        unset START_TIME
     fi
 }
 

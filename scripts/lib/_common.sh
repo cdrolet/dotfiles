@@ -31,6 +31,8 @@
 #
 ########################################################################################
 
+sudo -v
+
 # Check if the library is already loaded
 if [ -n "${COMMON_LIB_LOADED+x}" ]; then
     # Already loaded, return silently
@@ -43,14 +45,17 @@ COMMON_LIB_LOADED=true
 # Increase the maximum nested function level to prevent "maximum nested function level reached" errors
 FUNCNEST=100
 
-# Source all library files
-source "$(dirname "${BASH_SOURCE[0]}")/_core.sh"
-source "$(dirname "${BASH_SOURCE[0]}")/_errors.sh"
-source "$(dirname "${BASH_SOURCE[0]}")/_ui.sh"
-source "$(dirname "${BASH_SOURCE[0]}")/_commands.sh"
-source "$(dirname "${BASH_SOURCE[0]}")/_git.sh"
-source "$(dirname "${BASH_SOURCE[0]}")/_utils.sh"
+LIBRARY_PATH=$(dirname "${BASH_SOURCE[0]}")
 
-sudo -v
+# Source all library files
+source "$LIBRARY_PATH/_core.sh"
+source "$LIBRARY_PATH/_errors.sh"
+source "$LIBRARY_PATH/_ui.sh"
+source "$LIBRARY_PATH/_commands.sh"
+source "$LIBRARY_PATH/_git.sh"
+source "$LIBRARY_PATH/_utils.sh"
+
+unset LIBRARY_PATH
+
 hide_cursor
 header

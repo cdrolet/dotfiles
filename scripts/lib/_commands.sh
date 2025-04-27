@@ -9,6 +9,7 @@ source "$(dirname "${BASH_SOURCE[0]}")/_core.sh"
 source "$(dirname "${BASH_SOURCE[0]}")/_ui.sh"
 source "$(dirname "${BASH_SOURCE[0]}")/_errors.sh"
 source "$(dirname "${BASH_SOURCE[0]}")/_utils.sh"
+
 # Function to check if a command exists and install it if necessary
 install() {
     local command_name="$1"   # Name of the command to check (e.g., "brew")
@@ -65,8 +66,8 @@ spin() {
 
     # Show spinner while command is running
     while kill -0 $pid 2>/dev/null; do
-        render_spinner_output "${spinner_chars[$i]}" "$description" "$output_command"
-        i=$(( (i + 1) % ${#spinner_chars[@]} ))
+        render_spinner_output "${SPINNER_CHARS[$i]}" "$description" "$output_command"
+        i=$(( (i + 1) % ${#SPINNER_CHARS[@]} ))
         sleep $delay
     done
 
@@ -122,10 +123,10 @@ render_spinner_output() {
     local description="$2"
     local command="$3"
     
-    if [ "$verbose" -eq 1 ]; then
-        printf "\r${blue}${spinner_char}${white} $description"
-    elif [ "$verbose" -ge 2 ]; then
-        printf "\r${blue}${spinner_char}${white} $description ${gray}$command${white}"
+    if [ "$VERBOSE" -eq 1 ]; then
+        printf "\r${BLUE}${spinner_char}${WHITE} $description"
+    elif [ "$VERBOSE" -ge 2 ]; then
+        printf "\r${BLUE}${spinner_char}${WHITE} $description ${GRAY}$command${WHITE}"
     fi
 }
 
@@ -178,7 +179,7 @@ track_command() {
     
     # Ensure both values are integers for math
     step_stopwatch=${step_stopwatch%%[!0-9]*}
-    
+
     end_time=${end_time%%[!0-9]*}
     
     local total_time=$((end_time - step_stopwatch))
@@ -219,7 +220,7 @@ run() {
 # Function to execute a command and handle its output
 execute_command() {
     local command="$1"
-    if [ "$is_simulation" = true ]; then
+    if [ "$IS_SIMULATION" = true ]; then
         echo "Simulated: $command"
     else
         eval "$command" 2>&1
@@ -264,7 +265,7 @@ render_command_output() {
     local output_func=""
     case "$status" in
         "success") 
-            if [ "$is_simulation" = true ]; then
+            if [ "$IS_SIMULATION" = true ]; then
                 output_func="simulated"
             else
                 output_func="success"
@@ -275,12 +276,12 @@ render_command_output() {
     esac
 
     # Handle error output for failure status
-    if [ "$status" = "failure" ] && [ "$verbose" -ge 2 ]; then
+    if [ "$status" = "failure" ] && [ "$VERBOSE" -ge 2 ]; then
         handle_error_output "$description" "$output"
     fi
     
     # Render output based on verbosity level
-    case "$verbose" in
+    case "$VERBOSE" in
         1) # Verbosity level 1: Only show description
             $output_func "$description"
             ;;
@@ -288,9 +289,9 @@ render_command_output() {
             $output_func "$description" "$command"
             ;;
         3) # Verbosity level 3: Show command, output and description on separate lines
-            printf "${gray}${arrow_left} $command${white}\n"
+            printf "${GRAY}${ARROW_LEFT} $command${WHITE}\n"
             if [ -n "$output" ]; then
-                printf "${gray}${arrow_right} $output${white}\n"
+                printf "${GRAY}${ARROW_RIGHT} $output${WHITE}\n"
             fi
             $output_func "$description"
             ;;

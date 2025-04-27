@@ -8,8 +8,9 @@
 source "$(dirname "${BASH_SOURCE[0]}")/_core.sh"
 
 # Arrays to store messages
-failures=()
-errors=()
+FAILURES=()
+ALL_FAILURES=()
+ERRORS=()
 
 # Set up error handling
 set -E  # ERR trap is inherited by shell functions
@@ -20,52 +21,84 @@ trap 'check_state' EXIT
 handle_error() {
     local exit_code=$1
     local command=$2
+    local error_message=""
+
+    # Check specifically for source commands with "No such file or directory" errors
+    # since this is a common error and we want to handle it gracefully
+    if [[ "$command" == source* ]] || [[ "$command" == ". "* ]]; then
+        # Extract the file path from the source command
+        local file_path=$(echo "$command" | sed -E 's/^(source|\.) +([^ ]+).*/\2/')
+        # Remove any quotes from the file path
+        file_path="${file_path//\"/}"
+        file_path="${file_path//\'/}"
+        
+        # Expand any variables in the file path
+        eval "file_path=$file_path"
+        
+        # Check if the file exists
+        if [[ ! -f "$file_path" ]]; then
+            error_message="Error: File not found - $file_path"
+            exit_code=2
+        fi
+    fi
     
     # Only treat it as an error if it's a syntax error or command not found
     if [[ $exit_code -eq 2 ]] || [[ $exit_code -eq 127 ]]; then
         local error_message="Command failed with exit code $exit_code: $command"
-        errors+=("$error_message")
+        ERRORS+=("$error_message")
         local shell_error=$(bash -c "$command" 2>&1)
         if [[ -n "$shell_error" ]]; then
-            errors+=("$shell_error")
+            ERRORS+=("$shell_error")
         fi
-        show_cursor
-        unset COMMON_LIB_LOADED
         exit $exit_code
     fi
+    
     return 0  # Return 0 to prevent script from exiting
 }
 
 # Function to output all errors and ask for confirmation to continue
 check_state() {
-    if [ ${#errors[@]} -gt 0 ]; then
+
+    if [ "$LAST_STAGE" = true ]; then
+        # Copy failures to ALL_FAILURES
+        ALL_FAILURES+=("${FAILURES[@]}")
+        
+        # On last stage, set FAILURES to ALL_FAILURES to show complete summary
+        FAILURES=("${ALL_FAILURES[@]}")
+    fi
+
+    if [ ${#ERRORS[@]} -gt 0 ]; then
         error_footer
-        show_cursor
-        unset COMMON_LIB_LOADED
+        clear_state 
         exit 1
-    elif [ ${#failures[@]} -gt 0 ]; then
-        failure_footer
+    elif [ ${#FAILURES[@]} -gt 0 ]; then
         
         printf "\n"
-        if [ "$last_stage" = false ]; then
-            confirm "Do you want to continue despite these failures?"
+        if [ "$LAST_STAGE" = false ]; then
+            confirm "Do you want to continue despite the $(pluralize ${#FAILURES[@]} "failure")?"
             if [[ ! "$confirm" =~ ^[Yy]$ ]]; then
                 printf "Aborting...\n"
-                show_cursor
-                unset COMMON_LIB_LOADED
+                failure_footer
+                clear_state 
                 exit 1
             fi
+            # Copy failures to ALL_FAILURES before clearing
+            ALL_FAILURES+=("${FAILURES[@]}")
+            
+            # Clear failures after confirmation
+            FAILURES=()
+        elif [ "$LAST_STAGE" = true ]; then
+            failure_footer
         fi
-        
-        # Clear failures after confirmation
-        failures=()
     else
-        success_footer
+        if [ "$LAST_STAGE" = true ]; then
+            success_footer
+        fi
     fi
     
     # Only unset if this is the last stage
-    if [ "$last_stage" = true ]; then
-        unset COMMON_LIB_LOADED
+    if [ "$LAST_STAGE" = true ]; then
+        clear_state 
     fi
     
     show_cursor
@@ -85,8 +118,14 @@ handle_error_output() {
         if [ ${#first_line} -gt $max_length ] || [ $(echo "$output" | wc -l) -gt 1 ]; then
             truncated_error="${truncated_error}..."
         fi
-        failures+=("$message: $truncated_error")
+        FAILURES+=("$message: $truncated_error")
     else
-        failures+=("$message: {No output}")
+        FAILURES+=("$message: {No output}")
     fi
 } 
+
+clear_state() {
+    unset COMMON_LIB_LOADED
+    unset LAST_STAGE
+    show_cursor
+}
