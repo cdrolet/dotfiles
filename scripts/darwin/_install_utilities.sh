@@ -117,7 +117,7 @@ install_code_extension() {
     
     # Check if extension is already installed, ignore SIGPIPE errors
     if $code_cmd --list-extensions 2>/dev/null | grep -q "^$extension_id$"; then
-        skipped "VS Code extension $extension_id already installed" "$code_cmd --install-extension $extension_id"
+        skipped "$extension_id already installed" "$code_cmd --install-extension $extension_id"
         return 0
     fi
     

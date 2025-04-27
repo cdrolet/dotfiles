@@ -101,10 +101,10 @@ find_dotfiles() {
     if [ -z $TARGET ]; then
         local title="Scanning dot files"
         local title_length=${#title}
-        printf "\n$title"
-        separator $title_length
+        printf "\n"
+        section "$title"
     else
-        info "targeting dot file: "$TARGET""
+        ind; info "targeting dot file: "$TARGET""
     fi
 
     scan_dotfile_tree "$SOURCE_DIR"
@@ -151,7 +151,7 @@ is_valid_dotfile() {
     
     # false if the file is in the ignored list
     if is_in_ignore_list "$filename";then
-        ind; printf "${SKIPPED}${GRAY}Ignoring "$1"${white}\n"
+        printf "${SKIPPED}${GRAY}Ignoring "$1"${white}\n"
         return 1
     fi
 
@@ -169,20 +169,20 @@ is_valid_dotfile() {
         # false if the parent dir is already a symlink to our dotfiles
         if is_linked_to_dotfiles $HOME/"$parent_name" "$SOURCE_DIR";then
             SKIPPED_FILES+=($1)
-            ind; skipped "${GRAY}Skipping $1" "(already symlinked)"
+            skipped "${GRAY}Skipping $1" "(already symlinked)"
             return 1
         fi
         # false if the file is already a symlink to our dotfiles
         if is_linked_to_dotfiles $HOME/"$parent_name/$filename" "$SOURCE_DIR";then
             SKIPPED_FILES+=($1)
-            ind; skipped "${GRAY}Skipping $1" "(already symlinked)"
+            skipped "${GRAY}Skipping $1" "(already symlinked)"
             return 1
         fi
     else
         # false if the file is already a symlink to our dotfiles
         if is_linked_to_dotfiles $HOME/"$filename" "$SOURCE_DIR";then
             SKIPPED_FILES+=($1)
-            ind; skipped "${GRAY}Skipping $1" "(already symlinked)"
+            skipped "${GRAY}Skipping $1" "(already symlinked)"
             return 1
         fi
     fi
@@ -198,7 +198,7 @@ has_naming_conflict() {
     
     for element in "${files[@]}"; do
         if [[ $(basename "$element") == "$filename" ]]; then
-            ind; failure "Rejecting $1" "(in conflict with $element)"   
+            failure "Rejecting $1" "(in conflict with $element)"   
             REJECTED_FILES+=($1)
             return 0
         fi
@@ -237,11 +237,11 @@ process_dotfile() {
     # check if file exist in home
     if [ -e "$homefile" ];then
         OVERWRITTEN_FILES+=("$1")
-        ind; printf "${SUCCESS_SYMBOL}${WHITE} Selecting $1 ${GRAY}(exist in home)${WHITE}\n"
+        printf "${SUCCESS_SYMBOL}${WHITE} Selecting $1 ${GRAY}(exist in home)${WHITE}\n"
         return
     fi
 
-    ind; printf "${SUCCESS_SYMBOL}${WHITE} Selecting $1 ${GRAY}(new dotfile)${WHITE}\n"
+    printf "${SUCCESS_SYMBOL}${WHITE} Selecting $1 ${GRAY}(new dotfile)${WHITE}\n"
 }
 
 clean_broken_links() {

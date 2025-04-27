@@ -120,13 +120,13 @@ sub_header() {
     # The final bar length is whichever is larger: the title's length or the minimum length
     local bar_length=$(( title_length > min_length ? title_length : min_length ))
     
-    printf "${WHITE}"
+    printf "\n${WHITE}"
 
     # Print the top bar
     bar "$bar_length" 
 
     # Print the title itself, prefixed with "■ "
-    printf "\n${BAR_BLOCK}${BAR_BLOCK} $title${WHITE} ${BAR_BLOCK}${BAR_BLOCK}"
+    printf "\n${BAR_BLOCK}${BAR_BLOCK} $title${WHITE} ${BAR_BLOCK}${BAR_BLOCK}\n"
     
     # Print the bottom bar
     bar "$bar_length" 
@@ -146,6 +146,7 @@ separator() {
     local text="$2"
     local symbol="${3:-$HEADER_BLOCK}"
 
+    printf "\n"
     bar "$length" "$symbol"
     printf " $text\n"
 }
@@ -154,7 +155,6 @@ bar() {
     local length="$1"
     local symbol="${2:-$BAR_BLOCK}"
     
-    printf "\n"
     local i=0
     while [ $i -lt "$length" ]; do
         printf "$symbol"

@@ -11,6 +11,8 @@ detect_os() {
     echo "$os_name"
 }
 
+sudo -v
+
 # Get the absolute path of the directory containing install.sh
 INSTALL_SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
 # Get the parent directory of INSTALL_SCRIPT_DIR
@@ -27,7 +29,7 @@ sub_header "OS-specific configuration for $OS_NAME"
 
 # Check for OS-specific system script
 if [ -f "$INSTALL_SCRIPT_DIR/$OS_NAME/install.sh" ]; then
-    info "Loading $OS_NAME installer script"
+    info "Loading $OS_NAME installer script..."
     source "$INSTALL_SCRIPT_DIR/$OS_NAME/install.sh"
 else
     last_stage=true

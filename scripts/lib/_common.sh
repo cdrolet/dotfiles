@@ -31,14 +31,13 @@
 #
 ########################################################################################
 
-sudo -v
-
 # Check if the library is already loaded
 if [ -n "${COMMON_LIB_LOADED+x}" ]; then
     # Already loaded, return silently
     return 0
 fi
 
+echo "LOADED!!!!!!!!"
 # Mark the library as loaded
 COMMON_LIB_LOADED=true
 
