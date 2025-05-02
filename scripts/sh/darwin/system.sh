@@ -353,7 +353,7 @@ run_command_map "Safari" safari_preferences defaults_handler
 
 # Address Book preferences
 declare -A address_book_preferences=(
-    ["Enable debug menu"]="defaults write com.apple.addressbook ABShowDebugMenu -bool true"
+    ["Enable debug menu"]="sudo defaults write com.apple.addressbook ABShowDebugMenu -bool true"
 )
 run_command_map "Address Book" address_book_preferences defaults_handler
 
@@ -365,7 +365,7 @@ run_command_map "iCal" ical_preferences defaults_handler
 
 # Time Machine preferences
 declare -A time_machine_preferences=(
-    ["Prevent Time Machine from prompting to use new hard drives"]="defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true"
+    ["Prevent prompting to use new hard drives"]="defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true"
 )
 run_command_map "Time Machine" time_machine_preferences defaults_handler
 

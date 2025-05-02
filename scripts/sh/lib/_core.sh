@@ -9,7 +9,7 @@
 DEFAULT_VERBOSE=2
 DEFAULT_SIMULATION=false
 DEFAULT_SKIP_CONFIRMATION=false
-
+DEFAULT_ENVIRONMENT=Home
 # Global state variables
 LAST_STAGE=true
 
@@ -22,8 +22,9 @@ fi
 if [ -z "${VERBOSE+x}" ]; then
     VERBOSE=$DEFAULT_VERBOSE
 fi
-
-# Start time for execution time tracking
+if [ -z "${ENVIRONMENT+x}" ]; then
+    ENVIRONMENT=$DEFAULT_ENVIRONMENT
+fi
 if [ -z "${START_TIME+x}" ]; then
     START_TIME=$(date +%s)
 fi 

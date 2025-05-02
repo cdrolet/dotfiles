@@ -20,7 +20,6 @@ print_execution_time() {
     fi
 }
 
-# Function to format time in a human-friendly way
 format_time() {
     local seconds=$1
     local hours=$((seconds / 3600))
@@ -41,7 +40,6 @@ format_time() {
     fi
 }
 
-# Function to handle pluralization
 pluralize() {
     local count="$1"
     local singular="$2"
@@ -84,3 +82,14 @@ get_timestamp() {
             ;;
     esac
 } 
+
+# Detect OS type and extract OS name before any version
+detect_os() {
+    # Get the lowercase OS type
+    local os_type=$(uname -s | tr '[:upper:]' '[:lower:]')
+    
+    # Extract OS name before any number (darwin20.6.0 -> darwin)
+    os_name=$(echo "$os_type" | sed -E 's/([a-z]+)[0-9.].*/\1/')
+    
+    echo "$os_name"
+}

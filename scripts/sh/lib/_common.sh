@@ -31,13 +31,14 @@
 #
 ########################################################################################
 
+sudo -v
+
 # Check if the library is already loaded
 if [ -n "${COMMON_LIB_LOADED+x}" ]; then
     # Already loaded, return silently
     return 0
 fi
 
-echo "LOADED!!!!!!!!"
 # Mark the library as loaded
 COMMON_LIB_LOADED=true
 
@@ -53,6 +54,7 @@ source "$LIBRARY_PATH/_ui.sh"
 source "$LIBRARY_PATH/_commands.sh"
 source "$LIBRARY_PATH/_git.sh"
 source "$LIBRARY_PATH/_utils.sh"
+source "$LIBRARY_PATH/_dotsync.sh"
 
 unset LIBRARY_PATH
 

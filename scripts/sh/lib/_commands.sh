@@ -77,15 +77,33 @@ spin() {
     
     # Extract only error-related lines from the output
     if [ $exit_status -ne 0 ]; then
-        # Try to find error or fail messages, otherwise take the first line
+        # Try to find error or fail messages, otherwise take the full output
         if grep -i "error\|fail\|already exists\|cannot\|denied" "$tmp_file" > /dev/null; then
-            output=$(grep -i "error\|fail\|already exists\|cannot\|denied" "$tmp_file" | head -n 1)
+            if [ "$VERBOSE" -lt 3 ]; then
+                # For lower verbosity, only take the first line of errors
+                output=$(grep -i "error\|fail\|already exists\|cannot\|denied" "$tmp_file" | head -n 1)
+            else
+                # For high verbosity, take all error lines
+                output=$(grep -i "error\|fail\|already exists\|cannot\|denied" "$tmp_file")
+            fi
         else
-            output=$(head -n 1 "$tmp_file")
+            if [ "$VERBOSE" -lt 3 ]; then
+                # For lower verbosity, only take the first line
+                output=$(head -n 1 "$tmp_file")
+            else
+                # For high verbosity, take all output
+                output=$(cat "$tmp_file")
+            fi
         fi
     else
-        # On success, just take the first line
-        output=$(head -n 1 "$tmp_file")
+        # On success, handle based on verbosity
+        if [ "$VERBOSE" -lt 3 ]; then
+            # For lower verbosity, only take the first line
+            output=$(head -n 1 "$tmp_file")
+        else
+            # For high verbosity, take all output
+            output=$(cat "$tmp_file")
+        fi
     fi
 
     rm -f "$tmp_file"
@@ -95,9 +113,9 @@ spin() {
 
     # Handle command result
     if [ $exit_status -eq 0 ]; then
-        $success_handler "$description" "$output_command" "$output"
+        $success_handler "$description" "$command" "$output"
     else
-        $failure_handler "$description" "$output_command" "$output"
+        $failure_handler "$description" "$command" "$output"
     fi
 }
 
@@ -117,7 +135,6 @@ move_cursor_at_start() {
     printf "\033[0G"
 }
 
-# Function to render spinner output based on verbosity level
 render_spinner_output() {
     local spinner_char="$1"
     local description="$2"
@@ -223,11 +240,27 @@ execute_command() {
     if [ "$IS_SIMULATION" = true ]; then
         echo "Simulated: $command"
     else
-        eval "$command" 2>&1
+        # Create a temporary file for output
+        local tmp_file=$(mktemp)
+        
+        # Run the command and capture its exit status
+        eval "$command" > "$tmp_file" 2>&1
+        local exit_status=$?
+        
+        # Read the output from the temp file
+        output=$(cat "$tmp_file")
+        
+        # Clean up
+        rm -f "$tmp_file"
+        
+        # Return the output without color codes - we'll add colors during rendering
+        echo "$output"
+        
+        # Return the original exit status
+        return $exit_status
     fi
 }
 
-# Default success handler function
 default_success_handler() {
     local description="$1"
     local command="$2"
@@ -235,7 +268,6 @@ default_success_handler() {
     render_command_output "success" "$description" "$command" "$output"
 }
 
-# Default failure handler function
 default_failure_handler() {
     local description="$1"
     local command="$2"
@@ -244,7 +276,6 @@ default_failure_handler() {
     return 1
 }
 
-# Default warning handler function
 default_warning_handler() {
     local description="$1"
     local command="$2"
@@ -254,7 +285,9 @@ default_warning_handler() {
     return 0
 }
 
-# Function to render command output based on verbosity level
+
+
+# Function to properly display colored output
 render_command_output() {
     local status="$1"  # success, warning, or failure
     local description="$2"
@@ -288,10 +321,15 @@ render_command_output() {
         2) # Verbosity level 2: Show description and command on same line (default)
             $output_func "$description" "$command"
             ;;
-        3) # Verbosity level 3: Show command, output and description on separate lines
+        3) # Verbosity level 3: Show command, output in a box, and description
             printf "${GRAY}${ARROW_LEFT} $command${WHITE}\n"
             if [ -n "$output" ]; then
-                printf "${GRAY}${ARROW_RIGHT} $output${WHITE}\n"
+                # Draw a box around the output with the appropriate color
+                if [ "$status" = "failure" ]; then
+                    draw_output_box "$output" "$RED"
+                else
+                    draw_output_box "$output" "$GRAY"
+                fi
             fi
             $output_func "$description"
             ;;

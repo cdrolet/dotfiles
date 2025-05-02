@@ -44,11 +44,8 @@
 #
 ################################################################################
 
-# Get the absolute path of the directory containing dotsync.sh
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-
-# Source common functions
-source "$SCRIPT_DIR/lib/_common.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/_ui.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/_errors.sh"
 
 # Initialize variables
 SOURCE_DIR=""
@@ -261,7 +258,6 @@ find_broken_links() {
         if [ ! -e "$file" ]; then
             if is_linked_to_dotfiles "$file" "$SOURCE_DIR"; then
                 BROKEN_FILES+=("$file")
-                #ind; echo "- $file"
            fi
         fi
     done
@@ -282,7 +278,9 @@ confirm_broken_link_cleanup() {
 
 remove_broken_links() {
     for file in "${BROKEN_FILES[@]}"; do
-        if rm -f "$file" >/dev/null 2>&1; then
+        if [ "$IS_SIMULATION" = true ]; then
+            success "(simulated) Removed broken symlink" "$file"
+        elif rm -f "$file" >/dev/null 2>&1; then
             success "Removed broken symlink" "$file"
         else
             failure "Failed to remove broken symlink" "$file"
@@ -334,13 +332,16 @@ create_dotfile_symlink() {
         ERRORS+=("$error")
         return 1
     fi
-    
+
+    if [ "$IS_SIMULATION" = true ]; then
+        ind; success "(simulated) Symlink" "${source} -> ${target}"
+        return 0
+    fi
+
     if [[ "${source_dir}" == .* ]]; then
         target="$HOME/${source_dir}"
         mkdir -p "${target}"
     fi
-
-    ind
 
     # Create symlink and suppress its output
     if ! ln -sfn "${source}" "${target}" >/dev/null 2>&1; then
@@ -350,8 +351,7 @@ create_dotfile_symlink() {
         return 1
     fi
 
-    # Add our own success message
-    success "Symlink" "${source} -> ${target}"
+    ind; success "Symlink" "${source} -> ${target}"
 }
 
 clean_sync_state() {
@@ -375,7 +375,6 @@ clean_sync_state() {
     unset -f create_home_symlinks
     unset -f create_dotfile_symlink
     unset -f clean_sync_state
-    unset -f sync_dotfiles
 
     # Unset all defined variables
 

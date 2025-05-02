@@ -7,7 +7,6 @@
 
 source "$(dirname "${BASH_SOURCE[0]}")/_core.sh"
 
-# Arrays to store messages
 FAILURES=()
 ALL_FAILURES=()
 ERRORS=()
@@ -17,7 +16,6 @@ set -E  # ERR trap is inherited by shell functions
 trap 'handle_error $? "$BASH_COMMAND"' ERR
 trap 'check_state' EXIT
 
-# Function to handle errors
 handle_error() {
     local exit_code=$1
     local command=$2
@@ -76,7 +74,7 @@ check_state() {
         printf "\n"
         if [ "$LAST_STAGE" = false ]; then
             confirm "Do you want to continue despite the $(pluralize ${#FAILURES[@]} "failure")?"
-            if [[ ! "$confirm" =~ ^[Yy]$ ]]; then
+            if [[ ! "$confirm" =~ ^([Yy]|[Yy][Ee][Ss])$ ]]; then
                 printf "Aborting...\n"
                 failure_footer
                 clear_state 

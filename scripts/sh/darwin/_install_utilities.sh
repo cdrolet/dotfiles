@@ -16,7 +16,17 @@ install_xcode_cli_tools() {
 }
 
 install_brew() {
-    install "Homebrew" "/bin/bash -c \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\"" "Installing Homebrew" true
+    # Check if Homebrew is already installed
+    if command -v brew &>/dev/null; then
+        if [ "$UPGRADE_OUTDATED" = true ]; then
+            spin "Upgrading Homebrew" "brew upgrade"
+        else
+            skipped "Homebrew already installed" "$(brew --version)"
+            return 0
+        fi
+    else
+        install "Homebrew" "/bin/bash -c \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\"" "Installing Homebrew" true    
+    fi
 }
 
 load_brew() {
@@ -87,12 +97,16 @@ brew_install() {
 
     # Check if package is already installed
     if brew list "$package" &>/dev/null; then
-        skipped "$package already installed" "$command"
-        return 0
+        if [ "$UPGRADE_OUTDATED" = true ]; then
+            spin "Upgrading $package" "brew upgrade$cask_command $package"
+        else
+            skipped "$package already installed" "$command"
+            return 0
+        fi
+    else
+        # Install the package
+        spin "$description" "$command"
     fi
-    
-    # Install the package
-    spin "$description" "$command"
 }
 
 # Function to install multiple VS Code extensions from an array

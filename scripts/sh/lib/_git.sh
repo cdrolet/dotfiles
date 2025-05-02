@@ -35,7 +35,6 @@ configure_git() {
     fi
 }
 
-# Function to update git submodules with option to force update
 force_update_git_submodules() {
 
     if [ "$(pwd)" != "$HOME/project/dotfiles" ]; then
@@ -54,8 +53,8 @@ force_update_git_submodules() {
 
 # Function to check if already authenticated with GitHub
 check_github_auth() {
-    # Try to access GitHub API with current authentication
-    if gh auth status &>/dev/null; then
+    # Try to access GitHub API with current authentication or check if in simulation mode
+    if [ "$IS_SIMULATION" = true ] || gh auth status &>/dev/null; then
         skipped "Already authenticated with GitHub" "gh auth status"
         return 0
     else
