@@ -11,6 +11,7 @@ SYSTEM_SCRIPT_DIR="$( cd "$( dirname "$(dirname "${BASH_SOURCE[0]}")" )" && pwd 
 #verbose=2
 #is_simulation=false
 
+
 source "$SYSTEM_SCRIPT_DIR/lib/_common.sh"
 source "$SYSTEM_SCRIPT_DIR/darwin/_dock_utilities.sh"
 source "$SYSTEM_SCRIPT_DIR/darwin/_default_utilities.sh"

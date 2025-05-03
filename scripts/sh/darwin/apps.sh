@@ -103,13 +103,14 @@ declare -A music=(
 brew_install_from_map "Music" "music"
 
 declare -A productivity=(
-#    ["alfred"]=true
-    ["boost-note"]=true
     ["obsidian"]=true
     ["rectangle"]=true
     ["koekeishiya/formulae:yabai"]=false
     ["felixkratz/formulae:sketchybar"]=false
+    ["felixkratz/formulae:borders"]=false
 )
+run "Start borders" "brew start borders"
+
 brew_install_from_map "Productivity" "productivity"
 
 declare -A git_tools=(  

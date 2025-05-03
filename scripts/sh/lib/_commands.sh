@@ -297,6 +297,7 @@ render_command_output() {
     # Define the output function based on status
     local output_func=""
     case "$status" in
+        "skipped") output_func="skipped" ;;
         "success") 
             if [ "$IS_SIMULATION" = true ]; then
                 output_func="simulated"

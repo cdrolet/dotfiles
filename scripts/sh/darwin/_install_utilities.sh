@@ -7,7 +7,7 @@ install_xcode_cli_tools() {
     
     # Check if Xcode CLI tools are already installed
     if xcode-select -p &>/dev/null; then
-        skipped "Xcode Command Line Tools already installed" "$install_command"
+        render_command_output "skipped" "Xcode Command Line Tools already installed" "$install_command"
         return 0
     fi
     
@@ -21,7 +21,7 @@ install_brew() {
         if [ "$UPGRADE_OUTDATED" = true ]; then
             spin "Upgrading Homebrew" "brew upgrade"
         else
-            skipped "Homebrew already installed" "$(brew --version)"
+            render_command_output "skipped" "Homebrew already installed" "$(brew --version)"
             return 0
         fi
     else
@@ -32,7 +32,7 @@ install_brew() {
 load_brew() {
     # Check if brew is already in PATH
     if command -v brew &>/dev/null; then
-        skipped "Homebrew already loaded" "$(which brew)"
+        render_command_output "skipped" "Homebrew already loaded" "$(which brew)"
         return 0
     fi
     
@@ -82,7 +82,7 @@ brew_install() {
     if [ -n "$tap" ]; then
         # Check if tap is already added
         if brew tap | grep -q "^$tap$"; then
-            skipped "Tap $tap already added" "brew tap $tap"
+            render_command_output "skipped" "Tap $tap already added" "brew tap $tap"
         else
             spin "Adding tap $tap" "brew tap $tap"
         fi
@@ -100,7 +100,7 @@ brew_install() {
         if [ "$UPGRADE_OUTDATED" = true ]; then
             spin "Upgrading $package" "brew upgrade$cask_command $package"
         else
-            skipped "$package already installed" "$command"
+            render_command_output "skipped" "$package already installed" "$command"
             return 0
         fi
     else
@@ -131,7 +131,7 @@ install_code_extension() {
     
     # Check if extension is already installed, ignore SIGPIPE errors
     if $code_cmd --list-extensions 2>/dev/null | grep -q "^$extension_id$"; then
-        skipped "$extension_id already installed" "$code_cmd --install-extension $extension_id"
+        render_command_output "skipped" "$extension_id already installed" "$code_cmd --install-extension $extension_id"
         return 0
     fi
     
