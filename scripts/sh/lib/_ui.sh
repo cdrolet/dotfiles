@@ -32,7 +32,7 @@ INFO_SYMBOL="i"
 SKIPPED_SYMBOL="↷"
 ARROW_RIGHT="→"
 ARROW_LEFT="←"
-BAR_BLOCK="░" #▓ ⠿
+BAR_BLOCK="░"
 HEADER_BLOCK="■"
 
 # Spinner animation characters

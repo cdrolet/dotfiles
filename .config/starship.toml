@@ -1,5 +1,4 @@
 format = """
-$battery\
 $username\
 $hostname\
 $directory\
@@ -11,26 +10,21 @@ $line_break\
 $character"""
 
 [directory]
-read_only = " "
-
-[battery]
-full_symbol = "•"
-charging_symbol = "⇡"
-discharging_symbol = "⇣"
+read_only = " 🔒"
 
 [git_branch]
 format = "[$branch]($style)"
 style = "bright-black"
 
 [git_status]
-format = "[[(*$conflicted$untracked$modified$staged$renamed$deleted)](bright-black) ($ahead_behind$stashed)]($style)"
+format = "[[($conflicted$untracked$modified$staged$renamed$deleted)](bright-black) ($ahead_behind$stashed)]($style)"
 style = "cyan"
-conflicted = "​"
-untracked = "​"
-modified = "​"
-staged = "​"
-renamed = "​"
-deleted = "​"
+conflicted = "!​"
+untracked = "+​"
+modified = "*​"
+staged = "​•"
+renamed = "→​"
+deleted = "x​"
 stashed = "≡"
 
 [git_state]
@@ -40,3 +34,7 @@ style = "bright-black"
 [cmd_duration]
 format = "[$duration]($style) "
 style = "yellow"
+
+[python]
+format = "[$virtualenv]($style) "
+style = "bright-black"
