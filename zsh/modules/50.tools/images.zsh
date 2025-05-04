@@ -1,0 +1,1 @@
+alias icat="kitten icat"

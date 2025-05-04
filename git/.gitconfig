@@ -20,7 +20,6 @@
     plus-emph-style = "syntax #2D4F3D"
     minus-emph-style = "syntax #613038"
 
-
 [color]
 	ui = auto
 	interactive = auto
@@ -43,7 +42,7 @@
 	untracked = red bold
 	
 [core]
-	editor = nvim
+	editor = helix
 	autocrlf = input
 	pager = delta
 	excludesfile = ~/.gitignore_global
@@ -53,25 +52,19 @@
 	conflictstyle = diff3
 
 [diff]
-    tool = vimdiff
+    tool = kitty
+	guitool=kitty.gui
     colorMoved = default
 
-#[mergetool "intellij"]
-#   cmd = idea merge $(cd $(dirname "$LOCAL") && pwd)/$(basename "$LOCAL") $(cd $(dirname "$REMOTE") && pwd)/$(basename "$REMOTE") $(cd $(dirname "$BASE") && pwd)/$(basename "$BASE") $(cd $(dirname "$MERGED") && pwd)/$(basename "$MERGED")
-#   trustExitCode = true
+[difftool]
+    prompt = false
+    trustExitCode = true
 
-#[diff]
-#   tool = intellij
+[difftool "kitty"]
+    cmd = kitten diff $LOCAL $REMOTE
 
-#[difftool "intellij"]
-#   cmd = idea diff $(cd $(dirname "$LOCAL") && pwd)/$(basename "$LOCAL") $(cd $(dirname "$REMOTE") && pwd)/$(basename "$REMOTE")
-
-#[merge]
-#    log = true
-#	tool = vimdiff
-
-#[diff]
-#	tool = vimdiff
+[difftool "kitty.gui"]
+    cmd = kitten diff $LOCAL $REMOTE
 
 [filter "lfs"]
 	clean = git-lfs clean -- %f
@@ -81,7 +74,6 @@
 
 [format]
 	pretty = oneline
-
 
 [http]
 	sslVerify = false

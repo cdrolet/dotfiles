@@ -83,7 +83,7 @@ alias gitam="gitAddCommitAmend"
 alias gitco="git checkout develop -b "
 
 # Diff
-alias gitdiff="git difftool"
+alias gitdiff="git difftool --no-symlinks --dir-diff"
 
 # Merge
 alias gitmerge="git mergetool"

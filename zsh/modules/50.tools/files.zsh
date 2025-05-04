@@ -69,3 +69,4 @@ alias l="eza -oAhtr --group-directories-first"
 alias ll='eza -l'
 alias la='eza -lah --git --group-directories-first --sort=size'
 alias tree='eza --tree'
+alias d='kitten diff'

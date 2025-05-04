@@ -127,6 +127,7 @@ full_stopwatch=$(get_timestamp_ms)
 track "initHome"
 track "scanModules"
 track "sdkMan"
+track "$(starship init zsh)"
 
 if [ $record_metrics -gt 0 ]; then
     

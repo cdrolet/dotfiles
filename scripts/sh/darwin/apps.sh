@@ -24,14 +24,12 @@ declare -A fonts=(
 )
 brew_install_from_map "Fonts" "fonts"
 
-#brew_install "iterm2" true
-
 declare -A essential_tools=(
     ["coreutils"]=false
     ["wget"]=false
     ["curl"]=false
     ["btop"]=false
-    ["neovim"]=false
+    ["helix"]=false
     ["ripgrep"]=false
     ["fd"]=false
     ["fzf"]=false
@@ -39,7 +37,14 @@ declare -A essential_tools=(
     ["eza"]=false
     ["delta"]=false
     ["duti"]=false
-    ["kitty"]=true
+
+)
+brew_install_from_map "Essential Tools" "essential_tools"
+
+declare -A terminal_stuff=(
+    ["ghostty"]=true
+    ["starship"]=false
+    ["neofetch"]=false
 )
 brew_install_from_map "Essential Tools" "essential_tools"
 
@@ -47,7 +52,7 @@ declare -A development_languages=(
     ["node"]=false
     ["python"]=false
     ["go"]=false
-    ["rust"]=false
+#    ["rust"]=false
     ["ruby"]=false
 )
 brew_install_from_map "Development languages" "development_languages"
@@ -105,7 +110,7 @@ brew_install_from_map "Music" "music"
 declare -A productivity=(
     ["obsidian"]=true
     ["rectangle"]=true
-    ["koekeishiya/formulae:yabai"]=false
+#    ["koekeishiya/formulae:yabai"]=false
     ["felixkratz/formulae:sketchybar"]=false
     ["felixkratz/formulae:borders"]=false
 )

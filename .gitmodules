@@ -4,9 +4,9 @@
 [submodule "zsh/modules/66.suggestions/external"]
 	path = zsh/modules/66.suggestions/external
 	url = https://github.com/zsh-users/zsh-autosuggestions
-[submodule "zsh/modules/70.prompt/external"]
-	path = zsh/modules/70.prompt/external
-	url = https://github.com/bhilburn/powerlevel9k
+# [submodule "zsh/modules/70.prompt/external"]
+# 	path = zsh/modules/70.prompt/external
+# 	url = https://github.com/bhilburn/powerlevel9k
 [submodule "zsh/modules/40.completion/external"]
 	path = zsh/modules/40.completion/external
 	url = https://github.com/zsh-users/zsh-completions

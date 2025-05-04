@@ -19,10 +19,14 @@ source "$SYSTEM_SCRIPT_DIR/darwin/_default_utilities.sh"
 sub_header "System Settings"
 
 declare -a appsToStartAtLogin=(
+    '/Applications/Weather.app'
     '/Applications/Rectangle.app'
     '/Applications/ProtonVPN.app'
+    '/Applications/Proton Mail Bridge.app'
+    '/Applications/Proton Drive.app'
 );
 configure_startup_from_array "appsToStartAtLogin"
+run "Start borders" "brew services start borders"
 
 declare -a dockItems=(
     '/Applications/Brave\ Browser.app'
@@ -30,10 +34,10 @@ declare -a dockItems=(
     '/System/Applications/Maps.app'
     '/Applications/Bitwarden.app'
     '/Applications/Qobuz.app'
-    '/Applications/Obsidian.app'
     'spacer'
     '/Applications/Cursor.app'
-    '/Applications/iTerm.app'
+    '/Applications/Ghostty.app'
+    '/Applications/Obsidian.app'
     'spacer'
     '/System/Applications/System\ Settings.app'
     '/System/Applications/Utilities/Activity\ Monitor.app'
