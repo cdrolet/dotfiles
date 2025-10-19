@@ -12,13 +12,21 @@ source "$APP_SCRIPT_DIR/lib/_git.sh"
 
 sub_header "Applications"
 
-declare -A core_system_tools=(
-    ["xcode"]="xcode-select --install"
-    ["brew"]="install_brew"
-    ["load brew"]="load_brew"
-    ["nix"]="curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install"
+section "Core System Tools"
+install_xcode_cli_tools
+install_brew
+load_brew
+install "nix" "curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install"
+
+declare -A git_tools=(  
+    ["git"]=false
+    ["gh"]=false
+    ["gist"]=false
 )
-command_install_from_map "Core System Tools" "core_system_tools"
+brew_install_from_map "Git tools" "git_tools"
+
+section "GitHub Authentication"
+ensure_github_auth
 
 declare -A essential_tools=(
     ["coreutils"]=false
@@ -86,7 +94,7 @@ declare -a vscode_extensions=(
 code_extensions_install_from_array "VS Code Extensions" "vscode_extensions"
 
 declare -A containers=(
-    ["podman"]=true
+    ["podman"]=false
     ["kubectl"]=false
     ["kubernetes-cli"]=false
     ["kubectx"]=false
@@ -123,18 +131,11 @@ brew_install_from_map "Team work" "teamwork"
 
 declare -A productivity=(
 #  ["notion"]=true
-    ["nikitabobko/formulae/aerospaceaerospace"]=true
+    ["nikitabobko/tap:aerospace"]=true
     ["felixkratz/formulae:sketchybar"]=false
     ["felixkratz/formulae:borders"]=false
 )
 brew_install_from_map "Productivity" "productivity"
-
-declare -A git_tools=(  
-    ["git"]=false
-    ["gh"]=false
-    ["gist"]=false
-)
-brew_install_from_map "Git tools" "git_tools"
 
 declare -A common_fonts=(
     ["font-envy-code-r"]=true

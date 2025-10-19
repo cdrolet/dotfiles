@@ -1,5 +1,19 @@
 #!/usr/bin/env bash
 
+# Function to check for and install Xcode Command Line Tools
+install_xcode_cli_tools() {
+    local install_command="xcode-select --install"
+    local description="Install Xcode Command Line Tools"
+    
+    # Check if Xcode CLI tools are already installed
+    if xcode-select -p &>/dev/null; then
+        render_command_output "skipped" "Xcode Command Line Tools already installed" "$install_command"
+        return 0
+    fi
+    
+    # Install Xcode CLI tools
+    spin "$description" "$install_command"
+}
 
 install_brew() {
     # Check if Homebrew is already installed
@@ -122,11 +136,11 @@ uv_install_from_map() {
     
     # Iterate over the associative array
     eval "for package in \"\${!$array_name[@]}\"; do
-        # Get the gitrepository url
+        # Get the git repository url
         url=\$(eval \"echo \\\"\${$array_name[\$package]}\\\"\")
         
-        # Install the extension
-        run "Installing python $package from ${url}" "uv tool install $package --from git+${url}"
+        # Install the package
+        run \"Installing python \$package from \$url\" \"uv tool install \$package --from git+\$url\"
     done"
 }
 
@@ -149,23 +163,4 @@ code_extension_install() {
     run "Installing $extension_id extension" "$code_cmd --install-extension $extension_id"
 }
 
-# Function to install fonts from a directory
-install_fonts_from_directory() {
-    local source_dir="$1"
-    local description="${2:-fonts}"
-    
-    # macOS fonts directory
-    local fonts_dir="$HOME/Library/Fonts"
-    
-    # Count fonts to install
-    local font_count=$(find "$source_dir" -type f \( -name "*.ttf" -o -name "*.otf" -o -name "*.TTF" -o -name "*.OTF" \) | wc -l | tr -d ' ')
-    
-    if [ "$font_count" -eq 0 ]; then
-        skipped "No fonts found in $source_dir"
-        return 0
-    fi
-    
-    # Copy fonts to system fonts directory
-    run "Installing $font_count $description" "find '$source_dir' -type f \( -name '*.ttf' -o -name '*.otf' -o -name '*.TTF' -o -name '*.OTF' \) -exec cp {} '$fonts_dir/' \;"
-}
 

@@ -62,6 +62,16 @@ check_github_auth() {
     fi
 }
 
+# Function to authenticate with GitHub if not already authenticated
+ensure_github_auth() {
+    if check_github_auth; then
+        return 0
+    fi
+    
+    # Not authenticated, prompt user to login
+    run "Authenticating with GitHub" "gh auth login --web"
+}
+
 # Function to clone or update a git repository
 clone_or_update_repo() {
     local repo_url="$1"

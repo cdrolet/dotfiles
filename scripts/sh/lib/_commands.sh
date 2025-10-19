@@ -21,10 +21,10 @@ command_install_from_map() {
     
     # Iterate over the associative array
     eval "for cmd in \"\${!$array_name[@]}\"; do
-        # Get the tool to install
-        cmd_name=\$(eval \"echo \\\"\${$array_name[\$cmd]}\\\"\")
+        # Get the install command
+        install_cmd=\$(eval \"echo \\\"\${$array_name[\$cmd]}\\\"\")
         
-        install "$cmd_name" "$cmd"
+        install \"\$cmd\" \"\$install_cmd\"
     done"
 }
 
