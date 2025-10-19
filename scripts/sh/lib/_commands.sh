@@ -5,10 +5,28 @@
 # Description: Command execution functionality
 ########################################################################################
 
-source "$(dirname "${BASH_SOURCE[0]}")/_core.sh"
-source "$(dirname "${BASH_SOURCE[0]}")/_ui.sh"
-source "$(dirname "${BASH_SOURCE[0]}")/_errors.sh"
-source "$(dirname "${BASH_SOURCE[0]}")/_utils.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
+# source "$(dirname "${BASH_SOURCE[0]}")/_ui.sh"
+# source "$(dirname "${BASH_SOURCE[0]}")/_errors.sh"
+# source "$(dirname "${BASH_SOURCE[0]}")/_utils.sh"
+
+
+# Function to install commands from an associative array
+command_install_from_map() {
+    local section_name="$1"
+    local array_name="$2"  # Name of the associative array
+    
+    # Print section header
+    section "$section_name"
+    
+    # Iterate over the associative array
+    eval "for cmd in \"\${!$array_name[@]}\"; do
+        # Get the tool to install
+        cmd_name=\$(eval \"echo \\\"\${$array_name[\$cmd]}\\\"\")
+        
+        install "$cmd_name" "$cmd"
+    done"
+}
 
 # Function to check if a command exists and install it if necessary
 install() {
@@ -58,7 +76,7 @@ spin() {
     local output_command="$command"
     if [ "$no_details" = true ]; then
         output_command=""
-    fi
+    fi 
     
     # Start the command in the background and redirect output to temp file
     eval "$output_command" > "$tmp_file" 2>&1 &

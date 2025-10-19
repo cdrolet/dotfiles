@@ -61,3 +61,22 @@ check_github_auth() {
         return 1
     fi
 }
+
+# Function to clone or update a git repository
+clone_or_update_repo() {
+    local repo_url="$1"
+    local target_dir="$2"
+    local repo_name=$(basename "$repo_url" .git)
+    
+    if [ -d "$target_dir" ]; then
+        # Repository exists, update it
+        run "Updating $repo_name" "cd '$target_dir' && git pull"
+    else
+        # Repository doesn't exist, clone it
+        local parent_dir=$(dirname "$target_dir")
+        mkdir -p "$parent_dir"
+        spin "Cloning $repo_name" "git clone '$repo_url' '$target_dir'"
+    fi
+}
+
+

@@ -5,7 +5,7 @@
 # Description: Error handling functionality
 ########################################################################################
 
-source "$(dirname "${BASH_SOURCE[0]}")/_core.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 
 FAILURES=()
 ALL_FAILURES=()

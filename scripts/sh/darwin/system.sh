@@ -12,7 +12,7 @@ SYSTEM_SCRIPT_DIR="$( cd "$( dirname "$(dirname "${BASH_SOURCE[0]}")" )" && pwd 
 #is_simulation=false
 
 
-source "$SYSTEM_SCRIPT_DIR/lib/_common.sh"
+source "$SYSTEM_SCRIPT_DIR/lib/_bootstrap.sh"
 source "$SYSTEM_SCRIPT_DIR/darwin/_dock_utilities.sh"
 source "$SYSTEM_SCRIPT_DIR/darwin/_default_utilities.sh"
 
@@ -38,6 +38,7 @@ declare -a dockItems=(
     '/Applications/Cursor.app'
     '/Applications/Ghostty.app'
     '/Applications/Obsidian.app'
+    '/Applications/UTM.app'
     'spacer'
     '/System/Applications/System\ Settings.app'
     '/System/Applications/Utilities/Activity\ Monitor.app'
@@ -171,6 +172,8 @@ declare -A screen_preferences=(
     ["Save screenshots to the desktop"]="defaults write com.apple.screencapture location -string '${HOME}/Desktop'"
     ["Save screenshots in PNG format"]="defaults write com.apple.screencapture type -string 'png'"
     ["Enable HiDPI display modes (non native resolution)"]="sudo defaults write /Library/Preferences/com.apple.windowserver DisplayResolutionEnabled -bool true"
+    ["Disable displays have separate Spaces"]="defaults write com.apple.spaces spans-displays -bool true"
+
 )
 run_command_map "Screen" screen_preferences defaults_handler
 
@@ -219,6 +222,7 @@ declare -A windows_preferences=(
     ["Disable open application confirmation dialog"]="defaults write com.apple.LaunchServices LSQuarantine -bool false"
     ["Expand save panel"]="defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true"
     ["Expand save panel(2)"]="defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode2 -bool true"
+    ["Move windows by dragging any part(ctrl + cmd)"]="Defaults write -g NSWindowShouldDragOnGesture -bool true"
 )
 run_command_map "Windows" windows_preferences defaults_handler
 

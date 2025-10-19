@@ -2,61 +2,49 @@
 
 ########################################################################################
 # File: _common.sh
-# Author: Charles Drolet
-# GitHub: @cdrolet
-# 
-# Description:
-#   A utility library providing error handling and UI formatting functionality.
-#   This script serves as a foundation for other setup scripts by providing:
-#   
-#   - Error Handling:
-#     * Error collection and reporting
-#     * Interactive error resolution
-#     * Signal handling and cleanup
-#   
-#   - UI Formatting:
-#     * Consistent header and section formatting
-#     * Status indicators (✓, ✗, ⚠)
-#     * Progress feedback
-#   
-#   - Command Execution:
-#     * Safe command execution with error capture
+# Description: Common configuration, constants, and global variables
 #
-# Usage:
-#   source "$(dirname "$0")/lib/_common.sh"
+# Purpose:
+#   Defines shared configuration defaults and global state variables used across
+#   all scripts in the dotfiles installation system.
 #
-# Dependencies:
-#   - bash 3.2+ or zsh 5.0+
-#   - Standard Unix utilities (date, printf, etc.)
+# Contents:
+#   - Default configuration values (verbosity, simulation mode, confirmations)
+#   - Global state tracking (execution stage, timing)
+#   - Environment detection
+#   - Variable initialization with fallback to defaults
+#
+# Variables:
+#   DEFAULT_VERBOSE: Verbosity level (1=minimal, 2=normal, 3=detailed)
+#   DEFAULT_SIMULATION: Dry-run mode flag
+#   DEFAULT_SKIP_CONFIRMATION: Auto-confirm prompts flag
+#   DEFAULT_ENVIRONMENT: Target environment (Home/Work)
+#   LAST_STAGE: Indicates if this is the final execution stage
+#   START_TIME: Script execution start timestamp
 #
 ########################################################################################
 
-sudo -v
+# Default values for settings
+DEFAULT_VERBOSE=2
+DEFAULT_SIMULATION=false
+DEFAULT_SKIP_CONFIRMATION=false
+DEFAULT_ENVIRONMENT=Home
+# Global state variables
+LAST_STAGE=true
 
-# Check if the library is already loaded
-if [ -n "${COMMON_LIB_LOADED+x}" ]; then
-    # Already loaded, return silently
-    return 0
+if [ -z "${SKIP_CONFIRMATION+x}" ]; then
+    SKIP_CONFIRMATION=$DEFAULT_SKIP_CONFIRMATION
 fi
+if [ -z "${IS_SIMULATION+x}" ]; then    
+    IS_SIMULATION=$DEFAULT_SIMULATION
+fi
+if [ -z "${VERBOSE+x}" ]; then
+    VERBOSE=$DEFAULT_VERBOSE
+fi
+if [ -z "${ENVIRONMENT+x}" ]; then
+    ENVIRONMENT=$DEFAULT_ENVIRONMENT
+fi
+if [ -z "${START_TIME+x}" ]; then
+    START_TIME=$(date +%s)
+fi 
 
-# Mark the library as loaded
-COMMON_LIB_LOADED=true
-
-# Increase the maximum nested function level to prevent "maximum nested function level reached" errors
-FUNCNEST=100
-
-LIBRARY_PATH=$(dirname "${BASH_SOURCE[0]}")
-
-# Source all library files
-source "$LIBRARY_PATH/_core.sh"
-source "$LIBRARY_PATH/_errors.sh"
-source "$LIBRARY_PATH/_ui.sh"
-source "$LIBRARY_PATH/_commands.sh"
-source "$LIBRARY_PATH/_git.sh"
-source "$LIBRARY_PATH/_utils.sh"
-source "$LIBRARY_PATH/_dotsync.sh"
-
-unset LIBRARY_PATH
-
-hide_cursor
-header

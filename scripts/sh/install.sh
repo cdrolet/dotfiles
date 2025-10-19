@@ -64,7 +64,7 @@ DOTFILES_ROOT="$(dirname "$(dirname "$INSTALL_SCRIPT_DIR")")"
 
 parse_arguments "$@"
 
-source "$INSTALL_SCRIPT_DIR/lib/_common.sh"
+source "$INSTALL_SCRIPT_DIR/lib/_bootstrap.sh"
 
 DEFAULT_UPGRADE_OUTDATED=false
 if [ -z "${UPGRADE_OUTDATED+x}" ]; then

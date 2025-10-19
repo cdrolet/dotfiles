@@ -1,19 +1,5 @@
 #!/usr/bin/env bash
 
-# Function to check for and install Xcode Command Line Tools
-install_xcode_cli_tools() {
-    local install_command="xcode-select --install"
-    local description="Install Xcode Command Line Tools"
-    
-    # Check if Xcode CLI tools are already installed
-    if xcode-select -p &>/dev/null; then
-        render_command_output "skipped" "Xcode Command Line Tools already installed" "$install_command"
-        return 0
-    fi
-    
-    # Install Xcode CLI tools
-    spin "$description" "$install_command"
-}
 
 install_brew() {
     # Check if Homebrew is already installed
@@ -28,6 +14,7 @@ install_brew() {
         install "Homebrew" "/bin/bash -c \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\"" "Installing Homebrew" true    
     fi
 }
+
 
 load_brew() {
     # Check if brew is already in PATH
@@ -70,6 +57,7 @@ brew_install_from_map() {
     done"
 }
 
+
 # Function to install packages using Homebrew
 brew_install() {
     local package="$1"
@@ -110,7 +98,7 @@ brew_install() {
 }
 
 # Function to install multiple VS Code extensions from an array
-install_code_extensions_from_array() {
+code_extensions_install_from_array() {
     local section_name="$1"
     local array_name="$2"  # Name of the array containing extension IDs
     local code_cmd="${3:-code}"  # Default to 'code', but allow custom command (like 'cursor')
@@ -120,12 +108,30 @@ install_code_extensions_from_array() {
     
     # Iterate over the array
     eval "for extension_id in \"\${$array_name[@]}\"; do
-        install_code_extension \"\$extension_id\" \"$code_cmd\"
+        code_extension_install \"\$extension_id\" \"$code_cmd\"
+    done"
+}
+
+# Function to install multiple python packages using uv tool
+uv_install_from_map() {
+    local section_name="$1"
+    local array_name="$2"  # Name of the associative array
+    
+    # Print section header
+    section "$section_name"
+    
+    # Iterate over the associative array
+    eval "for package in \"\${!$array_name[@]}\"; do
+        # Get the gitrepository url
+        url=\$(eval \"echo \\\"\${$array_name[\$package]}\\\"\")
+        
+        # Install the extension
+        run "Installing python $package from ${url}" "uv tool install $package --from git+${url}"
     done"
 }
 
 # Function to install VS Code extensions if they don't already exist
-install_code_extension() {
+code_extension_install() {
     local extension_id="$1"
     local code_cmd="${2:-code}"  # Default to 'code', but allow custom command (like 'cursor')
     
@@ -143,5 +149,23 @@ install_code_extension() {
     run "Installing $extension_id extension" "$code_cmd --install-extension $extension_id"
 }
 
-
+# Function to install fonts from a directory
+install_fonts_from_directory() {
+    local source_dir="$1"
+    local description="${2:-fonts}"
+    
+    # macOS fonts directory
+    local fonts_dir="$HOME/Library/Fonts"
+    
+    # Count fonts to install
+    local font_count=$(find "$source_dir" -type f \( -name "*.ttf" -o -name "*.otf" -o -name "*.TTF" -o -name "*.OTF" \) | wc -l | tr -d ' ')
+    
+    if [ "$font_count" -eq 0 ]; then
+        skipped "No fonts found in $source_dir"
+        return 0
+    fi
+    
+    # Copy fonts to system fonts directory
+    run "Installing $font_count $description" "find '$source_dir' -type f \( -name '*.ttf' -o -name '*.otf' -o -name '*.TTF' -o -name '*.OTF' \) -exec cp {} '$fonts_dir/' \;"
+}
 

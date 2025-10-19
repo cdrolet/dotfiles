@@ -8,7 +8,7 @@ INSTALL_SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
 # Get the parent directory of INSTALL_SCRIPT_DIR
 DOTFILES_ROOT="$(dirname "$(dirname "$INSTALL_SCRIPT_DIR")")"
 
-source "$INSTALL_SCRIPT_DIR/lib/_common.sh"
+source "$INSTALL_SCRIPT_DIR/lib/_bootstrap.sh"
 
 LAST_STAGE=true
 

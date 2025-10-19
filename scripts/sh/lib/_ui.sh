@@ -5,7 +5,7 @@
 # Description: UI formatting and display functions for the script library
 ########################################################################################
 
-source "$(dirname "${BASH_SOURCE[0]}")/_core.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 
 # Color definitions
 RED='\033[0;31m'

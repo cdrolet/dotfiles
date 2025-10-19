@@ -20,6 +20,7 @@ export PATH=$ZSH_CONFIG_HOME/bin:$PATH
 # OTHERS
 ##############################################################
 
+export STARSHIP_CONFIG="$HOME/.config/starship/starship.toml"
 export DOTFILE_HOME=${PWD}
 export TERM="xterm-256color"
 export ZSH_DIRCOLORS="$HOME/.dircolors/dircolors.256dark"
