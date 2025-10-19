@@ -145,9 +145,9 @@ declare -A common_fonts=(
 )
 brew_install_from_map "Common Fonts" "common_fonts"
 
-declare -A paid_fonts=(
+declare -A professional_fonts=(
     ["d-fonts"]="install_fonts_from_repo git@github.com:cdrolet/d-fonts.git"
 )
-command_install_from_map "Paid Fonts" "paid_fonts"
+command_install_from_map "Professional Fonts" "professional_fonts"
 
 unset APP_SCRIPT_DIR
