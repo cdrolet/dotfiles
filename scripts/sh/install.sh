@@ -32,6 +32,10 @@ parse_arguments() {
                 UPGRADE_OUTDATED=true
                 shift
                 ;;
+            --quiet|-q)
+                VERBOSE=0
+                shift
+                ;;
             --environment=*)
                 ENVIRONMENT="${1#*=}"
                 shift
@@ -41,6 +45,7 @@ parse_arguments() {
                 echo ""
                 echo "Options:"
                 echo "  --verbose=LEVEL, -v       Set verbosity level (0-3, default: $DEFAULT_VERBOSE)"
+                echo "  --quiet, -q               Minimal output (verbosity level 0)"
                 echo "  --simulation, -s          Run in simulation mode"
                 echo "  --skip-confirmation, -y   Skip all confirmation prompts"
                 echo "  --upgrade-outdated, -u    Upgrade outdated packages"
@@ -125,4 +130,3 @@ sub_header "Syncing dotfiles"
 LAST_STAGE=true
 
 sync_dotfiles "$DOTFILES_ROOT"
-

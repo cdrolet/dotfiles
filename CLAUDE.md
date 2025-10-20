@@ -12,6 +12,18 @@ This is a personal dotfiles repository designed to automate macOS development en
 **Terminal**: Ghostty
 **Editor**: Helix (hx)
 
+**Modern Rust-Based Tools**:
+
+- **zoxide** - Smarter cd (replaces z.sh) - Jump to directories by frecency
+- **atuin** - Magical shell history with search and optional sync
+- **direnv** - Auto-load environment variables per directory
+- **xh** - Modern HTTP client (httpie alternative)
+- **ripgrep** - Fast recursive grep
+- **fd** - Fast find alternative
+- **bat** - cat with syntax highlighting
+- **eza** - Modern ls replacement
+- **delta** - Beautiful git diffs
+
 ## Key Commands
 
 ### Installation & Setup
@@ -22,9 +34,10 @@ scripts/sh/install.sh
 
 # Installation with options
 scripts/sh/install.sh --verbose=2          # Detailed output
+scripts/sh/install.sh --quiet              # Minimal output
 scripts/sh/install.sh --simulation         # Preview changes without applying
 scripts/sh/install.sh --skip-confirmation  # Non-interactive mode
-scripts/sh/install.sh --upgrade-outdated   # Update existing packages
+scripts/sh/install.sh --upgrade-outdated   # Update existing packages (use update.sh instead)
 
 # Sync dotfiles only (create/update symlinks)
 scripts/sh/dotsync.sh
@@ -34,12 +47,31 @@ scripts/sh/darwin/apps.sh      # Install applications via Homebrew
 scripts/sh/darwin/system.sh    # Configure macOS system defaults
 ```
 
+### Update & Maintenance
+
+```bash
+# Update everything (Homebrew, macOS, dotfiles, submodules)
+scripts/sh/update.sh
+
+# Update with options
+scripts/sh/update.sh --simulation          # Preview updates without applying
+scripts/sh/update.sh --quiet               # Minimal output
+scripts/sh/update.sh --skip-confirmation   # Non-interactive mode
+scripts/sh/update.sh --verbose=2           # Detailed output
+
+# Update specific components
+brew update && brew upgrade                # Update Homebrew packages only
+git submodule update --remote --merge      # Update Zsh plugins only
+```
+
+**Note:** `update.sh` always runs in upgrade mode (equivalent to `install.sh --upgrade-outdated`). Use `--simulation` to preview changes before applying.
+
 ### Development Workflow
 
 ```bash
 # Update repository and submodules
-git pull origin master
-git submodule update --init --recursive
+scripts/sh/update.sh --simulation          # Preview updates
+scripts/sh/update.sh                       # Apply updates
 
 # Test changes in simulation mode before applying
 scripts/sh/install.sh --simulation
@@ -151,6 +183,33 @@ Always update submodules after pulling: `git submodule update --init --recursive
 
 ## Development Notes
 
+### Important Assumptions
+
+**CRITICAL: Always assume `install.sh` has been run and all tools are installed.**
+
+- **Never add fallback logic** in Zsh configuration files
+- **Never check if commands exist** with `command -v` or `which`
+- Tools are guaranteed to be present after running `install.sh`
+- If a tool is missing, the configuration should fail fast (helps with debugging)
+
+**Example - DON'T do this:**
+
+```zsh
+# ❌ BAD - Never add fallback logic
+if command -v zoxide &> /dev/null; then
+    eval "$(zoxide init zsh)"
+else
+    # fallback to old tool
+fi
+```
+
+**Example - DO this:**
+
+```zsh
+# ✅ GOOD - Assume tool is installed
+eval "$(zoxide init zsh)"
+```
+
 ### Adding New Dotfiles
 
 1. Add file starting with `.` to repository root or first-level subfolder
@@ -168,9 +227,91 @@ Always update submodules after pulling: `git submodule update --init --recursive
 
 Edit `scripts/sh/darwin/apps.sh`:
 
-- Add to `_brew_install_or_upgrade()` calls
+- Add to `brew_install_from_map()` calls
 - Use associative arrays for batch installation
 - Categories: core tools, essentials, languages, IDEs, containers, DevOps
+
+**Important: Package Type Convention**
+
+Each package specifies its installation type explicitly using strings:
+
+- `["package"]="formula"` → CLI tool, library, server (via `brew install`)
+- `["package"]="cask"` → GUI application with .app bundle (via `brew install --cask`)
+
+**All packages in the list WILL be installed** - the value only determines the installation method.
+
+Examples:
+
+```bash
+declare -A essential_tools=(
+    ["helix"]="formula"      # ✓ Installs via: brew install helix
+    ["ripgrep"]="formula"    # ✓ Installs via: brew install ripgrep
+    ["zoxide"]="formula"     # ✓ Installs via: brew install zoxide
+)
+
+declare -A development_IDEs=(
+    ["cursor"]="cask"        # ✓ Installs via: brew install --cask cursor
+    ["bruno"]="cask"         # ✓ Installs via: brew install --cask bruno
+    ["ghostty"]="cask"       # ✓ Installs via: brew install --cask ghostty
+)
+
+declare -A terminal_stuff=(
+    ["ghostty"]="cask"       # GUI app
+    ["kitty"]="cask"         # GUI app
+    ["starship"]="formula"   # CLI tool
+    ["macchina"]="formula"   # CLI tool
+)
+```
+
+**How to determine which to use:**
+
+- CLI tools, libraries, servers → `"formula"`
+- GUI applications with .app bundles → `"cask"`
+- Fonts → `"cask"` (use homebrew-cask-fonts tap)
+
+**To skip a package:** Remove it from the array entirely
+
+**Legacy Support:** The function still accepts `true`/`false` for backward compatibility:
+
+- `false` → treated as `"formula"`
+- `true` → treated as `"cask"`
+
+### Using Modern Shell Tools
+
+**zoxide** (Smarter cd):
+
+```bash
+z dotfiles        # Jump to ~/project/dotfiles
+zi                # Interactive directory picker (fuzzy find)
+z -             # Go to previous directory
+```
+
+**atuin** (Magical history):
+
+```bash
+Ctrl+R            # Interactive fuzzy history search
+Up Arrow          # Smart history navigation
+atuin search git  # Search history for 'git' commands
+atuin sync        # Sync history across machines (optional)
+```
+
+**direnv** (Auto-load environment):
+
+```bash
+# Create .envrc in project directory:
+echo 'export DATABASE_URL=postgres://localhost/mydb' > .envrc
+direnv allow .    # Approve the .envrc file
+cd ..             # Variables unloaded
+cd project        # Variables auto-loaded
+```
+
+**xh** (HTTP client):
+
+```bash
+xh GET https://api.github.com/users/cdrolet
+xh POST https://httpbin.org/post name=value --json
+xh --download https://example.com/file.zip
+```
 
 ### Modifying macOS Defaults
 

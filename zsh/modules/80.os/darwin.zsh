@@ -6,16 +6,6 @@ fi
 # ENVIRONMENT
 ##############################################################
 
-# Homebrew paths
-export HOMEBREW_PREFIX="/opt/homebrew"
-export HOMEBREW_CELLAR="/opt/homebrew/Cellar"
-export HOMEBREW_REPOSITORY="/opt/homebrew"
-
-# Set up PATH with both Homebrew and GNU utils
-export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:$PATH"
-export MANPATH="/opt/homebrew/share/man${MANPATH+:$MANPATH}:"
-export INFOPATH="/opt/homebrew/share/info:${INFOPATH:-}"
-
 # The OSX way for ls colors.
 export CLICOLOR=1
 export LSCOLORS="gxfxcxdxbxegedabagacad"
@@ -54,4 +44,3 @@ alias dnsflush='sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder'
 
 # Copy and paste and prune the useless newline
 alias pbcopynn='tr -d "\n" | pbcopy'
-

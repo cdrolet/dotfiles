@@ -1,5 +1,5 @@
 ##############################################################
-# CACHE 
+# CACHE
 ##############################################################
 
 export XDG_CACHE_HOME="$HOME/.cache"
@@ -9,6 +9,16 @@ mkdir -p $ZSH_CACHE
 ##############################################################
 # SEARCH PATH
 ##############################################################
+
+# Homebrew paths (must be set early for tool initialization)
+if [[ "$OSTYPE" == darwin* ]]; then
+    export HOMEBREW_PREFIX="/opt/homebrew"
+    export HOMEBREW_CELLAR="/opt/homebrew/Cellar"
+    export HOMEBREW_REPOSITORY="/opt/homebrew"
+    export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
+    export MANPATH="/opt/homebrew/share/man${MANPATH+:$MANPATH}:"
+    export INFOPATH="/opt/homebrew/share/info:${INFOPATH:-}"
+fi
 
 export PATH=/usr/local/sbin:$PATH
 export PATH=$HOME/.local/bin:$PATH
@@ -42,4 +52,15 @@ fi
 # Reset to default key bindings.
 bindkey -d
 
+##############################################################
+# DIRENV - AUTO-LOAD ENVIRONMENT PER DIRECTORY
+##############################################################
 
+# Initialize direnv (loads .envrc files per directory)
+eval "$(direnv hook zsh)"
+
+# direnv automatically loads/unloads environment variables
+# based on .envrc files in directories
+# Example .envrc:
+#   export DATABASE_URL=postgres://localhost/mydb
+#   export NODE_ENV=development

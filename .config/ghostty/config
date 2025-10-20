@@ -4,6 +4,7 @@ theme = "nord"
 
 # Typography
 font-family = "Berkeley Mono Nerd Font"
+font-size = 14
 font-feature = +calt,+liga
 
 # Cursor
@@ -19,4 +20,3 @@ mouse-hide-while-typing = true
 
 # Keybinding
 keybind = command+k=clear_screen
-

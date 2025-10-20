@@ -19,8 +19,7 @@ source "$SYSTEM_SCRIPT_DIR/darwin/_default_utilities.sh"
 sub_header "System Settings"
 
 declare -a appsToStartAtLogin=(
-    '/Applications/Weather.app'
-    '/Applications/Rectangle.app'
+    '/Applications/AeroSpace.app'
     '/Applications/ProtonVPN.app'
     '/Applications/Proton Mail Bridge.app'
     '/Applications/Proton Drive.app'
@@ -83,7 +82,7 @@ declare -A booting_commands=(
     ["Enable verbose boot"]="sudo nvram boot-args=\"-v\""
     ["Mute sound effects on boot"]="sudo nvram SystemAudioVolume=0"
 )
-run_command_map "Booting" booting_commands 
+run_command_map "Booting" booting_commands
 
 # Visual effects
 declare -A visual_effects_commands=(
@@ -457,7 +456,7 @@ cfprefsd
 section "Kill affected applications"
 for app in "${appsToKill[@]}"; do
     rwarn "Kill $app" "killall $app"
-done 
+done
 
 run "Make sure indexing is enabled for the main volume" "sudo mdutil -i on /"
 

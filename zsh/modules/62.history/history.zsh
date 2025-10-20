@@ -50,18 +50,31 @@ setopt HIST_BEEP
 # Expire a duplicate event first when trimming history.
 setopt HIST_EXPIRE_DUPS_FIRST
 
-# This option both imports new commands from the history file, and also causes your typed commands to be appended to the history file. The history lines are also output with timestamps 
+# This option both imports new commands from the history file, and also causes your typed commands to be appended to the history file. The history lines are also output with timestamps
 setopt SHARE_HISTORY
 
 ##############################################################
 # ALIAS
 ##############################################################
 
-# Show all history with timestamp: yyyy-mm-dd
-alias h='fc -il 1'
+# Show all history with atuin (searchable, timestamped)
+alias h='atuin search --interactive'
 
-# Lists the ten most used commands.
-alias history-stat="history 0 | awk '{print \$2}' | sort | uniq -c | sort -n -r | head"
+# Lists the ten most used commands (using atuin stats)
+alias history-stat='atuin stats'
 
 # Clear history.
 alias history-clear="rm $HISTFILE"
+
+##############################################################
+# ATUIN - MAGICAL SHELL HISTORY
+##############################################################
+
+# Initialize atuin (replaces default history search with magic)
+eval "$(atuin init zsh)"
+
+# atuin provides:
+# - Ctrl+R: Interactive history search with fuzzy finding
+# - Up arrow: Smart history navigation
+# - Optional sync across machines
+# - SQLite-backed searchable history

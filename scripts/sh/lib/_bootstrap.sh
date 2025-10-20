@@ -4,12 +4,12 @@
 # File: _bootstrap.sh
 # Author: Charles Drolet
 # GitHub: @cdrolet
-# 
+#
 # Description:
 #   Bootstrap initialization script that loads all core libraries and sets up the
 #   environment for installation and configuration scripts. This is the entry point
 #   that orchestrates the loading of all utility modules.
-#   
+#
 #   Responsibilities:
 #   - Sudo validation and privilege elevation
 #   - Library loading guard to prevent duplicate sourcing
@@ -35,7 +35,19 @@
 #
 ########################################################################################
 
-sudo -v
+# Ask for password upfront (only if not in simulation mode)
+# Skip in simulation mode to avoid unnecessary password prompts
+if [ "${IS_SIMULATION:-false}" = false ]; then
+    sudo -v
+
+    # Keep sudo alive in background (updates every 60 seconds)
+    # This prevents password prompts during long-running operations
+    while true; do
+        sudo -n true
+        sleep 60
+        kill -0 "$$" || exit
+    done 2>/dev/null &
+fi
 
 # Check if the library is already loaded
 if [ -n "${BOOTSTRAP_LIB_LOADED+x}" ]; then

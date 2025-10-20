@@ -37,18 +37,16 @@ alias d=' dirs -v | head -10'
 alias v=" clear; l -g"
 
 # show all files in all subdirs plain in a list
-alias vs=" v **/*(.)"     
+alias vs=" v **/*(.)"
 
 ##############################################################
-# Z - DIRECTORY JUMP
+# ZOXIDE - SMARTER DIRECTORY JUMP
 ##############################################################
 
-source "${0:h}/external/z.sh" || return 1
+# Initialize zoxide (smarter cd, replaces z.sh)
+eval "$(zoxide init zsh)"
 
-# add z directory recording
-add_directory_to_z_db () {
-    z --add "$(pwd -P)"
-}
-
-
-add-zsh-hook precmd add_directory_to_z_db
+# zoxide provides:
+# - z <dir>     : Jump to directory by frecency
+# - zi          : Interactive directory picker (fuzzy find)
+# - z -         : Go to previous directory
