@@ -26,22 +26,5 @@ Create symlinks to your dotfiles with the following steps:
   - apply them all at once.
   - create a symlink to the dotrevert.sh script
 
-## dotrevert.sh
-
-Undo the dotsync.sh changes:
-
-1. Scan the user home directory for any symlinks pointing to a file of this repo.
-2. Scan the backup folder.
-3. Propose to the user the following list of changes:
-   - Remove all files from step 1 in the home directory.
-   - Restore all files from step 2 in the home directory.
-4. If user confirm to proceed with the changes proposal, apply them all at once.
-   
-#### options    
-    sh dotsync.sh [-f] [-t filename] 
-    sh dotrevert.sh [-f] [-t filename] 
-
-    -f: don't ask for user confirmation before applying changes.
-    -t: only apply to the specified filename.
    
 

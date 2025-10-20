@@ -18,7 +18,7 @@ install_brew
 load_brew
 install "nix" "curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install"
 
-declare -A git_tools=(  
+declare -A git_tools=(
     ["git"]=false
     ["gh"]=false
     ["gist"]=false
@@ -46,6 +46,7 @@ brew_install_from_map "Essential Tools" "essential_tools"
 
 declare -A terminal_stuff=(
     ["ghostty"]=true
+    ["kitty"]=true
     ["starship"]=false
     ["neofetch"]=false
 
@@ -73,6 +74,7 @@ brew_install_from_map "Development IDEs" "development_IDEs"
 declare -A development_tools=(
     ["utm"]=true
     ["uv"]=false
+    ["claude-code"]=true
 )
 brew_install_from_map "Development tools" "development_tools"
 

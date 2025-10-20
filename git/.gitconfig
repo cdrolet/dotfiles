@@ -14,46 +14,52 @@
     light = false      # set to true if you're in a terminal with a light background color
     side-by-side = true
     line-numbers = true
-    syntax-theme = Dracula
-    plus-style = "syntax #2A363B"
-    minus-style = "syntax #3F2D3D"
-    plus-emph-style = "syntax #2D4F3D"
-    minus-emph-style = "syntax #613038"
+    syntax-theme = Nord
+    plus-style = "syntax #2E3440"
+    minus-style = "syntax #3B4252"
+    plus-emph-style = "syntax #A3BE8C"
+    minus-emph-style = "syntax #BF616A"
+    line-numbers-left-style = "#4C566A"
+    line-numbers-right-style = "#4C566A"
+    line-numbers-minus-style = "#BF616A"
+    line-numbers-plus-style = "#A3BE8C"
 
 [color]
 	ui = auto
 	interactive = auto
-	
+
 [color "branch"]
 	current = yellow bold
 	local = green bold
 	remote = cyan bold
-	
+
 [color "diff"]
 	meta = yellow bold
 	frag = magenta bold
 	old = red bold
 	new = green bold
 	whitespace = red reverse
-	
+
 [color "status"]
 	added = green bold
 	changed = yellow bold
 	untracked = red bold
-	
+
 [core]
-	editor = helix
+	editor = hx
 	autocrlf = input
 	pager = delta
 	excludesfile = ~/.gitignore_global
 
 [merge]
-	tool = vimdiff
-	conflictstyle = diff3
+	tool = hx
+	conflictstyle = zdiff3
+
+[mergetool "hx"]
+	cmd = hx $MERGED
 
 [diff]
-    tool = kitty
-	guitool=kitty.gui
+    algorithm = histogram
     colorMoved = default
 
 [difftool]
@@ -72,18 +78,33 @@
 	required = true
 	process = git-lfs filter-process
 
-[format]
-	pretty = oneline
+[commit]
+	verbose = true
 
-[http]
-	sslVerify = false
+[fetch]
+	prune = true
+	pruneRags = true
+
+[log]
+	date = relative
+
+[pull]
+	rebase = true
+
+[rebase]
+	autoStash = true
+	autoSquash = true
+
+[rerere]
+	enabled = true
 
 [push]
-	default = matching
+	default = current
+	autoSetupRemote = true
 
 [web]
 	browser = brave
-	
+
 [url "https://github.com/"]
     insteadOf = gh:
 
@@ -92,7 +113,7 @@
 
 [url "https://bitbucket.org/"]
     insteadOf = bb:
-    
+
 [url "https://github.com/cdrolet/"]
     insteadOf = home:
 [init]
