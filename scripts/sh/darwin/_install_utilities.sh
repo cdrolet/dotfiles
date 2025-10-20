@@ -219,22 +219,3 @@ uv_install_from_map() {
         run \"Installing python \$package from \$url\" \"uv tool install \$package --from git+\$url\"
     done"
 }
-
-# Function to install VS Code extensions if they don't already exist
-code_extension_install() {
-    local extension_id="$1"
-    local code_cmd="${2:-code}"  # Default to 'code', but allow custom command (like 'cursor')
-
-    # Check if extension is already installed, ignore SIGPIPE errors
-    if $code_cmd --list-extensions 2>/dev/null | grep -q "^$extension_id$"; then
-        render_command_output "skipped" "$extension_id already installed" "$code_cmd --install-extension $extension_id"
-        return 0
-    fi
-
-    # Just silently ignore SIGPIPE errors and proceed with installation
-    # The --list-extensions command is only used for checking if installed
-    # We'll let the actual installation attempt handle any real errors
-
-    # Install the extension
-    run "Installing $extension_id extension" "$code_cmd --install-extension $extension_id"
-}

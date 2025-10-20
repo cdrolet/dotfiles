@@ -34,7 +34,7 @@ declare -a dockItems=(
     '/Applications/Bitwarden.app'
     '/Applications/Qobuz.app'
     'spacer'
-    '/Applications/Cursor.app'
+    '/Applications/Zed.app'
     '/Applications/Ghostty.app'
     '/Applications/Obsidian.app'
     '/Applications/UTM.app'

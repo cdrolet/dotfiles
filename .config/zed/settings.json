@@ -7,61 +7,13 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
-  "languages": {
-    "Diff": {
-      "indent_guides": {
-        "coloring": "indent_aware",
-        "background_coloring": "indent_aware"
-      }
-    }
-  },
-  "agent": {
-    "default_model": {
-      "provider": "zed.dev",
-      "model": "claude-sonnet-4-thinking"
-    }
-  },
-  "minimap": {
-    "show": "auto"
-  },
-  "inlay_hints": {
-    "enabled": true,
-    "show_value_hints": true,
-    "show_type_hints": true,
-    "show_parameter_hints": true,
-    "show_other_hints": true,
-    "show_background": false,
-    "edit_debounce_ms": 700,
-    "scroll_debounce_ms": 50,
-    "toggle_on_modifiers_press": {
-      "control": false,
-      "alt": false,
-      "shift": false,
-      "platform": false,
-      "function": false
-    }
-  },
-  "buffer_font_family": "Berkeley Mono Variable",
-  "format_on_save": "on",
-  "buffer_font_features": {
-    "calt": 1
-  },
-  "ui_font_family": "Zed Plex Sans",
-  "base_keymap": "Cursor",
-  "icon_theme": {
-    "mode": "dark",
-    "light": "Zed (Default)",
-    "dark": "Zed (Default)"
-  },
+  "ui_font_family": "Berkeley Mono Nerd Font",
+  "buffer_font_family": "Berkeley Mono Nerd Font",
   "ui_font_size": 16,
-  "buffer_font_size": 15,
+  "buffer_font_size": 15.0,
   "theme": {
-    "mode": "dark",
+    "mode": "system",
     "light": "One Light",
     "dark": "Ayu Dark"
-  },
-  "terminal": {
-    "font_family": "Berkeley Mono Nerd Font",
-    "font_size": 14
   }
 }
