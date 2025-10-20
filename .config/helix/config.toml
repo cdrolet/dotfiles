@@ -1,0 +1,39 @@
+# Helix Editor Configuration
+# Uses default theme
+
+[editor]
+line-number = "relative"
+mouse = false
+cursorline = true
+true-color = true
+rulers = [80, 120]
+auto-save = true
+idle-timeout = 250
+
+[editor.cursor-shape]
+insert = "bar"
+normal = "block"
+select = "underline"
+
+[editor.file-picker]
+hidden = false
+
+[editor.lsp]
+display-messages = true
+display-inlay-hints = true
+
+[editor.soft-wrap]
+enable = true
+
+[editor.indent-guides]
+render = true
+character = "│"
+
+[editor.whitespace]
+render = "all"
+
+[editor.whitespace.characters]
+space = "·"
+nbsp = "⍽"
+tab = "→"
+newline = "⏎"

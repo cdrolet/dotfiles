@@ -1,0 +1,22 @@
+## Atuin Shell History Configuration
+
+# Search configuration
+search_mode = "fuzzy"  # Options: prefix, fulltext, fuzzy, skim
+filter_mode = "global"  # Options: global, host, session, directory
+style = "compact"  # Options: auto, full, compact
+inline_height = 20
+show_preview = true
+
+# History behavior
+update_check = false
+history_filter = [
+    "^SECRET",
+    "^AWS_ACCESS_KEY_ID",
+    "^AWS_SECRET_ACCESS_KEY"
+]
+
+# Keys configuration
+keys = []  # Use default keybindings
+
+# UI
+enter_accept = true  # Press enter to execute command immediately

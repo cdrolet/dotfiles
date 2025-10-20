@@ -26,7 +26,7 @@
 
 # Default values for settings
 DEFAULT_VERBOSE=2
-DEFAULT_SIMULATION=false
+DEFAULT_DRY_RUN=false
 DEFAULT_SKIP_CONFIRMATION=false
 DEFAULT_ENVIRONMENT=Home
 # Global state variables
@@ -35,8 +35,8 @@ LAST_STAGE=true
 if [ -z "${SKIP_CONFIRMATION+x}" ]; then
     SKIP_CONFIRMATION=$DEFAULT_SKIP_CONFIRMATION
 fi
-if [ -z "${IS_SIMULATION+x}" ]; then    
-    IS_SIMULATION=$DEFAULT_SIMULATION
+if [ -z "${IS_DRY_RUN+x}" ]; then
+    IS_DRY_RUN=$DEFAULT_DRY_RUN
 fi
 if [ -z "${VERBOSE+x}" ]; then
     VERBOSE=$DEFAULT_VERBOSE
@@ -46,5 +46,4 @@ if [ -z "${ENVIRONMENT+x}" ]; then
 fi
 if [ -z "${START_TIME+x}" ]; then
     START_TIME=$(date +%s)
-fi 
-
+fi

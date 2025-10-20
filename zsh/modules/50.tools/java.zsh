@@ -2,9 +2,9 @@
 # JAVA
 ##############################################################
 
-export JAVA_17_HOME=/Users/cdrolet/.sdkman/candidates/java/17.0.0-tem
+export JAVA_17_HOME=$HOME/.sdkman/candidates/java/17.0.0-tem
 
-export JAVA_21_HOME=/Users/cdrolet/.sdkman/candidates/java/21.0.3-tem
+export JAVA_21_HOME=$HOME/.sdkman/candidates/java/21.0.3-tem
 
 export JAVA_HOME=$JAVA_21_HOME
 

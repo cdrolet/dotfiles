@@ -15,15 +15,15 @@ source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 command_install_from_map() {
     local section_name="$1"
     local array_name="$2"  # Name of the associative array
-    
+
     # Print section header
     section "$section_name"
-    
+
     # Iterate over the associative array
     eval "for cmd in \"\${!$array_name[@]}\"; do
         # Get the install command
         install_cmd=\$(eval \"echo \\\"\${$array_name[\$cmd]}\\\"\")
-        
+
         install \"\$cmd\" \"\$install_cmd\"
     done"
 }
@@ -39,7 +39,7 @@ install() {
     if [ -z "$description" ]; then
         description="Installing $command_name"
     fi
-    
+
     local output_command="$install_command"
     if [ "$no_details" = true ]; then
         output_command=""
@@ -50,7 +50,7 @@ install() {
         skipped "$command_name already installed" "$output_command"
         return 0
     fi
-    
+
     # Command doesn't exist, so install it
     spin "$description" "$install_command" "$no_details"
 }
@@ -62,7 +62,7 @@ spin() {
     local no_details="$3"
     local success_handler="${4:-default_success_handler}"  # Default to default_success_handler if not provided
     local failure_handler="${5:-default_failure_handler}"  # Default to default_failure_handler if not provided
- 
+
     local delay=0.1
     local i=0
     local output=""
@@ -72,12 +72,12 @@ spin() {
 
     # Create a temporary file for output
     local tmp_file=$(mktemp)
-    
+
     local output_command="$command"
     if [ "$no_details" = true ]; then
         output_command=""
-    fi 
-    
+    fi
+
     # Start the command in the background and redirect output to temp file
     eval "$output_command" > "$tmp_file" 2>&1 &
     local pid=$!
@@ -92,7 +92,7 @@ spin() {
     # Get the exit status of the command
     wait $pid
     exit_status=$?
-    
+
     # Extract only error-related lines from the output
     if [ $exit_status -ne 0 ]; then
         # Try to find error or fail messages, otherwise take the full output
@@ -125,7 +125,7 @@ spin() {
     fi
 
     rm -f "$tmp_file"
-    
+
     clear_line
     move_cursor_at_start
 
@@ -157,7 +157,7 @@ render_spinner_output() {
     local spinner_char="$1"
     local description="$2"
     local command="$3"
-    
+
     if [ "$VERBOSE" -eq 1 ]; then
         printf "\r${BLUE}${spinner_char}${WHITE} $description"
     elif [ "$VERBOSE" -ge 2 ]; then
@@ -193,10 +193,10 @@ run_commands() {
     for param in "${params_array[@]}"; do
         # Replace placeholder in command template with the parameter
         command=$(echo "$command_template" | sed "s/{param}/$param/g")
-        
+
         # Replace placeholder in description template with the parameter
         description=$(echo "$description_template" | sed "s/{param}/$param/g")
-        
+
         run "$description" "$command" "$success_handler" "$failure_handler"
     done
 }
@@ -210,13 +210,13 @@ track_command() {
 
     eval "$function_call"
 
-    local end_time=$(get_timestamp_ms) 
-    
+    local end_time=$(get_timestamp_ms)
+
     # Ensure both values are integers for math
     step_stopwatch=${step_stopwatch%%[!0-9]*}
 
     end_time=${end_time%%[!0-9]*}
-    
+
     local total_time=$((end_time - step_stopwatch))
 
     if [ $total_time -gt 0 ]; then
@@ -255,25 +255,25 @@ run() {
 # Function to execute a command and handle its output
 execute_command() {
     local command="$1"
-    if [ "$IS_SIMULATION" = true ]; then
-        echo "Simulated: $command"
+    if [ "$IS_DRY_RUN" = true ]; then
+        echo "Dry-run: $command"
     else
         # Create a temporary file for output
         local tmp_file=$(mktemp)
-        
+
         # Run the command and capture its exit status
         eval "$command" > "$tmp_file" 2>&1
         local exit_status=$?
-        
+
         # Read the output from the temp file
         output=$(cat "$tmp_file")
-        
+
         # Clean up
         rm -f "$tmp_file"
-        
+
         # Return the output without color codes - we'll add colors during rendering
         echo "$output"
-        
+
         # Return the original exit status
         return $exit_status
     fi
@@ -311,13 +311,13 @@ render_command_output() {
     local description="$2"
     local command="$3"
     local output="$4"
-    
+
     # Define the output function based on status
     local output_func=""
     case "$status" in
         "skipped") output_func="skipped" ;;
-        "success") 
-            if [ "$IS_SIMULATION" = true ]; then
+        "success")
+            if [ "$IS_DRY_RUN" = true ]; then
                 output_func="simulated"
             else
                 output_func="success"
@@ -331,7 +331,7 @@ render_command_output() {
     if [ "$status" = "failure" ] && [ "$VERBOSE" -ge 2 ]; then
         handle_error_output "$description" "$output"
     fi
-    
+
     # Render output based on verbosity level
     case "$VERBOSE" in
         1) # Verbosity level 1: Only show description
@@ -354,4 +354,3 @@ render_command_output() {
             ;;
     esac
 }
-

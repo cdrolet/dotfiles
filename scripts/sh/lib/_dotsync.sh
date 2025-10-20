@@ -84,7 +84,7 @@ read_command_args() {
 
 initialize_sync_state() {
     shopt -s dotglob
-   
+
     SELECTED_FILES=()
     SKIPPED_FILES=()
     OVERWRITTEN_FILES=()
@@ -145,7 +145,7 @@ is_valid_dotfile() {
 
     # false if target is defined the file is not the target file
     [[ ! -z $TARGET ]] && [[ "$filename" != $TARGET ]] && return 1
-    
+
     # false if the file is in the ignored list
     if is_in_ignore_list "$filename";then
         printf "${SKIPPED}${GRAY}Ignoring "$1"${white}\n"
@@ -156,12 +156,12 @@ is_valid_dotfile() {
     if has_naming_conflict "$1" SELECTED_FILES; then
         return 1
     fi
-    
-    # false if the file is in conflict with a skipped file    
+
+    # false if the file is in conflict with a skipped file
     if has_naming_conflict "$1" SKIPPED_FILES; then
         return 1
     fi
-    
+
     if [[ "$parent_name" == .* ]];then
         # false if the parent dir is already a symlink to our dotfiles
         if is_linked_to_dotfiles $HOME/"$parent_name" "$SOURCE_DIR";then
@@ -190,17 +190,17 @@ is_valid_dotfile() {
 has_naming_conflict() {
     local filename=$(basename "$1")
     local arrayname=$2[@]
-    
+
     files=("${!arrayname}")
-    
+
     for element in "${files[@]}"; do
         if [[ $(basename "$element") == "$filename" ]]; then
-            failure "Rejecting $1" "(in conflict with $element)"   
+            failure "Rejecting $1" "(in conflict with $element)"
             REJECTED_FILES+=($1)
             return 0
         fi
     done
-    
+
     return 1
 }
 
@@ -242,7 +242,7 @@ process_dotfile() {
 }
 
 clean_broken_links() {
- 
+
     find_broken_links
 
     if [ "${#BROKEN_FILES[@]}" -eq 0 ];then
@@ -278,8 +278,8 @@ confirm_broken_link_cleanup() {
 
 remove_broken_links() {
     for file in "${BROKEN_FILES[@]}"; do
-        if [ "$IS_SIMULATION" = true ]; then
-            success "(simulated) Removed broken symlink" "$file"
+        if [ "$IS_DRY_RUN" = true ]; then
+            success "(dry-run) Removed broken symlink" "$file"
         elif rm -f "$file" >/dev/null 2>&1; then
             success "Removed broken symlink" "$file"
         else
@@ -290,7 +290,7 @@ remove_broken_links() {
 
 create_dotfile_links() {
     find_dotfiles
-    
+
     if [ "${#SELECTED_FILES[@]}" -eq 0 ];then
         printf "\n"
         success "No new symbolic links required."
@@ -333,8 +333,8 @@ create_dotfile_symlink() {
         return 1
     fi
 
-    if [ "$IS_SIMULATION" = true ]; then
-        ind; success "(simulated) Symlink" "${source} -> ${target}"
+    if [ "$IS_DRY_RUN" = true ]; then
+        ind; success "(dry-run) Symlink" "${source} -> ${target}"
         return 0
     fi
 
@@ -402,5 +402,3 @@ sync_dotfiles() {
 
     clean_sync_state
 }
-
-

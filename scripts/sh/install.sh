@@ -20,8 +20,8 @@ parse_arguments() {
                 VERBOSE=3  # Set to highest verbosity
                 shift
                 ;;
-            --simulation|-s)
-                IS_SIMULATION=true
+            --dry-run|-s)
+                IS_DRY_RUN=true
                 shift
                 ;;
             --skip-confirmation|-y)
@@ -46,7 +46,7 @@ parse_arguments() {
                 echo "Options:"
                 echo "  --verbose=LEVEL, -v       Set verbosity level (0-3, default: $DEFAULT_VERBOSE)"
                 echo "  --quiet, -q               Minimal output (verbosity level 0)"
-                echo "  --simulation, -s          Run in simulation mode"
+                echo "  --dry-run, -s             Run in dry-run mode (preview changes without applying)"
                 echo "  --skip-confirmation, -y   Skip all confirmation prompts"
                 echo "  --upgrade-outdated, -u    Upgrade outdated packages"
                 echo "  --environment=ENV         Set environment (default: $DEFAULT_ENVIRONMENT)"

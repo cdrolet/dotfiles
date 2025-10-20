@@ -35,9 +35,9 @@
 #
 ########################################################################################
 
-# Ask for password upfront (only if not in simulation mode)
-# Skip in simulation mode to avoid unnecessary password prompts
-if [ "${IS_SIMULATION:-false}" = false ]; then
+# Ask for password upfront (only if not in dry-run mode)
+# Skip in dry-run mode to avoid unnecessary password prompts
+if [ "${IS_DRY_RUN:-false}" = false ]; then
     sudo -v
 
     # Keep sudo alive in background (updates every 60 seconds)

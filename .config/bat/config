@@ -1,0 +1,18 @@
+# Bat (cat replacement) Configuration
+
+# Theme (use 'bat --list-themes' to see available themes)
+--theme="Nord"
+
+# Show line numbers, Git modifications, and file header
+--style="numbers,changes,header"
+
+# Use italic text on terminal (if supported)
+--italic-text=always
+
+# Add mouse scrolling support in less
+--paging=auto
+
+# Map syntax for common extensions
+--map-syntax "*.jenkinsfile:Groovy"
+--map-syntax ".ignore:Git Ignore"
+--map-syntax "*.conf:INI"

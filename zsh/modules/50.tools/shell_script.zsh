@@ -5,10 +5,10 @@ shebang() {
     name=${1:?filename required}
     shell=${2:-bash}
 
-    if i=$(which $shell); then
-        printf '#!/usr/bin/env %s\n\n' $shell > $name && chmod 755 $name && vim + $name && chmod 755 $name;
+    if i=$(command -v $shell); then
+        printf '#!/usr/bin/env %s\n\n' $shell > $name && chmod 755 $name && hx $name && chmod 755 $name;
     else
-        echo "'which' could not find $shell, is it in your \$PATH?";
+        echo "Could not find $shell, is it in your \$PATH?";
     fi;
     # in case the new script is in path, this throw out the command hash table and
     # start over  (man zshbuiltins)

@@ -46,7 +46,7 @@
 	untracked = red bold
 
 [core]
-	editor = nvim
+	editor = hx
 	autocrlf = input
 	pager = delta
 	excludesfile = ~/.gitignore_global
@@ -65,12 +65,6 @@
 [difftool]
     prompt = false
     trustExitCode = true
-
-[difftool "kitty"]
-    cmd = kitten diff $LOCAL $REMOTE
-
-[difftool "kitty.gui"]
-    cmd = kitten diff $LOCAL $REMOTE
 
 [filter "lfs"]
 	clean = git-lfs clean -- %f

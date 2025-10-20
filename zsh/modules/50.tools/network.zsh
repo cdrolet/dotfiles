@@ -1,3 +1,11 @@
+# Modern HTTP client (xh - httpie alternative)
+alias http='xh'
+alias https='xh'
+alias get='xh GET'
+alias post='xh POST'
+alias put='xh PUT'
+alias delete='xh DELETE'
+
 # Network connections
 # Often useful to prefix with SUDO to see more system level network usage
 alias network.connections='lsof -l -i +L -R -V'

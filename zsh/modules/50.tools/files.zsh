@@ -63,10 +63,11 @@ alias files.usage.user='sudo fs_usage -e -f filesystem|grep -v CACHE_HIT|grep -v
 # Using modern tools
 alias grep='rg'
 alias find='fd'
-alias cat='bat'
+alias cat='bat --style=auto'
 alias ls='eza'
 alias l="eza -oAhtr --group-directories-first"
 alias ll='eza -l'
 alias la='eza -lah --git --group-directories-first --sort=size'
 alias tree='eza --tree'
-alias d='kitten diff'
+alias ps='procs'
+alias diff='delta'

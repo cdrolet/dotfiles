@@ -51,7 +51,6 @@ brew_install_from_map "Essential Tools" "essential_tools"
 
 declare -A terminal_stuff=(
     ["ghostty"]="cask"
-    ["kitty"]="cask"
     ["starship"]="formula"
     ["macchina"]="formula"
 )
@@ -95,6 +94,7 @@ brew_install_from_map "Containers" "containers"
 
 declare -A browsers=(
     ["brave-browser"]="cask"
+    ["zen"]=cask
 )
 brew_install_from_map "Browsers" "browsers"
 

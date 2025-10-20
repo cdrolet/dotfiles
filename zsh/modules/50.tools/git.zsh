@@ -80,7 +80,7 @@ alias gitac="gitAddCommit"
 alias gitam="gitAddCommitAmend"
 
 # Checkout
-alias gitco="git checkout develop -b "
+alias gitco="git checkout main -b "
 
 # Diff
 alias gitdiff="git difftool --no-symlinks --dir-diff"
@@ -89,7 +89,7 @@ alias gitdiff="git difftool --no-symlinks --dir-diff"
 alias gitmerge="git mergetool"
 
 # Pull
-alias gitpld="echoAndRun git pull origin develop"
+alias gitplm="echoAndRun git pull origin main"
 
 alias gitpl="gitPullFromCurrent"
 
@@ -110,9 +110,9 @@ alias gitrm="gitRemoveBranch"
 alias gitupdate="echoAndRun git submodule update --remote"
 
 # assumes git-up is installed (gem install git-up)
-# switches to "develop" branch, updates all local branches (nicely using git-up), removes all local branches already merged into 'develop'
-alias gitdev='git checkout develop; git-up; git branch --merged develop | grep -v "\* develop" | xargs -n 1 git branch -d; git branch;'
+# switches to "main" branch, updates all local branches (nicely using git-up), removes all local branches already merged into 'main'
+alias gitmain='git checkout main; git-up; git branch --merged main | grep -v "\* main" | xargs -n 1 git branch -d; git branch;'
 
-alias gitprune='git checkout master;git fetch --prune origin'
+alias gitprune='git checkout main;git fetch --prune origin'
 
-alias gitprunefull='git checkout master;git fsck;git reflog expire --expire=now --all;git gc --prune=now'
+alias gitprunefull='git checkout main;git fsck;git reflog expire --expire=now --all;git gc --prune=now'

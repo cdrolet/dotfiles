@@ -3,29 +3,6 @@ if [[ "$OSTYPE" != darwin* ]]; then
 fi
 
 ##############################################################
-# ENVIRONMENT
-##############################################################
-
-# The OSX way for ls colors.
-export CLICOLOR=1
-export LSCOLORS="gxfxcxdxbxegedabagacad"
-
-# Activate gls colors
-if [[ -a $ZSH_DIRCOLORS ]]; then
-    if [[ "$TERM" == *256* ]]; then
-        which gdircolors > /dev/null && eval "`gdircolors -b $ZSH_DIRCOLORS`"
-    else
-        # standard colors for non-256-color terms
-        which gdircolors > /dev/null && eval "`gdircolors -b`"
-    fi
-else
-    which gdircolors > /dev/null && eval "`gdircolors -b`"
-fi
-
-#iterm2 integration to zsh
-test -e "$HOME/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
-
-##############################################################
 # FUNCTIONS
 ##############################################################
 

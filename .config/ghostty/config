@@ -15,8 +15,22 @@ adjust-cursor-thickness = 2
 window-padding-x = 20
 window-padding-y = 10
 window-padding-balance = true
+window-theme = dark
+window-decoration = true
+macos-titlebar-style = native
 
 mouse-hide-while-typing = true
+
+# Shell integration
+shell-integration = true
+shell-integration-features = cursor,sudo,title
+
+# Copy/paste
+copy-on-select = clipboard
+clipboard-trim-trailing-spaces = true
+
+# Performance
+macos-non-native-fullscreen = true
 
 # Keybinding
 keybind = command+k=clear_screen

@@ -5,12 +5,19 @@ $directory\
 $git_branch\
 $git_state\
 $git_status\
+$golang\
+$rust\
+$python\
+$nodejs\
+$package\
 $cmd_duration\
 $line_break\
 $character"""
 
 [directory]
 read_only = " 🔒"
+truncation_length = 3
+truncate_to_repo = true
 
 [git_branch]
 format = "[$branch]($style)"
@@ -36,5 +43,27 @@ format = "[$duration]($style) "
 style = "yellow"
 
 [python]
-format = "[$virtualenv]($style) "
+symbol = " "
+format = '[$symbol($version )(\($virtualenv\) )]($style)'
 style = "bright-black"
+
+[golang]
+symbol = " "
+format = '[$symbol($version )]($style)'
+style = "bright-black"
+
+[rust]
+symbol = " "
+format = '[$symbol($version )]($style)'
+style = "bright-black"
+
+[nodejs]
+symbol = " "
+format = '[$symbol($version )]($style)'
+style = "bright-black"
+
+[package]
+symbol = " "
+format = '[$symbol$version]($style) '
+style = "bright-black"
+disabled = false

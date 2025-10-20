@@ -20,8 +20,8 @@ parse_arguments() {
                 VERBOSE=3  # Set to highest verbosity
                 shift
                 ;;
-            --simulation|-s)
-                IS_SIMULATION=true
+            --dry-run|-s)
+                IS_DRY_RUN=true
                 shift
                 ;;
             --skip-confirmation|-y)
@@ -44,7 +44,7 @@ parse_arguments() {
                 echo "Options:"
                 echo "  --verbose=LEVEL, -v       Set verbosity level (0-3, default: $DEFAULT_VERBOSE)"
                 echo "  --quiet, -q               Minimal output (verbosity level 0)"
-                echo "  --simulation, -s          Preview updates without applying them"
+                echo "  --dry-run, -s             Preview updates without applying them"
                 echo "  --skip-confirmation, -y   Skip all confirmation prompts"
                 echo "  --environment=ENV         Set environment (default: $DEFAULT_ENVIRONMENT)"
                 echo "  --help, -h                Show this help message"
@@ -81,7 +81,7 @@ UPGRADE_OUTDATED=true
 
 OS_NAME=$(detect_os)
 
-print_setting "Simulation mode" "$IS_SIMULATION" "$DEFAULT_SIMULATION"
+print_setting "Dry-run mode" "$IS_DRY_RUN" "$DEFAULT_DRY_RUN"
 print_setting "Upgrade packages" "$UPGRADE_OUTDATED" "true"
 print_setting "OS" "$OS_NAME" "$OS_NAME"
 
@@ -120,8 +120,8 @@ sync_dotfiles "$DOTFILES_ROOT"
 
 sub_header "Update Summary"
 
-if [ "$IS_SIMULATION" = true ]; then
-    info "This was a simulation. Run without ${YELLOW}--simulation${WHITE} to apply updates."
+if [ "$IS_DRY_RUN" = true ]; then
+    info "This was a dry-run. Run without ${YELLOW}--dry-run${WHITE} to apply updates."
 else
     success "System update complete!"
 fi

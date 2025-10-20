@@ -14,15 +14,16 @@ This is a personal dotfiles repository designed to automate macOS development en
 
 **Modern Rust-Based Tools**:
 
-- **zoxide** - Smarter cd (replaces z.sh) - Jump to directories by frecency
+- **zoxide** - Smarter cd (jump to directories by frecency)
 - **atuin** - Magical shell history with search and optional sync
 - **direnv** - Auto-load environment variables per directory
 - **xh** - Modern HTTP client (httpie alternative)
-- **ripgrep** - Fast recursive grep
-- **fd** - Fast find alternative
-- **bat** - cat with syntax highlighting
-- **eza** - Modern ls replacement
-- **delta** - Beautiful git diffs
+- **ripgrep** - Fast recursive grep (replaces grep)
+- **fd** - Fast find alternative (replaces find)
+- **bat** - cat with syntax highlighting (replaces cat)
+- **eza** - Modern ls replacement (replaces ls)
+- **procs** - Modern ps replacement (replaces ps)
+- **delta** - Beautiful git diffs (git pager)
 
 ## Key Commands
 
@@ -35,7 +36,7 @@ scripts/sh/install.sh
 # Installation with options
 scripts/sh/install.sh --verbose=2          # Detailed output
 scripts/sh/install.sh --quiet              # Minimal output
-scripts/sh/install.sh --simulation         # Preview changes without applying
+scripts/sh/install.sh --dry-run            # Preview changes without applying
 scripts/sh/install.sh --skip-confirmation  # Non-interactive mode
 scripts/sh/install.sh --upgrade-outdated   # Update existing packages (use update.sh instead)
 
@@ -54,7 +55,7 @@ scripts/sh/darwin/system.sh    # Configure macOS system defaults
 scripts/sh/update.sh
 
 # Update with options
-scripts/sh/update.sh --simulation          # Preview updates without applying
+scripts/sh/update.sh --dry-run             # Preview updates without applying
 scripts/sh/update.sh --quiet               # Minimal output
 scripts/sh/update.sh --skip-confirmation   # Non-interactive mode
 scripts/sh/update.sh --verbose=2           # Detailed output
@@ -64,17 +65,17 @@ brew update && brew upgrade                # Update Homebrew packages only
 git submodule update --remote --merge      # Update Zsh plugins only
 ```
 
-**Note:** `update.sh` always runs in upgrade mode (equivalent to `install.sh --upgrade-outdated`). Use `--simulation` to preview changes before applying.
+**Note:** `update.sh` always runs in upgrade mode (equivalent to `install.sh --upgrade-outdated`). Use `--dry-run` to preview changes before applying.
 
 ### Development Workflow
 
 ```bash
 # Update repository and submodules
-scripts/sh/update.sh --simulation          # Preview updates
+scripts/sh/update.sh --dry-run             # Preview updates
 scripts/sh/update.sh                       # Apply updates
 
-# Test changes in simulation mode before applying
-scripts/sh/install.sh --simulation
+# Test changes in dry-run mode before applying
+scripts/sh/install.sh --dry-run
 
 # View pending changes
 git status
@@ -101,10 +102,11 @@ git diff
    - Numbered module system (10, 40, 50, etc.) ensures predictable load order
    - **10.environment/**: Core environment variables, PATH, ZSH options
    - **40.completion/**: Completion system with zsh-completions submodule
-   - **50.tools/**: Tool-specific aliases (git, ssh, maven, gradle, curl, etc.)
-   - **55.directory/**: z.sh integration for directory jumping
+   - **50.tools/**: Tool-specific aliases (git, ssh, maven, gradle, network, etc.)
+   - **55.directory/**: zoxide integration for smart directory jumping
    - **60.syntax/**: fast-syntax-highlighting submodule
-   - **62.history/**: zsh-history-substring-search submodule
+   - **62.history/**: atuin + zsh-history-substring-search integration
+   - **64.editor/**: Editor bindings and functions
    - **66.suggestions/**: zsh-autosuggestions submodule
    - **80.os/**: OS-specific settings (darwin.zsh for macOS Homebrew paths)
    - **90.work/**: Work-specific configs (Airflow, Kafka)
@@ -156,11 +158,12 @@ Key patterns:
 ### Git Configuration (`git/.gitconfig`)
 
 - User: cdrolet (GitHub handle)
-- Diff tool: Delta with Dracula theme, side-by-side layout
+- Diff tool: Delta with Nord theme, side-by-side layout
 - Merge tool: Helix
 - Editor: Helix (hx)
 - URL shortcuts: `gh:`, `gist:`, `bb:`, `home:` prefixes
 - Git LFS enabled
+- Default branch: main
 
 ### Dotfile Exclusions (`.dotignore`)
 
@@ -323,10 +326,10 @@ Edit `scripts/sh/darwin/system.sh`:
 
 ### Testing Changes
 
-Always use `--simulation` flag first:
+Always use `--dry-run` flag first:
 
 ```bash
-scripts/sh/install.sh --simulation --verbose=2
+scripts/sh/install.sh --dry-run --verbose=2
 ```
 
 This previews all changes without applying them.

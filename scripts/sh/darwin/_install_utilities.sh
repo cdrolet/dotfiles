@@ -136,6 +136,19 @@ _cask_artifacts_exist() {
         return 0
     fi
 
+    # Check for font artifacts
+    if echo "$artifacts" | grep -q "(Font)"; then
+        # Extract font files from artifacts
+        local font_files=$(echo "$artifacts" | grep "(Font)" | sed 's/ (Font).*//')
+        while IFS= read -r font_file; do
+            local font_name=$(basename "$font_file")
+            # Check in both user and system font directories
+            if [ -e "$HOME/Library/Fonts/$font_name" ] || [ -e "/Library/Fonts/$font_name" ]; then
+                return 0
+            fi
+        done <<< "$font_files"
+    fi
+
     return 1
 }
 

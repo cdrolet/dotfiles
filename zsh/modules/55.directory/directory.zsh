@@ -47,6 +47,6 @@ alias vs=" v **/*(.)"
 eval "$(zoxide init zsh)"
 
 # zoxide provides:
-# - z <dir>     : Jump to directory by frecency
+# - z <dir>     : Jump to directory by frequency
 # - zi          : Interactive directory picker (fuzzy find)
 # - z -         : Go to previous directory

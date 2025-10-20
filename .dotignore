@@ -11,3 +11,6 @@ tmp
 .DS_Store
 idea
 *.code-workspace
+
+# Work-specific configurations (contains sensitive data)
+zsh/modules/90.work
