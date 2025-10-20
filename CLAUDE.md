@@ -165,6 +165,40 @@ Key patterns:
 - Git LFS enabled
 - Default branch: main
 
+### Zsh Keybindings (`.config/zsh/KEYBINDINGS.md`)
+
+Custom keybindings reference guide for productivity shortcuts.
+
+**Most useful shortcuts:**
+- `Ctrl+X Ctrl+S` - Insert sudo at beginning of line
+- `Ctrl+Y` - Erase backward to slash (path editing)
+- `Ctrl+Q` - Push line (save, run other command, restore)
+- `Esc M` - Duplicate previous word
+- `lskeys` - Show all custom keybindings
+
+**Full keybindings:** See `.config/zsh/KEYBINDINGS.md` or run `lskeys` in terminal
+
+### Lazygit Configuration (`.config/lazygit/config.yml`)
+
+Terminal UI for Git - interactive visual Git client.
+
+**Quick Start:**
+```bash
+lazygit          # Launch in current repo
+alias lg='lazygit'
+```
+
+**Essential shortcuts:**
+- `Space` - Stage/unstage files
+- `c` - Commit
+- `P` - Push
+- `p` - Pull
+- `?` - Help menu
+
+**Features:** Nord theme, Delta integration, Helix editor, interactive rebase, cherry-pick, merge conflict resolution.
+
+**Full guide:** See `.config/lazygit/README.md`
+
 ### Dotfile Exclusions (`.dotignore`)
 
 Files/patterns excluded from symlink creation:
