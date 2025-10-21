@@ -1,0 +1,21 @@
+# ShellCheck configuration for dotfiles
+# https://www.shellcheck.net/wiki/
+
+# Ignore: Not following sourced files (we use dynamic paths)
+# Our modular library system sources files dynamically
+disable=SC1091
+
+# Ignore: Variables used by sourced functions appear unused
+# Our map-based pattern passes variable names as strings to helper functions
+# like brew_install_from_map() which accesses them via eval
+disable=SC2034
+
+# Ignore: Dynamic source paths (intentional for environment configs)
+# We load env-specific configs like env_$ENVIRONMENT.sh
+disable=SC1090
+
+# Ignore: Quote escaping in macOS defaults commands
+# The quoting style is correct for macOS defaults write commands
+disable=SC2140
+
+

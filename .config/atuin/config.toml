@@ -15,8 +15,5 @@ history_filter = [
     "^AWS_SECRET_ACCESS_KEY"
 ]
 
-# Keys configuration
-keys = []  # Use default keybindings
-
 # UI
 enter_accept = true  # Press enter to execute command immediately

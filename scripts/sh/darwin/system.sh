@@ -7,11 +7,6 @@
 
 SYSTEM_SCRIPT_DIR="$( cd "$( dirname "$(dirname "${BASH_SOURCE[0]}")" )" && pwd )"
 
-#last_stage=true
-#verbose=2
-#is_simulation=false
-
-
 source "$SYSTEM_SCRIPT_DIR/lib/_bootstrap.sh"
 source "$SYSTEM_SCRIPT_DIR/darwin/_dock_utilities.sh"
 source "$SYSTEM_SCRIPT_DIR/darwin/_default_utilities.sh"
@@ -28,6 +23,7 @@ configure_startup_from_array "appsToStartAtLogin"
 run "Start borders" "brew services start borders"
 
 declare -a dockItems=(
+    '/Applications/Zen.app'
     '/Applications/Brave\ Browser.app'
     '/System/Applications/Mail.app'
     '/System/Applications/Maps.app'
@@ -43,7 +39,7 @@ declare -a dockItems=(
     '/System/Applications/Utilities/Activity\ Monitor.app'
     '/System/Applications/Utilities/Print\ Center.app'
     'spacer'
-    '~/Downloads'
+    "$HOME/Downloads"
 );
 configure_dock_from_array "dockItems"
 
@@ -404,37 +400,7 @@ run "Change indexing order and disable some file types from being indexed" "defa
   '{"enabled" = 0;"name" = "SOURCE";}'" defaults_handler
 
 # Files
-declare -a file_extensions=(
-    ".c"
-    ".cpp"
-    ".js"
-    ".jsx"
-    ".ts"
-    ".tsx"
-    ".json"
-    ".md"
-    ".sql"
-    ".css"
-    ".scss"
-    ".sass"
-    ".py"
-    ".sum"
-    ".rs"
-    ".go"
-    ".sh"
-    ".log"
-    ".toml"
-    ".yml"
-    ".yaml"
-    ".php"
-    ".rb"
-    ".swift"
-    ".xml"
-    "public.plain-text"
-    "public.unix-executable"
-    "public.data"
-)
-run_commands "Files" file_extensions "{param} using Cursor as default editor" "duti -s com.cursor.Cursor {param} all"
+# Note: File associations are now handled in set-defaults.sh
 run "Show the Library folder" "chflags nohidden /Library"
 
 declare -a appsToKill=(

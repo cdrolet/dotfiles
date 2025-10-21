@@ -4,9 +4,9 @@
 # Description: Main installation script for system, apps, and dotfiles
 ########################################################################################
 
-###########################
+##############################################################
 # PREFLIGHT
-###########################
+##############################################################
 
 # Function to parse command-line arguments
 parse_arguments() {
@@ -63,13 +63,13 @@ parse_arguments() {
 }
 
 # Get the absolute path of the directory containing install.sh
-INSTALL_SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
-# Get the parent directory of INSTALL_SCRIPT_DIR
-DOTFILES_ROOT="$(dirname "$(dirname "$INSTALL_SCRIPT_DIR")")"
+SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
+# Get the parent directory (dotfiles root)
+DOTFILES_ROOT="$(dirname "$(dirname "$SCRIPT_DIR")")"
 
 parse_arguments "$@"
 
-source "$INSTALL_SCRIPT_DIR/lib/_bootstrap.sh"
+source "$SCRIPT_DIR/lib/_bootstrap.sh"
 
 DEFAULT_UPGRADE_OUTDATED=false
 if [ -z "${UPGRADE_OUTDATED+x}" ]; then
@@ -85,14 +85,14 @@ full_os_name=$(uname -s)
 print_setting "Upgrade outdated" "$UPGRADE_OUTDATED" "$DEFAULT_UPGRADE_OUTDATED"
 print_setting "OS" "$OS_NAME" "$OS_NAME"
 
-###########################
+##############################################################
 # INSTALLATION
-###########################
+##############################################################
 
 # Check for OS-specific system script
-if [ -f "$INSTALL_SCRIPT_DIR/$OS_NAME/install.sh" ]; then
+if [ -f "$SCRIPT_DIR/$OS_NAME/install.sh" ]; then
     info "Loading ${YELLOW}$OS_NAME${WHITE} installer script..."
-    source "$INSTALL_SCRIPT_DIR/$OS_NAME/install.sh"
+    source "$SCRIPT_DIR/$OS_NAME/install.sh"
 else
     last_stage=true
     warning "No system installer found for $OS_NAME"
@@ -130,3 +130,10 @@ sub_header "Syncing dotfiles"
 LAST_STAGE=true
 
 sync_dotfiles "$DOTFILES_ROOT"
+
+##############################################################
+# END
+##############################################################
+
+unset SCRIPT_DIR
+unset DOTFILES_ROOT

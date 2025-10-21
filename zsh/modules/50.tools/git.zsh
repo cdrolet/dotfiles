@@ -17,10 +17,6 @@ gitCommit() {
 	echoAndRun git commit -m "$*";
 }
 
-gitCheckout() {
-	echoAndRun git checkout "$*";
-}
-
 gitCurrent() {
 	git rev-parse --abbrev-ref HEAD
 }
@@ -36,7 +32,7 @@ gitPullFromCurrent() {
 }
 
 gitRemoveBranch() {
-	echoAndRun git branch -d -r "$*"
+	echoAndRun git branch -d "$*"
 }
 
 gitRemoveSub() {
@@ -66,6 +62,16 @@ gitRemoveSub() {
 # ALIAS
 ##############################################################
 
+alias lg="lazygit"
+
+alias gitsw='git switch'           # Modern alternative to checkout
+alias gitswc='git switch -c'       # Create and switch to branch
+alias gitrestore='git restore'     # Discard changes (modern)
+alias gitunstage='git restore --staged'  # Unstage files (modern)
+alias gitundo='git reset --soft HEAD~1'  # Undo last commit (keep changes)
+alias gitlog='git log --oneline --graph --all --decorate'
+alias gitamend='git commit --amend --no-edit'  # Quick amend without message change
+
 alias gitfake="echoAndRun git commit --allow-empty -m 'Fake commit'"
 
 # Clone - recursively : init and update all sub modules
@@ -77,20 +83,16 @@ alias gitc="gitCommit"
 # Commit
 alias gitac="gitAddCommit"
 
-alias gitam="gitAddCommitAmend"
-
-# Checkout
-alias gitco="git checkout main -b "
-
 # Diff
 alias gitdiff="git difftool --no-symlinks --dir-diff"
 
 # Merge
 alias gitmerge="git mergetool"
 
-# Pull
+# Pull from main
 alias gitplm="echoAndRun git pull origin main"
 
+# Pull from current branch
 alias gitpl="gitPullFromCurrent"
 
 # Push
@@ -101,7 +103,7 @@ alias gits="echoAndRun git status -sb"
 
 # Branch
 alias gitb="echoAndRun git branch -av"
-
+alias gitbtree="echoAndRun git branch --format='%(refname:short) %(upstream:short)' --sort=-committerdate"  # Better branch listing
 
 # Remove
 alias gitrm="gitRemoveBranch"
@@ -109,10 +111,9 @@ alias gitrm="gitRemoveBranch"
 # Update submodules
 alias gitupdate="echoAndRun git submodule update --remote"
 
-# assumes git-up is installed (gem install git-up)
-# switches to "main" branch, updates all local branches (nicely using git-up), removes all local branches already merged into 'main'
-alias gitmain='git checkout main; git-up; git branch --merged main | grep -v "\* main" | xargs -n 1 git branch -d; git branch;'
+# switches to "main" branch, updates all local branches using native Git, removes all local branches already merged into 'main'
+alias gitmain='git switch main; git pull --rebase --autostash; git branch --merged main | grep -v "\* main" | xargs -n 1 git branch -d; git branch;'
 
-alias gitprune='git checkout main;git fetch --prune origin'
+alias gitprune='git switch main; git fetch --prune origin'
 
-alias gitprunefull='git checkout main;git fsck;git reflog expire --expire=now --all;git gc --prune=now'
+alias gitprunefull='git switch main; git fsck; git reflog expire --expire=now --all; git gc --prune=now'

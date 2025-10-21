@@ -46,7 +46,7 @@
 	untracked = red bold
 
 [core]
-	editor = hx
+	editor = nvim
 	autocrlf = input
 	pager = delta
 	excludesfile = ~/.gitignore_global
@@ -77,7 +77,7 @@
 
 [fetch]
 	prune = true
-	pruneRags = true
+	pruneTags = true
 
 [log]
 	date = relative

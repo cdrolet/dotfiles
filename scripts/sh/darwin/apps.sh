@@ -77,6 +77,7 @@ declare -A development_tools=(
     ["utm"]="cask"
     ["uv"]="formula"
     ["claude-code"]="cask"
+    
 )
 brew_install_from_map "Development tools" "development_tools"
 
@@ -87,6 +88,7 @@ uv_install_from_map "Python Packages" "python_packages"
 
 declare -A containers=(
     ["podman"]="formula"
+    ["docker"]="formula"
     ["kubernetes-cli"]="formula"
     ["kubectx"]="formula"
 )
@@ -94,7 +96,7 @@ brew_install_from_map "Containers" "containers"
 
 declare -A browsers=(
     ["brave-browser"]="cask"
-    ["zen"]=cask
+    ["zen"]="cask"
 )
 brew_install_from_map "Browsers" "browsers"
 
@@ -104,25 +106,47 @@ declare -A proton=(
     ["protonvpn"]="cask"
     ["bitwarden"]="cask"
 )
-brew_install_from_map "Proton / Bitwarden" "proton"
+brew_install_from_map "Proton" "proton"
+
+declare -A secrets=(
+    ["bitwarden"]="cask"
+    ["sops"]="formula"
+    ["age"]="formula"\
+)
+brew_install_from_map "Secrets" "secrets"
 
 declare -A music=(
     ["qobuz"]="cask"
 )
 brew_install_from_map "Music" "music"
 
-declare -A graphic=(
-    ["inkscape"]="cask"
+declare -A torrent=(
+    ["qbittorrent"]="cask"
 )
-brew_install_from_map "Graphic" "graphic"
+brew_install_from_map "Torrent" "torrent"
 
-declare -A teamwork=(
-    ["slack"]="cask"
+declare -A design=(
+    ["inkscape"]="cask"
+    ["blender"]="cask"
+    ["gimp"]="cask"
+    ["figma"]="cask"
 )
-brew_install_from_map "Team work" "teamwork"
+brew_install_from_map "Design" "graphic"
+
+declare -A office=(
+    ["slack"]="cask"
+    ["zoom"]="cask"
+)
+brew_install_from_map "Office" "office"
+
+declare -A social=(
+    ["discord"]="cask"
+    ["matrix"]="cask"
+    ["signal"]="cask"
+)
+brew_install_from_map "Social" "social"
 
 declare -A productivity=(
-#  ["notion"]="cask"
     ["nikitabobko/tap:aerospace"]="cask"
     ["felixkratz/formulae:sketchybar"]="formula"
     ["felixkratz/formulae:borders"]="formula"

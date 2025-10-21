@@ -10,17 +10,18 @@ install_xcode_cli_tools() {
         # If upgrade flag is set, check for updates
         if [ "$UPGRADE_OUTDATED" = true ]; then
             # Check if there's an update available
-            local update_check=$(softwareupdate --list 2>/dev/null | grep "^\* Label: Command Line Tools")
+            info "looking for updates"
+            local update_check=$(check_xcode_cli_tools_update)
 
             if [ -n "$update_check" ]; then
                 # Extract the full label (e.g., "Command Line Tools for Xcode 26.0-26.0")
                 local update_label=$(echo "$update_check" | sed 's/^\* Label: //')
-                run "Updating Xcode Command Line Tools" "sudo softwareupdate --install '$update_label' --agree-to-license --no-scan"
+                spin "Updating Xcode Command Line Tools" "sudo softwareupdate --install '$update_label' --agree-to-license --no-scan"
             else
-                render_command_output "skipped" "Xcode Command Line Tools already up to date" "$install_command"
+                skipped "Xcode Command Line Tools already up to date"
             fi
         else
-            render_command_output "skipped" "Xcode Command Line Tools already installed" "$install_command"
+            skipped "Xcode Command Line Tools already installed"
         fi
         return 0
     fi
@@ -29,13 +30,33 @@ install_xcode_cli_tools() {
     spin "$description" "$install_command"
 }
 
+
+# Check for available Xcode Command Line Tools updates
+# Outputs the update label if available, nothing if up to date
+check_xcode_cli_tools_update() {
+    softwareupdate --list 2>/dev/null | grep "^\* Label: Command Line Tools"
+}
+
+update_sdkman() {
+    # Check if SDKMAN is installed
+    if [ ! -d "$HOME/.sdkman" ]; then
+        skipped "SDKMAN not installed"
+        return 0
+    fi
+
+    # Source SDKMAN and update
+    source "$HOME/.sdkman/bin/sdkman-init.sh"
+    spin "Updating SDKMAN" "sdk update"
+    echo ""
+}
+
 install_brew() {
     # Check if Homebrew is already installed
     if command -v brew &>/dev/null; then
         if [ "$UPGRADE_OUTDATED" = true ]; then
             spin "Upgrading Homebrew" "brew upgrade"
         else
-            render_command_output "skipped" "Homebrew already installed" "$(brew --version)"
+            skipped "Homebrew already installed"
             return 0
         fi
     else
@@ -47,7 +68,7 @@ install_brew() {
 load_brew() {
     # Check if brew is already in PATH
     if command -v brew &>/dev/null; then
-        render_command_output "skipped" "Homebrew already loaded" "$(which brew)"
+        skipped "Homebrew already loaded"
         return 0
     fi
 
@@ -179,7 +200,7 @@ brew_install() {
     # Add tap if needed
     if [ -n "$tap" ]; then
         if brew tap | grep -q "^$tap$"; then
-            render_command_output "skipped" "Tap $tap already added" "brew tap $tap"
+            skipped "Tap $tap already added"
         else
             spin "Adding tap $tap" "brew tap $tap"
         fi
@@ -201,7 +222,7 @@ brew_install() {
             spin "Upgrading $package" "brew upgrade$cask_flag $package"
         else
             # Already installed, skip
-            render_command_output "skipped" "$package already installed" "$install_cmd"
+            skipped "$package already installed"
         fi
     else
         # Package not registered
@@ -231,4 +252,132 @@ uv_install_from_map() {
         # Install the package
         run \"Installing python \$package from \$url\" \"uv tool install \$package --from git+\$url\"
     done"
+}
+
+
+##############################################################
+# DEFAULT APPLICATION ASSOCIATION
+##############################################################
+
+# Set default application for a file type or protocol
+# Usage: _set_default_app "bundle.id" "file.ext"
+_set_default_app() {
+    local bundle_id="$1"
+    local file_ext="$2"
+    
+    run "Setting default for $file_ext" "duti -s $bundle_id $file_ext all"
+}
+
+# Set multiple default applications from associative array
+# Usage: set_default_apps "App Name" "bundle.id" "array_name"
+# Array format: ["Description"]="file.ext"
+set_default_apps() {
+    local app_name="$1"
+    local bundle_id="$2"
+    local array_name="$3"  # Name of the associative array
+    
+    # Print section header
+    section "$app_name"
+    
+    # Iterate over the associative array
+    eval "for description in \"\${!$array_name[@]}\"; do
+        # Get the file extension
+        file_ext=\$(eval \"echo \\\"\${$array_name[\$description]}\\\"\")
+        
+        # Set the default application
+        _set_default_app \"\$bundle_id\" \"\$file_ext\"
+    done"
+}
+
+
+##############################################################
+# BREWFILE GENERATION
+##############################################################
+
+# Generate Brewfile with versions in comments
+# This creates a snapshot of currently installed packages
+generate_brewfile() {
+    local output_dir="${1:-backup}"
+    local output_file="$output_dir/Brewfile"
+    
+    section "Generating Brewfile"
+    
+    # Create output directory if it doesn't exist
+    mkdir -p "$output_dir"
+    
+    # Generate header
+    cat > "$output_file" << 'EOF'
+# Brewfile
+# Auto-generated on $(date +"%Y-%m-%d %H:%M:%S")
+# 
+# This file documents all Homebrew packages, casks, and taps installed on this system.
+# Generated by: scripts/sh/darwin/_install_utilities.sh
+#
+# Usage:
+#   brew bundle install --file=brew/Brewfile  # Install all packages
+#   brew bundle check --file=brew/Brewfile    # Check what's missing
+#   brew bundle cleanup --file=brew/Brewfile  # Remove packages not in file
+
+EOF
+
+    # Add actual date
+    local current_date=$(date +"%Y-%m-%d %H:%M:%S")
+    sed -i '' "s/\$(date +\"%Y-%m-%d %H:%M:%S\")/$current_date/" "$output_file"
+    
+    # Generate taps
+    echo "" >> "$output_file"
+    echo "##############################################################" >> "$output_file"
+    echo "# TAPS" >> "$output_file"
+    echo "##############################################################" >> "$output_file"
+    echo "" >> "$output_file"
+    brew tap | while read -r tap; do
+        echo "tap \"$tap\"" >> "$output_file"
+    done
+    
+    # Generate formulae with versions
+    echo "" >> "$output_file"
+    echo "##############################################################" >> "$output_file"
+    echo "# FORMULAE" >> "$output_file"
+    echo "##############################################################" >> "$output_file"
+    echo "" >> "$output_file"
+    
+    brew list --formula | while read -r formula; do
+        local version=$(brew list --versions "$formula" | awk '{print $2}')
+        echo "brew \"$formula\"  # $version" >> "$output_file"
+    done
+    
+    # Generate casks with versions
+    echo "" >> "$output_file"
+    echo "##############################################################" >> "$output_file"
+    echo "# CASKS" >> "$output_file"
+    echo "##############################################################" >> "$output_file"
+    echo "" >> "$output_file"
+    
+    # Redirect stderr to suppress "not installed" errors for casks
+    # that may appear in old Brewfiles but are no longer installed
+    brew list --cask 2>/dev/null | while read -r cask; do
+        local version=$(brew list --cask --versions "$cask" 2>/dev/null | awk '{print $2}')
+        if [ -n "$version" ]; then
+            echo "cask \"$cask\"  # $version" >> "$output_file"
+        else
+            # Fallback if version couldn't be determined
+            echo "cask \"$cask\"" >> "$output_file"
+        fi
+    done
+    
+    # Generate VS Code extensions if code is installed
+    if command -v code >/dev/null 2>&1; then
+        echo "" >> "$output_file"
+        echo "##############################################################" >> "$output_file"
+        echo "# VSCODE EXTENSIONS" >> "$output_file"
+        echo "##############################################################" >> "$output_file"
+        echo "" >> "$output_file"
+        code --list-extensions | while read -r ext; do
+            local version=$(code --list-extensions --show-versions | grep "^$ext@" | cut -d@ -f2)
+            echo "vscode \"$ext\"  # $version" >> "$output_file"
+        done
+    fi
+    
+    render_command_output "success" "Brewfile generated at $output_file" "generate_brewfile"
+    info "Total: $(grep -c '^brew ' "$output_file") formulae, $(grep -c '^cask ' "$output_file") casks"
 }

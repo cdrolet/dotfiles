@@ -22,7 +22,7 @@ macos-titlebar-style = native
 mouse-hide-while-typing = true
 
 # Shell integration
-shell-integration = true
+shell-integration = zsh
 shell-integration-features = cursor,sudo,title
 
 # Copy/paste

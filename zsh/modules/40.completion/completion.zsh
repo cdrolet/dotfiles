@@ -24,6 +24,7 @@ zmodload -i zsh/complist
 # Initialize completion system with caching
 autoload -Uz compinit
 
+
 # Only check compinit once a day
 if [[ -n ~/.zcompdump(#qN.mh+24) ]]; then
   compinit

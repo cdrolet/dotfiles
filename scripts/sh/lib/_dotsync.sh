@@ -270,6 +270,13 @@ confirm_broken_link_cleanup() {
         ind; warning "$file"
     done
     printf "\n"
+
+    # Skip confirmation if SKIP_CONFIRMATION is set
+    if [ "$SKIP_CONFIRMATION" = true ]; then
+        remove_broken_links
+        return
+    fi
+
     confirm "Do you want to remove them?"
     if [[ $confirm =~ ^[Yy]$ ]];then
         remove_broken_links
@@ -306,6 +313,12 @@ confirm_link_creation() {
         warning "${#REJECTED_FILES[@]} dot files in conflict."
     fi
 
+    # Skip confirmation if SKIP_CONFIRMATION is set
+    if [ "$SKIP_CONFIRMATION" = true ]; then
+        create_home_symlinks
+        return
+    fi
+
     confirm "Do you want to proceed?"
     if [[ $confirm =~ ^[Yy]$ ]];then
         create_home_symlinks
@@ -339,8 +352,21 @@ create_dotfile_symlink() {
     fi
 
     if [[ "${source_dir}" == .* ]]; then
-        target="$HOME/${source_dir}"
-        mkdir -p "${target}"
+        target="$HOME/${source_dir}/${filename}"
+
+        # Ensure parent dotfolder exists as a directory
+        local parent_target="$HOME/${source_dir}"
+        mkdir -p "${parent_target}"
+
+        # If target exists and is not a symlink, remove it
+        if [[ -e "${target}" ]] && [[ ! -L "${target}" ]]; then
+            rm -rf "${target}" >/dev/null 2>&1
+        fi
+    else
+        # If target exists and is not a symlink, remove it
+        if [[ -e "${target}" ]] && [[ ! -L "${target}" ]]; then
+            rm -rf "${target}" >/dev/null 2>&1
+        fi
     fi
 
     # Create symlink and suppress its output

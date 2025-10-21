@@ -4,9 +4,9 @@
 # Description: Update script for system, apps, dotfiles, and dependencies
 ########################################################################################
 
-###########################
+##############################################################
 # PREFLIGHT
-###########################
+##############################################################
 
 # Function to parse command-line arguments
 parse_arguments() {
@@ -66,13 +66,13 @@ parse_arguments() {
 }
 
 # Get the absolute path of the directory containing update.sh
-UPDATE_SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
-# Get the parent directory of UPDATE_SCRIPT_DIR
-DOTFILES_ROOT="$(dirname "$(dirname "$UPDATE_SCRIPT_DIR")")"
+SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
+# Get the parent directory (dotfiles root)
+DOTFILES_ROOT="$(dirname "$(dirname "$SCRIPT_DIR")")"
 
 parse_arguments "$@"
 
-source "$UPDATE_SCRIPT_DIR/lib/_bootstrap.sh"
+source "$SCRIPT_DIR/lib/_bootstrap.sh"
 
 LAST_STAGE=false
 
@@ -85,24 +85,17 @@ print_setting "Dry-run mode" "$IS_DRY_RUN" "$DEFAULT_DRY_RUN"
 print_setting "Upgrade packages" "$UPGRADE_OUTDATED" "true"
 print_setting "OS" "$OS_NAME" "$OS_NAME"
 
-###########################
+##############################################################
 # UPDATE
-###########################
+##############################################################
 
-sub_header "Updating Homebrew"
-
-run "Update Homebrew formulae database" "brew update"
-spin "Upgrade Homebrew formulae" "brew upgrade"
-spin "Upgrade Homebrew casks" "brew upgrade --cask --greedy"
-spin "Cleanup Homebrew" "brew cleanup"
-spin "Remove unused dependencies" "brew autoremove"
-
-sub_header "Updating Xcode Command Line Tools"
-
-# Load darwin utilities to get install_xcode_cli_tools function
-if [ -f "$UPDATE_SCRIPT_DIR/darwin/_install_utilities.sh" ]; then
-    source "$UPDATE_SCRIPT_DIR/darwin/_install_utilities.sh"
-    install_xcode_cli_tools
+# Check for OS-specific update script
+if [ -f "$SCRIPT_DIR/$OS_NAME/update.sh" ]; then
+    info "Loading ${YELLOW}$OS_NAME${WHITE} update script..."
+    source "$SCRIPT_DIR/$OS_NAME/update.sh"
+else
+    warning "No OS-specific update script found for $OS_NAME"
+    info "Performing generic updates only..."
 fi
 
 sub_header "Updating dotfiles repository"
@@ -110,11 +103,9 @@ sub_header "Updating dotfiles repository"
 spin "Pulling latest changes from origin/master" "git -C $DOTFILES_ROOT pull origin master"
 spin "Updating git submodules" "git -C $DOTFILES_ROOT submodule update --remote --merge"
 
-sub_header "Checking for macOS updates"
-
-spin "Install recommended macOS updates" "softwareupdate --install --recommended"
-
 sub_header "Re-syncing dotfiles"
+
+LAST_STAGE=true
 
 sync_dotfiles "$DOTFILES_ROOT"
 
@@ -125,3 +116,10 @@ if [ "$IS_DRY_RUN" = true ]; then
 else
     success "System update complete!"
 fi
+
+##############################################################
+# END
+##############################################################
+
+unset SCRIPT_DIR
+unset DOTFILES_ROOT
